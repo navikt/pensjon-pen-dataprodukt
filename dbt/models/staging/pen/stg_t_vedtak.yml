@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: stg_t_vedtak
+    description: >
+        T_vedtak representerer det endelige utfallet av et krav som har blitt behandlet. 
+        Avhengig av om bruker har hatt rett til det som krevd eller ikke innholder objektet referanser til detaljer rundt vurdering av vilkår og beregning av størrelsen på pensjonsytelser. 
+        I tillegg inneholder objektet en rekke tidsstempler som benyttes for å spore fremdriften i iverksettelsen av vedtaket, 
+        informasjon som også er svært sentralt for statistiske formål.
+    columns:
+      - name: vedtak_id
+        description: 'Unik id for vedtaket'
+      - name: sak_id
+        description: 'Unik id for saken som vedtaket er knyttet til'
+      - name: kravhode_id
+        description: 'Unik id for kravhodet som var opphavet til vedtaket'
+      - name: dato_lopende_fom
+        description: 'Virkningsdatoen, fra og med, vedtaket er løpende.'
+      - name: dato_lopende_tom
+        description: 'Eventuell dato hvor vedtaket ikke lenger er løpende.'
