@@ -2,6 +2,7 @@ version: 2
 
 # kjør ´dbt seed´, så er tabellen klar til bruk
 # todo: test på at kolonnen flagg er 0/1
+# obs: description vises kun i dbt docs, ikke i databasen for seeds
 
 # overgangsstonad:
   # linje 18-64 i sql_pilot.sql, linje 18-64
@@ -10,7 +11,9 @@ version: 2
 
 seeds:
   - name: overgangsstonad
+    description: >
+      Statisk tabell for mapping på overgangsstønad.
+      Leser en csv-fil til tabell. Mulig dette er en dimensjonstabell som ligger i PEN.
     config:
       tags: ['seeds']
       delimiter: ','
-      # post_hook: "comment on table {{ this }} is 'Statisk tabell for mapping på overgangsstønad';"
