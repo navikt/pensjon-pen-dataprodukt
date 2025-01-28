@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: stg_t_uttaksgrad
+    description: >
+        ...
+    columns:
+      - name: kravhode_id
+        description: 'Unik id for kravhodet som var opphavet til vedtaket'
+      - name: dato_virk_fom
+        description: '...'
+      - name: dato_virk_tom
+        description: '...'
+      - name: uttaksgrad
+        description: '...'
