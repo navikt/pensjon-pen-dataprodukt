@@ -7,7 +7,11 @@ target/
 dbt_packages/
 logs/
 .user.yml
+
+# placeholders for dbt-filer som kommer senere
 analysis/
+int_temp.sql
+mart_temp.sql
 
 # mac
 .DS_Store
