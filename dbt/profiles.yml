@@ -1,0 +1,14 @@
+pen_dataprodukt:
+  target: pen_q2
+  outputs:
+    pen_q2:
+      type: oracle
+      port: 1521
+      threads: 2
+      protocol: tcp
+      service: pen_q2
+      database: pen_q2
+      schema: pen_dataprodukt
+      host: d26dbvl012.test.local
+      user: "{{env_var('DBT_ENV_SECRET_USER')}}"
+      pass: "{{env_var('DBT_ENV_SECRET_PASS')}}"

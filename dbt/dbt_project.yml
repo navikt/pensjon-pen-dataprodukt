@@ -1,0 +1,45 @@
+
+name: 'pen_dataprodukt'
+version: '0.1.0'
+profile: 'pen_dataprodukt'
+flags:
+  send_anonymous_usage_stats: False  # Stopper datasending til dbt Labs
+clean-targets: # det som fjernes ved å kjøre dbt clean
+  - "target"
+  - "dbt_packages"
+
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+model-paths: ["models"]
+macro-paths: ["macros"]
+analysis-paths: ["analyses"]
+
+
+
+models:
+  pen_dataprodukt:
+    +materialized: view # alle modeller blir views
+    +persist_docs:
+      relation: true
+      columns: true
+    staging:
+      +tags: ['staging']
+      +docs:
+        node_color: '#8ead74'
+    intermediate:
+      +tags: ['intermediate']
+      +docs:
+        node_color: '#d57448'
+    marts:
+      +tags: ['marts']
+      # +docs:
+      #   node_color: '#368da8'
+
+seeds:
+  pen_dataprodukt:
+    +persist_docs:
+      relation: true
+      columns: true
+    +tags: ['seed']
+    +docs:
+      node_color: '#065903'
