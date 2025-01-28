@@ -25,15 +25,15 @@ models:
     staging:
       +tags: ['staging']
       +docs:
-        node_color: '#8ead74'
+        node_color: '#a3c785'
     intermediate:
       +tags: ['intermediate']
       +docs:
-        node_color: '#d57448'
+        node_color: '#49a8b3'
     marts:
       +tags: ['marts']
-      # +docs:
-      #   node_color: '#368da8'
+      +docs:
+        node_color: '#a176b3'
 
 seeds:
   pen_dataprodukt:
