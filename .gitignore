@@ -1,0 +1,17 @@
+
+# python environment
+.venv/
+
+# dbt
+target/
+dbt_packages/
+logs/
+.user.yml
+analysis/
+
+# mac
+.DS_Store
+
+# code editor
+.vscode/
+.idea/
