@@ -1,0 +1,16 @@
+version: 2
+
+# kjør ´dbt seed´, så er tabellen klar til bruk
+# todo: test på at kolonnen flagg er 0/1
+
+# overgangsstonad:
+  # linje 18-64 i sql_pilot.sql, linje 18-64
+  # mapping fra en statisk fil for overgangsstønad, som Kunnskap har (?)
+  # kun kode og flagg blir brukt i sql-pilot, men her er alle kolonnene fra csv-filen
+
+seeds:
+  - name: overgangsstonad
+    config:
+      tags: ['seeds']
+      delimiter: ','
+      # post_hook: "comment on table {{ this }} is 'Statisk tabell for mapping på overgangsstønad';"
