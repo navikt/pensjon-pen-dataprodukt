@@ -4,6 +4,12 @@ Dataanalyse i PEN for å lage dataprodukter med dbt
 
 ---
 
+### Interaktiv dbt dokumentasjon
+
+https://dbt.ansatt.nav.no/docs/PoPe/pensjon-pen-dataprodukt, åpen for ansatte i Nav.
+
+---
+
 ### Ambisjoner og beskrivelse
 
 - **Kortsiktig ambisjon:** Lage et sett dataprodukter til datavarehuset, slik at de ikke trenger kopi av databasen.
@@ -15,8 +21,6 @@ Alle dbt-transformasjoner skjer i pen-databasen, altså flyttes ikke data ut for
 Data leses fra skjemaet pen og transformeres i skjemaet pen_dataprodukt.
 
 Idéen er å tilgjengeliggjøre dataproduktene på datamarkedsplassen.
-
-Link til dbt-docs kommer etterhvert, https://dbt.ansatt.nav.no/
 
 
 ---
