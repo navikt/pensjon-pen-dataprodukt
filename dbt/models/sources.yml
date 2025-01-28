@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: pen
+    schema: pen
+    tables:
+      - name: t_vedtak
+      - name: t_uttaksgrad
+      - name: t_ytelse_komp
+      - name: t_beregning_res
+      - name: t_pen_under_utbet
+  - name: pen_dataprodukt
+    schema: pen_dataprodukt
+    tables:
+      - name: overgangssstonad
