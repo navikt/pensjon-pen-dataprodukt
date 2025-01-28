@@ -890,29 +890,21 @@ name = "pen-dataprodukt"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "black" },
     { name = "db-dtypes" },
     { name = "dbt-oracle" },
     { name = "oracledb" },
     { name = "requests" },
-]
-
-[package.dev-dependencies]
-lint = [
-    { name = "black" },
     { name = "sqlfluff" },
 ]
 
 [package.metadata]
 requires-dist = [
+    { name = "black", specifier = ">=24.10.0" },
     { name = "db-dtypes", specifier = ">=1.2.0" },
     { name = "dbt-oracle", specifier = ">=1.9.0" },
     { name = "oracledb", specifier = ">=2.3.0" },
     { name = "requests", specifier = ">=2.32.3" },
-]
-
-[package.metadata.requires-dev]
-lint = [
-    { name = "black", specifier = ">=24.10.0" },
     { name = "sqlfluff", specifier = ">=3.3.0" },
 ]
 

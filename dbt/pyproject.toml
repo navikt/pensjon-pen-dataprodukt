@@ -10,13 +10,10 @@ dependencies = [
     "oracledb>=2.3.0",
     "requests>=2.32.3",
     "db-dtypes>=1.2.0",
-]
-
-[dependency-groups]
-lint = [
     "black>=24.10.0",
     "sqlfluff>=3.3.0",
 ]
+
 
 [tool.uv]
 package = false
