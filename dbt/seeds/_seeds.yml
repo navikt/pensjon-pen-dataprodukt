@@ -1,8 +1,6 @@
 version: 2
 
 # kjør ´dbt seed´, så er tabellen klar til bruk
-# todo: test på at kolonnen flagg er 0/1
-# obs: description vises kun i dbt docs, ikke i databasen for seeds
 
 # overgangsstonad:
   # linje 18-64 i sql_pilot.sql, linje 18-64
@@ -13,6 +11,35 @@ seeds:
   - name: seed_overgangsstonad
     description: >
       Statisk tabell for mapping på overgangsstønad.
-      Leser en csv-fil til tabell. Mulig dette er en dimensjonstabell som ligger i PEN.
+      Leser en csv-fil til tabell. Mulig dette er en dimensjonstabell som ligger i pen-skjemaet.
     config:
       delimiter: ','
+    columns:
+      - name: id
+        description: 'Unik identifikator for raden i tabellen.'
+        tests:
+          - unique
+          - not_null
+      - name: kode
+        description: 'Kode for overgangsstønad.'
+        tests:
+          - not_null
+      - name: beskrivelse
+        description: 'Kort beskrivelse av overgangsstønad.'
+        tests:
+          - not_null
+      - name: flagg
+        description: 'Flagg for overgangsstønad. Todo: finne ut hva flagget betyr'
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]
+      - name: nummer
+        description: 'Nummer for overgangsstønad. Todo: finne ut hva nummeret betyr'
+        tests:
+          - not_null
+      - name: tall1
+        description: 'En tallverdi som ikke er i bruk fra csv-fila. Invers av kolonnen flagg.'
+      - name: tall2
+        description: 'En tallverdi som ikke er i bruk fra csv-fila. 1 for alle rader.'
+
