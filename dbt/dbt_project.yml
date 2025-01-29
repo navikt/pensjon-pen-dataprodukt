@@ -8,6 +8,7 @@ clean-targets: # det som fjernes ved å kjøre dbt clean
   - "target"
   - "dbt_packages"
 
+docs-paths: ["docs"]
 test-paths: ["tests"]
 seed-paths: ["seeds"]
 model-paths: ["models"]
