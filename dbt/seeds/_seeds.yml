@@ -10,10 +10,9 @@ version: 2
   # kun kode og flagg blir brukt i sql-pilot, men her er alle kolonnene fra csv-filen
 
 seeds:
-  - name: overgangsstonad
+  - name: seed_overgangsstonad
     description: >
       Statisk tabell for mapping på overgangsstønad.
       Leser en csv-fil til tabell. Mulig dette er en dimensjonstabell som ligger i PEN.
     config:
-      tags: ['seeds']
       delimiter: ','
