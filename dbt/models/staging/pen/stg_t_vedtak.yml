@@ -14,6 +14,11 @@ models:
         description: 'Unik id for saken som vedtaket er knyttet til'
       - name: kravhode_id
         description: 'Unik id for kravhodet som var opphavet til vedtaket'
+      - name: k_sak_t
+        description: 'Kode for sakstype. Gyldige verdier er ALDER, UFOREP, KRIGSP, BARNEP, AFP_PRIVAT, AFP, GJENLEV, GAM_YRK, FAM_PL, GENRL, OMSORG'
+        tests:
+          - accepted_values:
+              values: ['ALDER', 'UFOREP', 'KRIGSP', 'BARNEP', 'AFP_PRIVAT', 'AFP', 'GJENLEV', 'GAM_YRK', 'FAM_PL', 'GENRL', 'OMSORG']
       - name: dato_lopende_fom
         description: 'Virkningsdatoen, fra og med, vedtaket er løpende.'
       - name: dato_lopende_tom
