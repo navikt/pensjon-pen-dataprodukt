@@ -25,8 +25,8 @@ ref_vedtak as (
         k_sak_t,
         dato_lopende_fom,
         dato_lopende_tom
-    from pen.t_vedtak
-    -- from {{ ref('stg_t_vedtak') }}
+    from {{ ref('stg_t_vedtak') }}
+    -- from pen.t_vedtak
 ),
 
 ref_kravhode as (
@@ -35,23 +35,23 @@ ref_kravhode as (
         kravhode_id,
         k_regelverk_t,
         k_afp_t
-    from pen.t_kravhode
-    -- from {{ ref('stg_t_kravhode') }}
+    from {{ ref('stg_t_kravhode') }}
+    -- from pen.t_kravhode
 ),
 
 ref_ytelse_komp as (
     -- supertabell for alle ytelsene med beløp
     select
         k_ytelse_komp_t,
-        pen_under_utbet_id,
+        k_minstepen_niva,
         ap_kap19_med_gjr,
         ap_kap19_uten_gjr,
+        pen_under_utbet_id,
         bruk,
-        k_minstepen_niva,
         netto,
         opphort
-    from pen.t_ytelse_komp
-    -- from {{ ref('stg_t_ytelse_komp') }}
+    from {{ ref('stg_t_ytelse_komp') }}
+    -- from pen.t_ytelse_komp
 ),
 
 ref_beregning_res as (
@@ -60,13 +60,13 @@ ref_beregning_res as (
         vedtak_id,
         dato_virk_fom,
         dato_virk_tom,
-        pen_under_utbet_id,
         beregning_info_id,
+        pen_under_utbet_id,
         beregning_info_avdod,
         ber_res_ap_2011_2016_id,
         ber_res_ap_2025_2016_id
-    from pen.t_beregning_res
-    -- from {{ ref('stg_t_beregning_res') }}
+    from {{ ref('stg_t_beregning_res') }}
+    -- from pen.t_beregning_res
 ),
 
 ref_uttaksgrad as (
@@ -75,8 +75,8 @@ ref_uttaksgrad as (
         dato_virk_fom,
         dato_virk_tom,
         uttaksgrad
-    from pen.t_uttaksgrad
-    -- from {{ ref('stg_t_uttaksgrad') }}
+    from {{ ref('stg_t_uttaksgrad') }}
+    -- from pen.t_uttaksgrad
 ),
 
 ref_pen_under_utbet as (
@@ -84,8 +84,8 @@ ref_pen_under_utbet as (
         pen_under_utbet_id,
         total_belop_brutto,
         total_belop_netto
-    from pen.t_pen_under_utbet
-    -- from {{ ref('stg_t_pen_under_utbet') }}
+    from {{ ref('stg_t_pen_under_utbet') }}
+    -- from pen.t_pen_under_utbet
 ),
 
 -- herfra joines inn en og en ref med vedtak
