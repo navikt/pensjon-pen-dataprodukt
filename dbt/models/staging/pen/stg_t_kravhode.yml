@@ -1,0 +1,18 @@
+version: 2
+
+models:
+  - name: stg_t_kravhode
+    description: >
+        ...
+    columns:
+      - name: sak_id
+        description: 'Unik id for saken som vedtaket er knyttet til'
+      - name: kravhode_id
+        description: 'Unik id for kravhodet som var opphavet til vedtaket'
+      - name: k_regelverk_t
+        description: 'Nøkkel til hvilket regelverk som er brukt i kravet. AP kap. 19 tom 2010, kap. 19 og 20, kap. 19 fom 2011, eller kap. 20. Se k_regelverk_t for verdier.'
+        tests:
+          - accepted_values:
+              values: ['G_REG', 'N_REG_G_N_OPPTJ', 'N_REG_G_OPPTJ', 'N_REG_N_OPPTJ']
+      - name: k_afp_t
+        description: 'Nøkkel til type AFP. Se k_afp_t for verdier.'

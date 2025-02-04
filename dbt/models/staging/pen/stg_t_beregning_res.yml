@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: stg_t_beregning_res
+    description: >
+        ...
+    columns:
+      - name: vedtak_id
+        description: 'Unik id for vedtaket'
+      - name: dato_virk_fom
+        description: '...'
+      - name: dato_virk_tom
+        description: '...'
+      - name: beregning_info_id
+        description: '...'
+      - name: pen_under_utbet_id
+        description: '...' # todo: spør Magne
+      - name: beregning_info_avdod
+        description: '...'
+      - name: ber_res_ap_2011_2016_id
+        description: '...'
+      - name: ber_res_ap_2025_2016_id
+        description: '...'

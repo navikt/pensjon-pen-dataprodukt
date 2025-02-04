@@ -5,7 +5,9 @@ sources:
     schema: pen
     tables:
       - name: t_vedtak
+      - name: t_kravhode
       - name: t_uttaksgrad
       - name: t_ytelse_komp
+      - name: t_beregning
       - name: t_beregning_res
       - name: t_pen_under_utbet

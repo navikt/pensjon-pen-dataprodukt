@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: stg_t_beregning
+    description: >
+        ...
+    columns:
+      - name: vedtak_id
+        description: 'Unik id for vedtaket'
+      - name: dato_virk_fom
+        description: '...'
+      - name: dato_virk_tom
+        description: '...'
+      - name: beregning_id
+        description: '...'
+      - name: total_vinner
+        description: '...'
