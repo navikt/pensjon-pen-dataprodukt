@@ -198,7 +198,7 @@ transponert_ytelse_komp as (
     where
         bruk = '1'
         and opphort = '0'
-    group by pen_under_utbet_id
+    group by pen_under_utbet_id -- en rad per type ytelse
 ),
 
 -- joiner inn ytelse_komp på pen_under_utbet_id
@@ -232,11 +232,11 @@ join_ytelse_komp as (
 ekstra_kolonner as (
     select
         join_ytelse_komp.*,
+        cast(0 as varchar2(1)) as red_pga_inst_opph_flagg,
         'ikke1967' as grein,
-        null as beregning_id,
-        null as minstepensjonist,
+        cast(null as number) as beregning_id,
+        cast(null as char(1)) as minstepensjonist,
         0 as anvendt_yrkesskade_flagg,
-        0 as red_pga_inst_opph_flagg,
         0 as afp_lopph_flagg,
         0 as afp_lopph_ytelse_flagg,
         0 as afp_finans_flagg
@@ -249,14 +249,18 @@ final as (
         vedtak_id,
         kravhode_id,
         grein,
-        regelverk,
         k_afp_t,
+        regelverk,
         dato_virk_tom,
+        dato_virk_fom,
+        beregning_id,
         beregning_info_id,
         beregning_info_id_2016,
         beregning_info_id_2025,
         beregning_info_id_avdod,
         beregning_info_id_avdod_2016,
+        pen_under_utbet_id,
+        uttaksgrad,
         brutto,
         netto,
         gp_netto,
@@ -264,28 +268,25 @@ final as (
         pt_netto,
         st_netto,
         et_netto,
-        saerkull_netto,
-        barn_felles_netto,
-        mpn_sstot_netto,
-        mpn_indiv_netto,
-        skjermt_netto,
-        ufor_sum_ut_ord_netto,
-        gjt_netto,
-        gjt_k19_netto,
-        ap_kap19_med_gjr_bel,
-        ap_kap19_uten_gjr_bel,
         ip_netto,
         gap_netto,
-        beregning_id,
-        pen_under_utbet_id,
-        minste_pen_niva,
+        gjt_netto,
+        gjt_k19_netto,
+        skjermt_netto,
+        saerkull_netto,
+        mpn_sstot_netto,
+        mpn_indiv_netto,
+        barn_felles_netto,
+        ufor_sum_ut_ord_netto,
+        ap_kap19_uten_gjr_bel,
+        ap_kap19_med_gjr_bel,
         minstepensjonist,
-        afp_finans_flagg,
+        minste_pen_niva,
         afp_lopph_flagg,
+        afp_finans_flagg,
         afp_lopph_ytelse_flagg,
-        anvendt_yrkesskade_flagg,
         red_pga_inst_opph_flagg,
-        uttaksgrad
+        anvendt_yrkesskade_flagg
     from ekstra_kolonner
 )
 
