@@ -15,3 +15,15 @@ models:
         description: '...'
       - name: total_vinner
         description: '...'
+      - name: k_minstepensj_t
+        description: '...'
+      - name: red_pga_inst_opph
+        description: '...'
+      - name: brutto
+        description: '...'
+      - name: netto
+        description: '...'
+      - name: yug
+        description: '...'
+      - name: tt_anv
+        description: '...'
