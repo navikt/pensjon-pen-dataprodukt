@@ -10,4 +10,5 @@ sources:
       - name: t_ytelse_komp
       - name: t_beregning
       - name: t_beregning_res
+      - name: t_vilkar_vedtak
       - name: t_pen_under_utbet
