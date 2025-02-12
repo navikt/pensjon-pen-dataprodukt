@@ -1,5 +1,6 @@
 -- int_aktive_alder
 -- Viser alle som har en løpende alderspensjonsytelse
+-- union av to intermediate modeller som bygger på t_beregning og t_beregning_res
 
 with
 
@@ -10,6 +11,7 @@ ref_int_aktive_alder_kap20 as (
         kravhode_id,
         grein,
         k_afp_t,
+        k_sak_t,
         regelverk,
         dato_virk_tom,
         dato_virk_fom,
@@ -57,6 +59,7 @@ ref_int_aktive_alder_kap19 as (
         kravhode_id,
         grein,
         k_afp_t,
+        k_sak_t,
         regelverk,
         dato_virk_tom,
         dato_virk_fom,
@@ -110,6 +113,7 @@ final as (
         kravhode_id,
         grein,
         k_afp_t,
+        k_sak_t,
         regelverk,
         dato_virk_tom,
         dato_virk_fom,

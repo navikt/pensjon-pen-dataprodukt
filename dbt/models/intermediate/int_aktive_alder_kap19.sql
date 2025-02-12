@@ -250,6 +250,7 @@ final as (
         kravhode_id,
         grein,
         k_afp_t,
+        k_sak_t,
         regelverk,
         dato_virk_tom,
         dato_virk_fom,
