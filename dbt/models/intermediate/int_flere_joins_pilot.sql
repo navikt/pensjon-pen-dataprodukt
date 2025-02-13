@@ -118,10 +118,9 @@ hente_beregning_info as (
         --     aktive.tt_anvendt_kap20_antall
         -- ) as tt_anvendt_kap20_antall
     from sette_afp_privat_flagg aktive
-    left join ref_stg_beregning_info
-        on aktive.beregning_info_id = case
-            when aktive.regelverk = 'N_REG_G_N_OPPTJ'
-                then aktive.beregning_info_id_2016
+    left outer join ref_stg_beregning_info
+        on ref_stg_beregning_info.beregning_info_id = case
+            when aktive.regelverk = 'N_REG_G_N_OPPTJ' then aktive.beregning_info_id_2016
             else aktive.beregning_info_id
         end
 -- left outer join ref_stg_beregning_info_2025
