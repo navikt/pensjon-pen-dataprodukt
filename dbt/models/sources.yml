@@ -4,15 +4,16 @@ sources:
   - name: pen
     schema: pen
     tables:
-      - name: t_vedtak
-      - name: t_kravhode
-      - name: t_uttaksgrad
-      - name: t_ytelse_komp
       - name: t_beregning
       - name: t_beregning_info
       - name: t_beregning_res
-      - name: t_vilkar_vedtak
+      - name: t_eo_resultat_ut
+      - name: t_kravhode
       - name: t_pen_under_utbet
+      - name: t_uttaksgrad
+      - name: t_vedtak
+      - name: t_vilkar_vedtak
+      - name: t_ytelse_komp
       # kodeverk
       - name: t_k_afp_t
       - name: t_k_regelverk_t
