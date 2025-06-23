@@ -4,5 +4,6 @@ select
     sak_id,
     kravhode_id,
     k_regelverk_t,
+    k_krav_gjelder,
     k_afp_t
 from {{ source('pen', 't_kravhode') }}
