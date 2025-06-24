@@ -22,7 +22,9 @@ models:
           - accepted_values:
               values: ['ALDER', 'UFOREP', 'KRIGSP', 'BARNEP', 'AFP_PRIVAT', 'AFP', 'GJENLEV', 'GAM_YRK', 'FAM_PL', 'GENRL', 'OMSORG']
       - name: dato_virk_fom
-        description: 'Dato som vedtaket skal gjelde fra'
+        description: 'Dato som vedtaket skal gjelde fra. NOT NULL'
+      - name: dato_virk_tom
+        description: 'Dato som vedtaket skal gjelde til'
       - name: dato_lopende_fom
         description: 'Virkningsdatoen, fra og med, vedtaket er løpende.'
       - name: dato_lopende_tom
