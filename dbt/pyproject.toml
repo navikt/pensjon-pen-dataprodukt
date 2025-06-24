@@ -10,10 +10,15 @@ dependencies = [
     "oracledb>=2.3.0",
     "requests>=2.32.3",
     "db-dtypes>=1.2.0",
-    "black>=24.10.0",
-    "sqlfluff>=3.3.0",
+    "dbt-core>=1.9.1",
 ]
 
 
 [tool.uv]
 package = false
+
+[dependency-groups]
+dev = [
+    "black>=24.10.0",
+    "sqlfluff>=3.3.0",
+]
