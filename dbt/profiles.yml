@@ -6,9 +6,9 @@ pen_dataprodukt:
       port: 1521
       threads: 2
       protocol: tcp
-      service: pen_q2
-      database: pen_q2
+      service: pen_q2_ha
+      database: pen_q2_ha
       schema: pen_dataprodukt
-      host: d26dbvl012.test.local
+      host: "{{env_var('DBT_ENV_SECRET_HOST')}}"
       user: "{{env_var('DBT_ENV_SECRET_USER')}}"
       pass: "{{env_var('DBT_ENV_SECRET_PASS')}}"

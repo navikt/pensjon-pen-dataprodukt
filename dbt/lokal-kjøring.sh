@@ -4,13 +4,15 @@
 # Setter miljøvariabler for dbt-kjøring lokalt
 
 export ORA_PYTHON_DRIVER_TYPE="thin"
-export DBT_DB_SCHEMA="pen_dataprodukt"
 
-# username
-printf "Enter db-username (without proxy): "
-read DB_USER
-DBT_ENV_SECRET_USER="${DB_USER}[${DBT_DB_SCHEMA}]"
-export DBT_ENV_SECRET_USER
+# Last inn variabler fra .env
+set -a
+source .env
+set +a
+
+if [[ -z "$DBT_ENV_SECRET_USER" || -z "$DBT_ENV_SECRET_HOST" ]]; then
+    echo "Error: DBT_ENV_SECRET_USER og DBT_ENV_SECRET_HOST miljøvariabler ikke satt"
+fi
 
 # password (input hidden)
 printf "Enter db-password: "
@@ -23,6 +25,5 @@ export DBT_ENV_SECRET_PASS
 
 # Print environment variables
 printf "Miljøvariabler satt:\n"
-printf "DBT_DB_SCHEMA:          %s\n" "$DBT_DB_SCHEMA"
 printf "DBT_ENV_SECRET_USER:    %s\n" "$DBT_ENV_SECRET_USER"
 printf "ORA_PYTHON_DRIVER_TYPE: %s\n" "$ORA_PYTHON_DRIVER_TYPE"

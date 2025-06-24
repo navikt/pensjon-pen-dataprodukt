@@ -18,3 +18,5 @@ analysis/
 # code editor
 .vscode/
 .idea/
+
+.env
