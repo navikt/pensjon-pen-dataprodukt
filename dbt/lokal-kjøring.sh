@@ -7,7 +7,7 @@ export ORA_PYTHON_DRIVER_TYPE="thin"
 
 # Last inn variabler fra .env
 set -a
-source .env
+source "$(dirname "$0")/.env"
 set +a
 
 if [[ -z "$DBT_ENV_SECRET_USER" || -z "$DBT_ENV_SECRET_HOST" ]]; then
