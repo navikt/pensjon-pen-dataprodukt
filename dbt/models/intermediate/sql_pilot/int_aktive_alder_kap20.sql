@@ -1,17 +1,23 @@
 -- int_aktive_alder_kap20
 
--- finner aktive utbetalinger på alder fra kapittel 20
--- bruker da beregning og finner utbetalinger fra ytelse_komp
+-- finner aktive utbetalinger på alder fra kapittel 19
+-- bruker da beregning_res og finner utbetalinger fra ytelse_komp
+
+-- beregning er for kapittel 19 (G_REG)
+-- beregning_res er for kapittel 20 (AFP_PRIVAT, ALDER, UFOREP)
+-- Fra 1. februar 2016 utbetales alderspensjon etter kapittel 20 for første gang.
+-- Årskullene 1954-1962 skal ha pensjon delvis etter kapittel 19 og 20.
+
 
 -- fra SQL-piloten:
 -- CTE for å trekke ut de aktive vedtakene, basert på Magne Nordås' SQL-er.
--- Denne kjører løpet via t_beregning, ned mot ytelse_komp.
+-- Denne kjører løpet via t_beregning_res og t_pen_under_utbet, ned mot ytelse_komp.
 -- Rader fra ytelse_komp traverseres og transponeres med aggregeringsfunksjoner opp på en rad per vedtak.
-
 
 with
 
 ref_vedtak as (
+    -- trenger info om vedtaket for alderspensjon
     select
         vedtak_id,
         sak_id,
@@ -40,7 +46,7 @@ ref_ytelse_komp as (
         k_minstepen_niva,
         ap_kap19_med_gjr,
         ap_kap19_uten_gjr,
-        beregning_id,
+        pen_under_utbet_id,
         bruk,
         netto,
         opphort
@@ -48,23 +54,41 @@ ref_ytelse_komp as (
     -- from pen.t_ytelse_komp
 ),
 
-ref_beregning as (
-    -- kapittel 20
+ref_beregning_res as (
+    -- kapittel 19
     select
         vedtak_id,
-        beregning_id,
-        total_vinner,
         dato_virk_fom,
         dato_virk_tom,
-        k_minstepensj_t,
-        red_pga_inst_opph,
-        brutto,
-        netto,
-        yug,
-        tt_anv
-    from {{ ref('stg_t_beregning') }}
-    -- from pen.t_beregning
+        beregning_info_id,
+        pen_under_utbet_id,
+        beregning_info_avdod,
+        ber_res_ap_2011_2016_id,
+        ber_res_ap_2025_2016_id
+    from {{ ref('stg_t_beregning_res') }}
+    -- from pen.t_beregning_res
 ),
+
+ref_uttaksgrad as (
+    select
+        kravhode_id,
+        dato_virk_fom,
+        dato_virk_tom,
+        uttaksgrad
+    from {{ ref('stg_t_uttaksgrad') }}
+    -- from pen.t_uttaksgrad
+),
+
+ref_pen_under_utbet as (
+    select
+        pen_under_utbet_id,
+        total_belop_brutto,
+        total_belop_netto
+    from {{ ref('stg_t_pen_under_utbet') }}
+    -- from pen.t_pen_under_utbet
+),
+
+-- herfra joines inn en og en ref med vedtak
 
 aktive_alder_vedtak as (
     select
@@ -85,38 +109,73 @@ join_kravhode as (
     select
         aktive_alder_vedtak.*,
         ref_kravhode.k_afp_t,
-        ref_kravhode.k_regelverk_t
-        -- coalesce(ref_kravhode.k_regelverk_t, 'G_REG') as regelverk -- flyttet ned
+        coalesce(ref_kravhode.k_regelverk_t, 'G_REG') as regelverk
     from aktive_alder_vedtak
     inner join ref_kravhode
-        on aktive_alder_vedtak.kravhode_id = ref_kravhode.kravhode_id
+        on
+            aktive_alder_vedtak.kravhode_id = ref_kravhode.kravhode_id
+            and aktive_alder_vedtak.sak_id = ref_kravhode.sak_id
+            -- todo: sjekk om dette er nødvendig med begge id-ene
 ),
 
-join_beregning as (
-    -- har riktig antall rader sammenliknet med yk_ber, sjekket mot Q1
+join_uttaksgrad as (
     select
         join_kravhode.*,
-        ref_beregning.beregning_id,
-        ref_beregning.dato_virk_fom,
-        ref_beregning.dato_virk_tom,
-        ref_beregning.k_minstepensj_t,
-        ref_beregning.red_pga_inst_opph,
-        ref_beregning.brutto,
-        ref_beregning.netto,
-        ref_beregning.yug,
-        ref_beregning.tt_anv
+        ref_uttaksgrad.uttaksgrad
     from join_kravhode
-    inner join ref_beregning
+    inner join ref_uttaksgrad
         on
-            join_kravhode.vedtak_id = ref_beregning.vedtak_id
-            and ref_beregning.total_vinner = '1'
-            and ref_beregning.dato_virk_fom <= current_date
-            and (ref_beregning.dato_virk_tom is null or ref_beregning.dato_virk_tom >= trunc(current_date))
+            join_kravhode.kravhode_id = ref_uttaksgrad.kravhode_id
+            and ref_uttaksgrad.uttaksgrad != 0
+            and ref_uttaksgrad.dato_virk_fom <= current_date
+            and (ref_uttaksgrad.dato_virk_tom is null or ref_uttaksgrad.dato_virk_tom >= trunc(current_date))
 ),
 
+join_beregning_res as (
+    select
+        join_uttaksgrad.*,
+        ref_beregning_res.dato_virk_fom,
+        ref_beregning_res.dato_virk_tom,
+        ref_beregning_res.beregning_info_id,
+        ref_beregning_res.beregning_info_avdod as beregning_info_id_avdod,
+        ref_beregning_res.pen_under_utbet_id
+    from join_uttaksgrad
+    inner join ref_beregning_res
+        on
+            join_uttaksgrad.vedtak_id = ref_beregning_res.vedtak_id
+            and ref_beregning_res.dato_virk_fom <= current_date
+            and (ref_beregning_res.dato_virk_tom is null or ref_beregning_res.dato_virk_tom >= trunc(current_date))
+),
+
+join_pen_under_utbet as (
+    -- todo: sjekke om brutto og netto er samme som i ytelse_komp eller beregning_res
+    select
+        join_beregning_res.*,
+        ref_pen_under_utbet.total_belop_brutto as brutto,
+        ref_pen_under_utbet.total_belop_netto as netto
+    from join_beregning_res
+    inner join ref_pen_under_utbet
+        on join_beregning_res.pen_under_utbet_id = ref_pen_under_utbet.pen_under_utbet_id
+),
+
+join_beregning_res_2011_og_2025 as (
+    select
+        join_pen_under_utbet.*,
+        br_2011.beregning_info_id as beregning_info_id_2016,
+        br_2025.beregning_info_id as beregning_info_id_2025,
+        br_2011.beregning_info_avdod as beregning_info_id_avdod_2016
+    from join_pen_under_utbet
+    left outer join ref_beregning_res br_2011
+        on join_pen_under_utbet.beregning_info_id = br_2011.ber_res_ap_2011_2016_id
+    left outer join ref_beregning_res br_2025
+        on join_pen_under_utbet.beregning_info_id = br_2025.ber_res_ap_2025_2016_id
+),
+
+
+-- prøver å pakke ut ytelse_komp først. Joiner inn på pen_under_utbet_id senere
 transponert_ytelse_komp as (
     select
-        beregning_id,
+        pen_under_utbet_id,
         sum(case when k_ytelse_komp_t = 'GP' then netto end) as gp_netto,
         sum(case when k_ytelse_komp_t = 'TP' then netto end) as tp_netto,
         sum(case when k_ytelse_komp_t = 'PT' then netto end) as pt_netto,
@@ -139,12 +198,13 @@ transponert_ytelse_komp as (
     where
         bruk = '1'
         and opphort = '0'
-    group by beregning_id -- en rad per type ytelse
+    group by pen_under_utbet_id -- en rad per type ytelse
 ),
 
+-- joiner inn ytelse_komp på pen_under_utbet_id
 join_ytelse_komp as (
     select
-        join_beregning.*,
+        join_beregning_res_2011_og_2025.*,
         transponert_ytelse_komp.gp_netto,
         transponert_ytelse_komp.tp_netto,
         transponert_ytelse_komp.pt_netto,
@@ -163,49 +223,23 @@ join_ytelse_komp as (
         transponert_ytelse_komp.ap_kap19_med_gjr_bel,
         transponert_ytelse_komp.ap_kap19_uten_gjr_bel,
         transponert_ytelse_komp.minste_pen_niva
-    from join_beregning
+    from join_beregning_res_2011_og_2025
     left outer join transponert_ytelse_komp
-        on join_beregning.beregning_id = transponert_ytelse_komp.beregning_id
+        on join_beregning_res_2011_og_2025.pen_under_utbet_id = transponert_ytelse_komp.pen_under_utbet_id
 ),
 
+-- legger til kolonner som mangler
 ekstra_kolonner as (
     select
         join_ytelse_komp.*,
-        join_ytelse_komp.red_pga_inst_opph as red_pga_inst_opph_flagg,
-        cast('1967' as varchar2(8)) as grein,
-        100 as uttaksgrad,
-        -1 as pen_under_utbet_id,
-        -1 as beregning_info_id,
-        -1 as beregning_info_id_2016,
-        -1 as beregning_info_id_2025,
-        -1 as beregning_info_id_avdod,
-        -1 as beregning_info_id_avdod_2016,
-        case
-            when join_ytelse_komp.k_minstepensj_t = 'IKKE_MINST_PEN' then '0'
-            when join_ytelse_komp.k_minstepensj_t = 'ER_MINST_PEN' then '1'
-        end as minstepensjonist,
-        case
-            when coalesce(join_ytelse_komp.yug, 0) > 0 then 1
-            else 0
-        end as anvendt_yrkesskade_flagg,
-        case
-            when join_ytelse_komp.k_sak_t = 'AFP' then 1
-            else 0
-        end as afp_lopph_flagg,
-        case
-            when
-                join_ytelse_komp.k_sak_t = 'AFP'
-                and coalesce(join_ytelse_komp.netto, 0) > 0 then 1
-            else 0
-        end as afp_lopph_ytelse_flagg,
-        case
-            when
-                join_ytelse_komp.k_sak_t = 'AFP'
-                and coalesce(join_ytelse_komp.netto, 0) > 0
-                and join_ytelse_komp.k_afp_t = 'FINANS' then 1
-            else 0
-        end as afp_finans_flagg,
-        coalesce(join_ytelse_komp.k_regelverk_t, 'G_REG') as regelverk
+        cast(0 as varchar2(1)) as red_pga_inst_opph_flagg,
+        'ikke1967' as grein,
+        cast(null as number) as beregning_id,
+        cast(null as char(1)) as minstepensjonist,
+        0 as anvendt_yrkesskade_flagg,
+        0 as afp_lopph_flagg,
+        0 as afp_lopph_ytelse_flagg,
+        0 as afp_finans_flagg
     from join_ytelse_komp
 ),
 
