@@ -6,7 +6,7 @@ import requests
 
 def publish_docs(url_suffix="pensjon-pen-dataprodukt"):
     # fra Nada på https://github.com/navikt/dbt-docs#publisering
-    complete_url = "https://dbt.intern.nav.no/docs/PoPe/" + url_suffix
+    complete_url = "https://dbt.intern.nav.no/docs/wendelboe/" + url_suffix
     files = ["target/manifest.json", "target/catalog.json", "target/index.html"]
     multipart_form_data = {}
     for file_path in files:
