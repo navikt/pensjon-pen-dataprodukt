@@ -3,9 +3,9 @@
 
 with
 
-ref_int_overgangsstonad as (
+ref_int_aktive_alder as (
     select *
-    from {{ ref('int_overgangsstonad') }}
+    from {{ ref('int_aktive_alder') }}
 ),
 
 ref_stg_k_afp_t as (
@@ -88,7 +88,7 @@ sette_afp_privat_flagg as (
             ) then 1
             else 0
         end as afp_privat_flagg
-    from ref_int_overgangsstonad aktive
+    from ref_int_aktive_alder aktive
 ),
 
 hente_beregning_info as (
@@ -185,7 +185,7 @@ final as (
         afp_lopph_flagg,
         afp_finans_flagg,
         afp_lopph_ytelse_flagg,
-        overgangsstonad,
+        -- todo overgangsstonad,
         -- nye kolonner i denne modellen
         afp_privat_flagg,
         gjenlevrett_anv,
@@ -198,7 +198,7 @@ final as (
         afp_ordning,
         regelverk_final as regelverk,
         sysdate as kjoretidspunkt,
-        20250101 as periode
+        20250627 as periode
         -- cast('00000000000' as varchar2(11)) as persnr
     from kobler_kodeverk
 )

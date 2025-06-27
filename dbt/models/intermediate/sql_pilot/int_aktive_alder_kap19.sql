@@ -134,7 +134,7 @@ transponert_ytelse_komp as (
         sum(case when k_ytelse_komp_t = 'MIN_NIVA_TILL_PPAR' then netto end) as mpn_sstot_netto,
         sum(case when k_ytelse_komp_t = 'AP_GJT_KAP19' then ap_kap19_med_gjr end) as ap_kap19_med_gjr_bel,
         sum(case when k_ytelse_komp_t = 'AP_GJT_KAP19' then ap_kap19_uten_gjr end) as ap_kap19_uten_gjr_bel,
-        max(k_minstepen_niva) as minste_pen_niva
+        max(k_minstepen_niva) as minste_pen_niva --todo
     from ref_ytelse_komp
     where
         bruk = '1'
@@ -174,12 +174,12 @@ ekstra_kolonner as (
         join_ytelse_komp.red_pga_inst_opph as red_pga_inst_opph_flagg,
         cast('1967' as varchar2(8)) as grein,
         100 as uttaksgrad,
-        -1 as pen_under_utbet_id,
-        -1 as beregning_info_id,
-        -1 as beregning_info_id_2016,
-        -1 as beregning_info_id_2025,
-        -1 as beregning_info_id_avdod,
-        -1 as beregning_info_id_avdod_2016,
+        -1 as pen_under_utbet_id, -- todo
+        -1 as beregning_info_id, -- todo
+        -1 as beregning_info_id_2016, -- todo
+        -1 as beregning_info_id_2025, -- todo
+        -1 as beregning_info_id_avdod, -- todo
+        -1 as beregning_info_id_avdod_2016, -- todo
         case
             when join_ytelse_komp.k_minstepensj_t = 'IKKE_MINST_PEN' then '0'
             when join_ytelse_komp.k_minstepensj_t = 'ER_MINST_PEN' then '1'

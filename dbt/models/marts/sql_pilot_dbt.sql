@@ -20,6 +20,7 @@ final as (
         sak_id,
         vedtak_id,
         kravhode_id,
+        null as person_id, --todo
         grein,
         sakstype,
         uttaksgrad,
@@ -45,7 +46,7 @@ final as (
         afp_lopph_flagg,
         afp_finans_flagg,
         afp_lopph_ytelse_flagg,
-        overgangsstonad,
+        null as overgangsstonad, -- todo
         afp_privat_flagg,
         gjenlevrett_anv,
         red_pga_inst_opph_flagg,
@@ -59,6 +60,7 @@ final as (
         kjoretidspunkt,
         periode
     from ref_int_flere_joins_pilot
+
 )
 
 select * from final

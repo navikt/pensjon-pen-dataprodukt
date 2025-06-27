@@ -1,4 +1,5 @@
 -- int_overgangsstonad
+-- todo partition by ref_int_aktive_alder.vedtak_id order by ref_int_aktive_alder.vedtak_id gir ikke mening
 -- setter flagget overgangsstonad, basert på seed_overgangsstonad og vilkår vedtak
 -- sql-pilot linje 381-393
 
