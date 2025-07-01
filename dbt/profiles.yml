@@ -1,14 +1,36 @@
 pen_dataprodukt:
-  target: pen_oracle
+  target: pen_q2
   outputs:
-    pen_oracle:
+    pen_q2:
       type: oracle
       port: 1521
       threads: 2
       protocol: tcp
-      service: "{{env_var('DBT_ENV_SERVICE_NAME', 'pen_q2_ha')}}"
-      database: "{{env_var('DBT_ENV_DATABASE', 'pen_q2_ha')}}"
+      service: "pen_q2"
+      database: "pen_q2"
       schema: pen_dataprodukt
-      host: "{{env_var('DBT_ENV_SECRET_HOST')}}"
+      host: "{{env_var('DBT_ENV_SECRET_HOST', 'dmv36-scan.adeo.no')}}"
+      user: "{{env_var('DBT_ENV_SECRET_USER')}}"
+      pass: "{{env_var('DBT_ENV_SECRET_PASS')}}"
+    pen_q1:
+      type: oracle
+      port: 1521
+      threads: 2
+      protocol: tcp
+      service: "pen_q1"
+      database: "pen_q1"
+      schema: pen_dataprodukt
+      host: "{{env_var('DBT_ENV_SECRET_HOST', 'dmv06-scan.adeo.no')}}"
+      user: "{{env_var('DBT_ENV_SECRET_USER')}}"
+      pass: "{{env_var('DBT_ENV_SECRET_PASS')}}"
+    pen_prod:
+      type: oracle
+      port: 1521
+      threads: 2
+      protocol: tcp
+      service: "pen"
+      database: "pen"
+      schema: pen_dataprodukt
+      host: "{{env_var('DBT_ENV_SECRET_HOST', 'dm08-scan.adeo.no')}}"
       user: "{{env_var('DBT_ENV_SECRET_USER')}}"
       pass: "{{env_var('DBT_ENV_SECRET_PASS')}}"
