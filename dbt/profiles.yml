@@ -1,13 +1,13 @@
 pen_dataprodukt:
-  target: pen_q2
+  target: pen_oracle
   outputs:
-    pen_q2:
+    pen_oracle:
       type: oracle
       port: 1521
       threads: 2
       protocol: tcp
-      service: pen_q2_ha
-      database: pen_q2_ha
+      service: "{{env_var('DBT_ENV_SERVICE_NAME', 'pen_q2_ha')}}"
+      database: "{{env_var('DBT_ENV_DATABASE', 'pen_q2_ha')}}"
       schema: pen_dataprodukt
       host: "{{env_var('DBT_ENV_SECRET_HOST')}}"
       user: "{{env_var('DBT_ENV_SECRET_USER')}}"
