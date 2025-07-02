@@ -292,6 +292,7 @@ aktive as
  
  union all
 
+-- distinct k_regelverk_t == G_REG,  
  select v.sak_id, 
         v.vedtak_id, 
         v.kravhode_id,
