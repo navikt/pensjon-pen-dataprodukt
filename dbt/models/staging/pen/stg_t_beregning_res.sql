@@ -1,6 +1,7 @@
 -- stg_t_beregning_res
 
 select
+    beregning_res_id,
     vedtak_id,
     dato_virk_fom,
     dato_virk_tom,

@@ -3,6 +3,7 @@
 select
     vedtak_id,
     sak_id,
+    person_id,
     kravhode_id,
     eo_resultat_ut_id,
     k_sak_t,

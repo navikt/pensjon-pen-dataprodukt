@@ -5,6 +5,8 @@ models:
     description: >
         ...
     columns:
+      - name: beregning_res_id
+        description: 'Unik id for beregningsresultatet'
       - name: vedtak_id
         description: 'Unik id for vedtaket'
       - name: dato_virk_fom

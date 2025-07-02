@@ -1,0 +1,7 @@
+version: 2
+
+models:
+  - name: sql_pilot_dbt
+    description: "Model for SQL Pilot DBT. Add a detailed description here."
+  - name: sql_pilot_original
+    description: "Model for SQL Pilot original. Add a detailed description here."

@@ -10,6 +10,8 @@ models:
     columns:
       - name: vedtak_id
         description: 'Unik id for vedtaket'
+      - name: person_id
+        description: 'Unik id for person '
       - name: sak_id
         description: 'Unik id for saken som vedtaket er knyttet til'
       - name: kravhode_id
