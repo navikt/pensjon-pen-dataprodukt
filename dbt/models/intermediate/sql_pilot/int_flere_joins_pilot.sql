@@ -197,8 +197,7 @@ final as (
         aldersytelseflagg,
         afp_ordning,
         regelverk_final as regelverk,
-        sysdate as kjoretidspunkt,
-        20250627 as periode
+        sysdate as kjoretidspunkt
         -- cast('00000000000' as varchar2(11)) as persnr
     from kobler_kodeverk
 )

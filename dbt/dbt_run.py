@@ -15,7 +15,6 @@ DBT_DOCS_URL = "https://dbt.intern.nav.no/docs/wendelboe/pensjon-pen-dataprodukt
 
 
 def set_secrets_as_envs(secret_name: str):
-
     secrets = secretmanager.SecretManagerServiceClient()
     secret = secrets.access_secret_version(name=secret_name)
     secret_str = secret.payload.data.decode("UTF-8")
@@ -53,6 +52,12 @@ if __name__ == "__main__":
     else:
         raise KeyError("Environment variable TEAM_GCP_SECRET_PATH")
 
+    valid_db_targets = ["pen_q2", "pen_q1", "pen_prod_lesekopi", "pen_prod"]
+    if dbt_target := os.getenv("DBT_DB_TARGET"):
+        if dbt_target not in valid_db_targets:
+            raise ValueError(
+                f"Ugyldig DBT_DB_TARGET: {dbt_target}. Velg mellom: {valid_db_targets}"
+            )
     project_path = Path(__file__).parent
     log_path = Path(__file__).parent / "logs/dbt.log"
 

@@ -1,5 +1,5 @@
 pen_dataprodukt:
-  target: pen_prod
+  target: "{{env_var('DBT_DB_TARGET', 'pen_q2')}}"
   outputs:
     pen_q2:
       type: oracle

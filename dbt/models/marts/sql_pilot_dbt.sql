@@ -50,15 +50,15 @@ final as (
         afp_privat_flagg,
         gjenlevrett_anv,
         red_pga_inst_opph_flagg,
-        tt_anvendt_kap19_antall, -- må skjønne hva disse skal være
-        tt_anvendt_kap20_antall, -- må skjønne hva disse skal være
+        tt_anvendt_kap19_antall, -- todo
+        tt_anvendt_kap20_antall, -- todo
         minstepensjon,
         anvendt_yrkesskade_flagg,
         aldersytelseflagg,
         afp_ordning,
         regelverk,
         kjoretidspunkt,
-        periode
+        to_char(trunc(sysdate), 'YYYYMMDD') as periode
     from ref_int_flere_joins_pilot
 
 )
