@@ -20,7 +20,7 @@ final as (
         sak_id,
         vedtak_id,
         kravhode_id,
-        null as person_id, --todo
+        cast(null as varchar2(50)) as person_id, --todo
         grein,
         sakstype,
         uttaksgrad,
@@ -46,7 +46,7 @@ final as (
         afp_lopph_flagg,
         afp_finans_flagg,
         afp_lopph_ytelse_flagg,
-        null as overgangsstonad, -- todo
+        cast(null as varchar2(50)) as overgangsstonad, -- todo
         afp_privat_flagg,
         gjenlevrett_anv,
         red_pga_inst_opph_flagg,
