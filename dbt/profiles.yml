@@ -1,5 +1,5 @@
 pen_dataprodukt:
-  target: pen_q2
+  target: pen_prod
   outputs:
     pen_q2:
       type: oracle
@@ -23,7 +23,7 @@ pen_dataprodukt:
       host: "{{env_var('DBT_ENV_SECRET_HOST', 'dmv06-scan.adeo.no')}}"
       user: "{{env_var('DBT_ENV_SECRET_USER')}}"
       pass: "{{env_var('DBT_ENV_SECRET_PASS')}}"
-    pen_prod:
+    pen_prod_lesekopi:
       type: oracle
       port: 1521
       threads: 2
@@ -32,5 +32,16 @@ pen_dataprodukt:
       database: "pen"
       schema: pen_dataprodukt
       host: "{{env_var('DBT_ENV_SECRET_HOST', 'dm08-scan.adeo.no')}}"
+      user: "{{env_var('DBT_ENV_SECRET_USER')}}"
+      pass: "{{env_var('DBT_ENV_SECRET_PASS')}}"
+    pen_prod:
+      type: oracle
+      port: 1521
+      threads: 2
+      protocol: tcp
+      service: "pen_ha"
+      database: "pen_ha"
+      schema: pen_dataprodukt
+      host: "{{env_var('DBT_ENV_SECRET_HOST', 'dmv18-scan.adeo.no')}}"
       user: "{{env_var('DBT_ENV_SECRET_USER')}}"
       pass: "{{env_var('DBT_ENV_SECRET_PASS')}}"
