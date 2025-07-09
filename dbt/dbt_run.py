@@ -67,10 +67,6 @@ if __name__ == "__main__":
     if dbt_models := os.getenv("DBT_MODELS", None):
         command = command + ["--select", dbt_models]
 
-    print(
-        f"target: {dbt_target}. command: {command}. host: {os.getenv('DBT_ENV_SECRET_HOST')}. user: {os.getenv('DBT_ENV_SECRET_USER')}"
-    )
-
     dbt = dbtRunner()
     dbt_deps = dbt.invoke(DBT_BASE_COMMAND + ["deps"])
     output: dbtRunnerResult = dbt.invoke(DBT_BASE_COMMAND + command)
