@@ -9,9 +9,14 @@ from google.cloud import secretmanager
 
 from dbt.cli.main import dbtRunner, dbtRunnerResult
 
+logging.basicConfig(level=logging.INFO)
+
 DBT_BASE_COMMAND = ["--no-use-colors", "--log-format-file", "json"]
 SCHEMA = "pen_dataprodukt"
 DBT_DOCS_URL = "https://dbt.intern.nav.no/docs/wendelboe/pensjon-pen-dataprodukt"
+
+print("Tester om print går til loggen i Airflow")
+logging.info("Tester om logging går til loggen i Airflow")
 
 
 def set_secrets_as_envs(secret_name: str):
@@ -44,8 +49,6 @@ def publish_docs(dbt_docs_url: str = DBT_DOCS_URL):
     res.raise_for_status()
 
 
-logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
-
 if __name__ == "__main__":
     if secret_name := os.getenv("TEAM_GCP_SECRET_PATH"):
         set_secrets_as_envs(secret_name=secret_name)
@@ -55,11 +58,7 @@ if __name__ == "__main__":
     valid_db_targets = ["pen_q2", "pen_q1", "pen_prod_lesekopi", "pen_prod"]
     if dbt_target := os.getenv("DBT_DB_TARGET"):
         if dbt_target not in valid_db_targets:
-            raise ValueError(
-                f"Ugyldig DBT_DB_TARGET: {dbt_target}. Velg mellom: {valid_db_targets}"
-            )
-    project_path = Path(__file__).parent
-    log_path = Path(__file__).parent / "logs/dbt.log"
+            raise ValueError(f"Ugyldig DBT_DB_TARGET: {dbt_target}. Velg mellom: {valid_db_targets}")
 
     os.environ["TZ"] = "Europe/Oslo"
     time.tzset()
