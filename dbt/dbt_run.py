@@ -1,10 +1,9 @@
-import requests
 import os
 import time
 import json
-import logging
-from pathlib import Path
 import shlex
+import logging
+import requests
 from google.cloud import secretmanager
 
 from dbt.cli.main import dbtRunner, dbtRunnerResult
@@ -67,6 +66,10 @@ if __name__ == "__main__":
     command = shlex.split(os.getenv("DBT_COMMAND", "build"))
     if dbt_models := os.getenv("DBT_MODELS", None):
         command = command + ["--select", dbt_models]
+
+    print(
+        f"target: {dbt_target}. command: {command}. host: {os.getenv('DBT_ENV_SECRET_HOST')}. user: {os.getenv('DBT_ENV_SECRET_USER')}"
+    )
 
     dbt = dbtRunner()
     dbt_deps = dbt.invoke(DBT_BASE_COMMAND + ["deps"])
