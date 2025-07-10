@@ -52,8 +52,8 @@ tvvx as (
         left outer join ref_vilkar_vedtak
             on ref_int_aktive_alder.vedtak_id = ref_vilkar_vedtak.vedtak_id
         where
-            ref_vilkar_vedtak.dato_virk_fom <= current_date
-            and (ref_vilkar_vedtak.dato_virk_tom >= trunc(current_date) or ref_vilkar_vedtak.dato_virk_tom is null)
+            ref_vilkar_vedtak.dato_virk_fom <= to_date({{ var("periode") }}, 'YYYYMMDD')
+            and (ref_vilkar_vedtak.dato_virk_tom >= to_date({{ var("periode") }}, 'YYYYMMDD') or ref_vilkar_vedtak.dato_virk_tom is null)
     )
     where rn = 1
 ),

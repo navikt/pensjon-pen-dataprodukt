@@ -16,6 +16,10 @@ macro-paths: ["macros"]
 analysis-paths: ["analyses"]
 
 
+vars:
+  # Defaulter til den første dagen i måneden til kjøretidspunktet
+  periode: "to_char(trunc(current_date, 'MM'), 'YYYYMMDD')"
+
 
 models:
   pen_dataprodukt:

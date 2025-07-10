@@ -58,9 +58,12 @@ final as (
         afp_ordning,
         regelverk,
         kjoretidspunkt,
-        to_char(trunc(sysdate), 'YYYYMMDD') as periode
+        {{ var("periode") }} as periode
     from ref_int_flere_joins_pilot
-
+    where 1 = 1
+    {% if is_incremental() %}
+      and {{ var("periode") }} not in (select distinct periode from {{ this }})
+    {% endif %}
 )
 
 select * from final

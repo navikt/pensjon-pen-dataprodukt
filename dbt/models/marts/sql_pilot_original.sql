@@ -127,19 +127,19 @@ yk_bres as
         max(k_minstepen_niva) as MINSTE_PEN_NIVA
    from pen.t_vedtak v
         inner join pen.t_uttaksgrad ug on ug.kravhode_id = v.kravhode_id 
-                                      and ug.dato_virk_fom <= current_date
-                                      and (ug.dato_virk_tom is null or ug.dato_virk_tom >= trunc(current_date))
+                                      and ug.dato_virk_fom <= to_date({{ var("periode") }}, 'YYYYMMDD')
+                                      and (ug.dato_virk_tom is null or ug.dato_virk_tom >= to_date({{ var("periode") }}, 'YYYYMMDD'))
                                       and ug.uttaksgrad <> 0
         inner join pen.t_beregning_res br on br.vedtak_id = v.vedtak_id
-                                         and br.dato_virk_fom <= current_date
-                                         and (br.dato_virk_tom is null or br.dato_virk_tom >= trunc(current_date))
+                                         and br.dato_virk_fom <= to_date({{ var("periode") }}, 'YYYYMMDD')
+                                         and (br.dato_virk_tom is null or br.dato_virk_tom >= to_date({{ var("periode") }}, 'YYYYMMDD'))
         inner join PEN.t_pen_under_utbet puu on puu.pen_under_utbet_id = br.pen_under_utbet_id 
         inner join pen.t_ytelse_komp yk on yk.pen_under_utbet_id = puu.pen_under_utbet_id
                                        and yk.bruk = '1'
                                        and yk.opphort = '0'
   where v.k_sak_t = 'ALDER'  
-    and v.dato_lopende_fom <= current_date
-    and (v.dato_lopende_tom is null or v.dato_lopende_tom >= trunc(current_date))
+    and v.dato_lopende_fom <= to_date({{ var("periode") }}, 'YYYYMMDD')
+    and (v.dato_lopende_tom is null or v.dato_lopende_tom >= to_date({{ var("periode") }}, 'YYYYMMDD'))
   group by v.vedtak_id, v.sak_id, v.kravhode_id, yk.pen_under_utbet_id
 ),
 
@@ -199,14 +199,14 @@ yk_ber as
    from pen.t_vedtak v
         inner join pen.t_beregning b on b.vedtak_id = v.vedtak_id
                                     and b.total_vinner = '1'
-                                    and b.dato_virk_fom <= current_date
-                                    and (b.dato_virk_tom is null or b.dato_virk_tom >= trunc(current_date))
+                                    and b.dato_virk_fom <= to_date({{ var("periode") }}, 'YYYYMMDD')
+                                    and (b.dato_virk_tom is null or b.dato_virk_tom >= to_date({{ var("periode") }}, 'YYYYMMDD'))
         inner join pen.t_ytelse_komp yk on yk.beregning_id = b.beregning_id
                                        and yk.bruk = '1'
                                        and yk.opphort = '0'
   where v.k_sak_t = 'ALDER'  
-    and v.dato_lopende_fom <= current_date
-    and (v.dato_lopende_tom is null or v.dato_lopende_tom >= trunc(current_date))
+    and v.dato_lopende_fom <= to_date({{ var("periode") }}, 'YYYYMMDD')
+    and (v.dato_lopende_tom is null or v.dato_lopende_tom >= to_date({{ var("periode") }}, 'YYYYMMDD'))
   group by v.vedtak_id, v.sak_id, v.kravhode_id, yk.beregning_id
 ),
 
@@ -280,12 +280,12 @@ aktive as
         inner join pen.t_kravhode kh on kh.kravhode_id = v.kravhode_id
                                     and kh.sak_id = v.sak_id
         inner join pen.t_uttaksgrad ug on ug.kravhode_id = v.kravhode_id 
-                                      and ug.dato_virk_fom <= current_date
-                                      and (ug.dato_virk_tom is null or ug.dato_virk_tom >= trunc(current_date))
+                                      and ug.dato_virk_fom <= to_date({{ var("periode") }}, 'YYYYMMDD')
+                                      and (ug.dato_virk_tom is null or ug.dato_virk_tom >= to_date({{ var("periode") }}, 'YYYYMMDD'))
                                       and ug.uttaksgrad <> 0
         inner join pen.t_beregning_res br on br.vedtak_id = v.vedtak_id
-                                         and br.dato_virk_fom <= current_date
-                                         and (br.dato_virk_tom is null or br.dato_virk_tom >= trunc(current_date))
+                                         and br.dato_virk_fom <= to_date({{ var("periode") }}, 'YYYYMMDD')
+                                         and (br.dato_virk_tom is null or br.dato_virk_tom >= to_date({{ var("periode") }}, 'YYYYMMDD'))
         inner join PEN.t_pen_under_utbet puu on puu.pen_under_utbet_id = br.pen_under_utbet_id
         LEFT outer JOIN PEN.T_BEREGNING_RES BR_2011 ON BR_2011.ber_res_ap_2011_2016_id = br.beregning_res_id 
         LEFT outer JOIN PEN.T_BEREGNING_RES BR_2025 ON BR_2025.ber_res_ap_2025_2016_id = br.beregning_res_id 
@@ -380,8 +380,8 @@ aktive as
         inner join pen.t_kravhode kh on kh.kravhode_id = v.kravhode_id
         inner join pen.t_beregning b on b.vedtak_id = v.vedtak_id
                                     and b.total_vinner = '1'
-                                    and b.dato_virk_fom <= current_date
-                                    and (b.dato_virk_tom is null or b.dato_virk_tom >= trunc(current_date))    
+                                    and b.dato_virk_fom <= to_date({{ var("periode") }}, 'YYYYMMDD')
+                                    and (b.dato_virk_tom is null or b.dato_virk_tom >= to_date({{ var("periode") }}, 'YYYYMMDD'))    
 ),
 
 --------------------------------------------------
@@ -395,8 +395,8 @@ tvvx as
                 row_number() over(partition by aktive.vedtak_id order by aktive.vedtak_id) as rn
            from aktive 
                 left outer join pen.t_vilkar_vedtak tvv on tvv.vedtak_id = aktive.vedtak_id
-          where tvv.dato_virk_fom <= current_date
-            and (tvv.dato_virk_tom >= trunc(current_date) or tvv.dato_virk_tom is null)
+          where tvv.dato_virk_fom <= to_date({{ var("periode") }}, 'YYYYMMDD')
+            and (tvv.dato_virk_tom >= to_date({{ var("periode") }}, 'YYYYMMDD') or tvv.dato_virk_tom is null)
          ) x
    where x.rn = 1
 )
@@ -406,7 +406,7 @@ tvvx as
 -- Selve uttrekket av data skjer her.
 -- Rader fra CTE-ene ovenfor, men henter også inn noen flere opplysninger.
 ------------------------------------------------------------------------------
-SELECT 20241201 as periode,
+SELECT {{ var("periode") }} as periode,
        aktive.grein,
        aktive.vedtak_id,
        aktive.sak_id,
@@ -490,20 +490,20 @@ SELECT 20241201 as periode,
           when exists (select null
                          from pen.t_vedtak v2
                         where v2.person_id = aktive.person_id
-                          and v2.dato_lopende_fom <= trunc(current_date)
-                          and (v2.dato_lopende_tom is null or v2.dato_lopende_tom >= trunc(current_date))
+                          and v2.dato_lopende_fom <= to_date({{ var("periode") }}, 'YYYYMMDD')
+                          and (v2.dato_lopende_tom is null or v2.dato_lopende_tom >= to_date({{ var("periode") }}, 'YYYYMMDD'))
                           and v2.k_sak_t = 'AFP_PRIVAT'
                           and not exists (select null
                                             from PEN.T_UTTAKSGRAD u2 
                                            where u2.sak_id = v2.sak_id 
-                                             and u2.dato_virk_fom <= trunc(current_date) 
-                                             and (u2.DATO_VIRK_TOM is null or u2.DATO_VIRK_TOM >= trunc(current_date)) 
+                                             and u2.dato_virk_fom <= to_date({{ var("periode") }}, 'YYYYMMDD') 
+                                             and (u2.DATO_VIRK_TOM is null or u2.DATO_VIRK_TOM >= to_date({{ var("periode") }}, 'YYYYMMDD')) 
                                              and u2.uttaksgrad = 0)
                        ) then 1
           else 0
        end as AFP_PRIVAT_FLAGG,
        aktive.AFP_FINANS_FLAGG,
-       current_date as kjoretidspunkt           
+       sysdate as kjoretidspunkt           
   FROM aktive 
  
        ---- AFP-ordning, regelverk og sakstype -----
