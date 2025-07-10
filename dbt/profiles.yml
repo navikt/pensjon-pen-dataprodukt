@@ -39,8 +39,8 @@ pen_dataprodukt:
       port: 1521
       threads: 2
       protocol: tcp
-      service: "pen_ha"
-      database: "pen_ha"
+      service: "pen"
+      database: "pen"
       schema: pen_dataprodukt
       host: "{{env_var('DBT_ENV_SECRET_HOST', 'dmv18-scan.adeo.no')}}"
       user: "{{env_var('DBT_ENV_SECRET_USER')}}"
