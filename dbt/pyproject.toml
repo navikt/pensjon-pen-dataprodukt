@@ -22,4 +22,9 @@ dev = [
     "black>=24.10.0",
     "google-cloud-secret-manager>=2.24.0",
     "sqlfluff>=3.3.0",
+    "ruff>=0.12.1",
 ]
+
+[tool.ruff]
+include = ["*.py", "*.ipynb"]
+line-length = 120
