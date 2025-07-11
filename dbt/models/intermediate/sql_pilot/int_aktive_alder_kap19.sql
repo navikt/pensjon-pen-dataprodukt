@@ -78,7 +78,7 @@ aktive_alder_vedtak as (
     where
         ref_vedtak.k_sak_t = 'ALDER'
         and ref_vedtak.dato_lopende_fom <= {{ periode_sluttdato(var("periode")) }}
-        and (ref_vedtak.dato_lopende_tom is null or ref_vedtak.dato_lopende_tom >= {{ periode_sluttdato(var("periode")) }})
+        and (ref_vedtak.dato_lopende_tom is null or ref_vedtak.dato_lopende_tom >= trunc({{ periode_sluttdato(var("periode")) }}))
 ),
 
 join_kravhode as (
@@ -111,7 +111,7 @@ join_beregning as (
             join_kravhode.vedtak_id = ref_beregning.vedtak_id
             and ref_beregning.total_vinner = '1'
             and ref_beregning.dato_virk_fom <= {{ periode_sluttdato(var("periode")) }}
-            and (ref_beregning.dato_virk_tom is null or ref_beregning.dato_virk_tom >= {{ periode_sluttdato(var("periode")) }})
+            and (ref_beregning.dato_virk_tom is null or ref_beregning.dato_virk_tom >= trunc({{ periode_sluttdato(var("periode")) }}))
 ),
 
 transponert_ytelse_komp as (

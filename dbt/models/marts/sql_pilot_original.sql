@@ -128,18 +128,18 @@ yk_bres as
    from pen.t_vedtak v
         inner join pen.t_uttaksgrad ug on ug.kravhode_id = v.kravhode_id 
                                       and ug.dato_virk_fom <= {{ periode_sluttdato(var("periode")) }}
-                                      and (ug.dato_virk_tom is null or ug.dato_virk_tom >= {{ periode_sluttdato(var("periode")) }})
+                                      and (ug.dato_virk_tom is null or ug.dato_virk_tom >= trunc({{ periode_sluttdato(var("periode")) }}))
                                       and ug.uttaksgrad <> 0
         inner join pen.t_beregning_res br on br.vedtak_id = v.vedtak_id
                                          and br.dato_virk_fom <= {{ periode_sluttdato(var("periode")) }}
-                                         and (br.dato_virk_tom is null or br.dato_virk_tom >= {{ periode_sluttdato(var("periode")) }})
+                                         and (br.dato_virk_tom is null or br.dato_virk_tom >= trunc({{ periode_sluttdato(var("periode")) }}))
         inner join PEN.t_pen_under_utbet puu on puu.pen_under_utbet_id = br.pen_under_utbet_id 
         inner join pen.t_ytelse_komp yk on yk.pen_under_utbet_id = puu.pen_under_utbet_id
                                        and yk.bruk = '1'
                                        and yk.opphort = '0'
   where v.k_sak_t = 'ALDER'  
     and v.dato_lopende_fom <= {{ periode_sluttdato(var("periode")) }}
-    and (v.dato_lopende_tom is null or v.dato_lopende_tom >= {{ periode_sluttdato(var("periode")) }})
+    and (v.dato_lopende_tom is null or v.dato_lopende_tom >= trunc({{ periode_sluttdato(var("periode")) }}))
   group by v.vedtak_id, v.sak_id, v.kravhode_id, yk.pen_under_utbet_id
 ),
 
@@ -200,13 +200,13 @@ yk_ber as
         inner join pen.t_beregning b on b.vedtak_id = v.vedtak_id
                                     and b.total_vinner = '1'
                                     and b.dato_virk_fom <= {{ periode_sluttdato(var("periode")) }}
-                                    and (b.dato_virk_tom is null or b.dato_virk_tom >= {{ periode_sluttdato(var("periode")) }})
+                                    and (b.dato_virk_tom is null or b.dato_virk_tom >= trunc({{ periode_sluttdato(var("periode")) }}))
         inner join pen.t_ytelse_komp yk on yk.beregning_id = b.beregning_id
                                        and yk.bruk = '1'
                                        and yk.opphort = '0'
   where v.k_sak_t = 'ALDER'  
     and v.dato_lopende_fom <= {{ periode_sluttdato(var("periode")) }}
-    and (v.dato_lopende_tom is null or v.dato_lopende_tom >= {{ periode_sluttdato(var("periode")) }})
+    and (v.dato_lopende_tom is null or v.dato_lopende_tom >= trunc({{ periode_sluttdato(var("periode")) }}))
   group by v.vedtak_id, v.sak_id, v.kravhode_id, yk.beregning_id
 ),
 
@@ -281,11 +281,11 @@ aktive as
                                     and kh.sak_id = v.sak_id
         inner join pen.t_uttaksgrad ug on ug.kravhode_id = v.kravhode_id 
                                       and ug.dato_virk_fom <= {{ periode_sluttdato(var("periode")) }}
-                                      and (ug.dato_virk_tom is null or ug.dato_virk_tom >= {{ periode_sluttdato(var("periode")) }})
+                                      and (ug.dato_virk_tom is null or ug.dato_virk_tom >= trunc({{ periode_sluttdato(var("periode")) }}))
                                       and ug.uttaksgrad <> 0
         inner join pen.t_beregning_res br on br.vedtak_id = v.vedtak_id
                                          and br.dato_virk_fom <= {{ periode_sluttdato(var("periode")) }}
-                                         and (br.dato_virk_tom is null or br.dato_virk_tom >= {{ periode_sluttdato(var("periode")) }})
+                                         and (br.dato_virk_tom is null or br.dato_virk_tom >= trunc({{ periode_sluttdato(var("periode")) }}))
         inner join PEN.t_pen_under_utbet puu on puu.pen_under_utbet_id = br.pen_under_utbet_id
         LEFT outer JOIN PEN.T_BEREGNING_RES BR_2011 ON BR_2011.ber_res_ap_2011_2016_id = br.beregning_res_id 
         LEFT outer JOIN PEN.T_BEREGNING_RES BR_2025 ON BR_2025.ber_res_ap_2025_2016_id = br.beregning_res_id 
@@ -381,7 +381,7 @@ aktive as
         inner join pen.t_beregning b on b.vedtak_id = v.vedtak_id
                                     and b.total_vinner = '1'
                                     and b.dato_virk_fom <= {{ periode_sluttdato(var("periode")) }}
-                                    and (b.dato_virk_tom is null or b.dato_virk_tom >= {{ periode_sluttdato(var("periode")) }})    
+                                    and (b.dato_virk_tom is null or b.dato_virk_tom >= trunc({{ periode_sluttdato(var("periode")) }}))    
 ),
 
 --------------------------------------------------
@@ -396,7 +396,7 @@ tvvx as
            from aktive 
                 left outer join pen.t_vilkar_vedtak tvv on tvv.vedtak_id = aktive.vedtak_id
           where tvv.dato_virk_fom <= {{ periode_sluttdato(var("periode")) }}
-            and (tvv.dato_virk_tom >= {{ periode_sluttdato(var("periode")) }} or tvv.dato_virk_tom is null)
+            and (tvv.dato_virk_tom >= trunc({{ periode_sluttdato(var("periode")) }}) or tvv.dato_virk_tom is null)
          ) x
    where x.rn = 1
 )
@@ -491,13 +491,13 @@ SELECT {{ var("periode") }} as periode,
                          from pen.t_vedtak v2
                         where v2.person_id = aktive.person_id
                           and v2.dato_lopende_fom <= {{ periode_sluttdato(var("periode")) }}
-                          and (v2.dato_lopende_tom is null or v2.dato_lopende_tom >= {{ periode_sluttdato(var("periode")) }})
+                          and (v2.dato_lopende_tom is null or v2.dato_lopende_tom >= trunc({{ periode_sluttdato(var("periode")) }}))
                           and v2.k_sak_t = 'AFP_PRIVAT'
                           and not exists (select null
                                             from PEN.T_UTTAKSGRAD u2 
                                            where u2.sak_id = v2.sak_id 
                                              and u2.dato_virk_fom <= {{ periode_sluttdato(var("periode")) }} 
-                                             and (u2.DATO_VIRK_TOM is null or u2.DATO_VIRK_TOM >= {{ periode_sluttdato(var("periode")) }}) 
+                                             and (u2.DATO_VIRK_TOM is null or u2.DATO_VIRK_TOM >= trunc({{ periode_sluttdato(var("periode")) }})) 
                                              and u2.uttaksgrad = 0)
                        ) then 1
           else 0

@@ -53,7 +53,7 @@ tvvx as (
             on ref_int_aktive_alder.vedtak_id = ref_vilkar_vedtak.vedtak_id
         where
             ref_vilkar_vedtak.dato_virk_fom <= {{ periode_sluttdato(var("periode")) }}
-            and (ref_vilkar_vedtak.dato_virk_tom >= {{ periode_sluttdato(var("periode")) }} or ref_vilkar_vedtak.dato_virk_tom is null)
+            and (ref_vilkar_vedtak.dato_virk_tom >= trunc({{ periode_sluttdato(var("periode")) }}) or ref_vilkar_vedtak.dato_virk_tom is null)
     )
     where rn = 1
 ),

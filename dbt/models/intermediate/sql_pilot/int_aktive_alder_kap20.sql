@@ -102,7 +102,7 @@ aktive_alder_vedtak as (
     where
         ref_vedtak.k_sak_t = 'ALDER'
         and ref_vedtak.dato_lopende_fom <= {{ periode_sluttdato(var("periode")) }}
-        and (ref_vedtak.dato_lopende_tom is null or ref_vedtak.dato_lopende_tom >= {{ periode_sluttdato(var("periode")) }})
+        and (ref_vedtak.dato_lopende_tom is null or ref_vedtak.dato_lopende_tom >= trunc({{ periode_sluttdato(var("periode")) }}))
 ),
 
 join_kravhode as (
@@ -128,7 +128,7 @@ join_uttaksgrad as (
             join_kravhode.kravhode_id = ref_uttaksgrad.kravhode_id
             and ref_uttaksgrad.uttaksgrad != 0
             and ref_uttaksgrad.dato_virk_fom <= {{ periode_sluttdato(var("periode")) }}
-            and (ref_uttaksgrad.dato_virk_tom is null or ref_uttaksgrad.dato_virk_tom >= {{ periode_sluttdato(var("periode")) }})
+            and (ref_uttaksgrad.dato_virk_tom is null or ref_uttaksgrad.dato_virk_tom >= trunc({{ periode_sluttdato(var("periode")) }}))
 ),
 
 join_beregning_res as (
@@ -144,7 +144,7 @@ join_beregning_res as (
         on
             join_uttaksgrad.vedtak_id = ref_beregning_res.vedtak_id
             and ref_beregning_res.dato_virk_fom <= {{ periode_sluttdato(var("periode")) }}
-            and (ref_beregning_res.dato_virk_tom is null or ref_beregning_res.dato_virk_tom >= {{ periode_sluttdato(var("periode")) }})
+            and (ref_beregning_res.dato_virk_tom is null or ref_beregning_res.dato_virk_tom >= trunc({{ periode_sluttdato(var("periode")) }}))
 ),
 
 join_pen_under_utbet as (

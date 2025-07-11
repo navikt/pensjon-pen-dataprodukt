@@ -74,7 +74,7 @@ sette_afp_privat_flagg as (
                 where
                     ref_vedtak.vedtak_id = aktive.vedtak_id -- endret fra person_id
                     and ref_vedtak.dato_lopende_fom <= {{ periode_sluttdato(var("periode")) }}
-                    and (ref_vedtak.dato_lopende_tom is null or ref_vedtak.dato_lopende_tom >= {{ periode_sluttdato(var("periode")) }})
+                    and (ref_vedtak.dato_lopende_tom is null or ref_vedtak.dato_lopende_tom >= trunc({{ periode_sluttdato(var("periode")) }}))
                     and ref_vedtak.k_sak_t = 'AFP_PRIVAT'
                     and not exists (
                         select null
@@ -82,7 +82,7 @@ sette_afp_privat_flagg as (
                         where
                             ref_uttaksgrad.sak_id = ref_vedtak.sak_id
                             and ref_uttaksgrad.dato_virk_fom <= {{ periode_sluttdato(var("periode")) }}
-                            and (ref_uttaksgrad.dato_virk_tom is null or ref_uttaksgrad.dato_virk_tom >= {{ periode_sluttdato(var("periode")) }})
+                            and (ref_uttaksgrad.dato_virk_tom is null or ref_uttaksgrad.dato_virk_tom >= trunc({{ periode_sluttdato(var("periode")) }}))
                             and ref_uttaksgrad.uttaksgrad = 0
                     )
             ) then 1
