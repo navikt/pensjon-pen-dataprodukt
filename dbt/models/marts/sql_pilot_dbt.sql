@@ -57,7 +57,7 @@ final as (
         aldersytelseflagg,
         afp_ordning,
         regelverk,
-        kjoretidspunkt,
+        sysdate as kjoretidspunkt,
         {{ var("periode") }} as periode
     from ref_int_flere_joins_pilot
     where 1 = 1

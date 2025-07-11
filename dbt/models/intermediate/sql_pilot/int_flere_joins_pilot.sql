@@ -73,16 +73,16 @@ sette_afp_privat_flagg as (
                 from ref_vedtak
                 where
                     ref_vedtak.vedtak_id = aktive.vedtak_id -- endret fra person_id
-                    and ref_vedtak.dato_lopende_fom <= to_date({{ var("periode") }}, 'YYYYMMDD')
-                    and (ref_vedtak.dato_lopende_tom is null or ref_vedtak.dato_lopende_tom >= to_date({{ var("periode") }}, 'YYYYMMDD'))
+                    and ref_vedtak.dato_lopende_fom <= {{ periode_sluttdato(var("periode")) }}
+                    and (ref_vedtak.dato_lopende_tom is null or ref_vedtak.dato_lopende_tom >= {{ periode_sluttdato(var("periode")) }})
                     and ref_vedtak.k_sak_t = 'AFP_PRIVAT'
                     and not exists (
                         select null
                         from ref_uttaksgrad
                         where
                             ref_uttaksgrad.sak_id = ref_vedtak.sak_id
-                            and ref_uttaksgrad.dato_virk_fom <= to_date({{ var("periode") }}, 'YYYYMMDD')
-                            and (ref_uttaksgrad.dato_virk_tom is null or ref_uttaksgrad.dato_virk_tom >= to_date({{ var("periode") }}, 'YYYYMMDD'))
+                            and ref_uttaksgrad.dato_virk_fom <= {{ periode_sluttdato(var("periode")) }}
+                            and (ref_uttaksgrad.dato_virk_tom is null or ref_uttaksgrad.dato_virk_tom >= {{ periode_sluttdato(var("periode")) }})
                             and ref_uttaksgrad.uttaksgrad = 0
                     )
             ) then 1
@@ -196,8 +196,7 @@ final as (
         anvendt_yrkesskade_flagg_final as anvendt_yrkesskade_flagg,
         aldersytelseflagg,
         afp_ordning,
-        regelverk_final as regelverk,
-        sysdate as kjoretidspunkt
+        regelverk_final as regelverk
         -- cast('00000000000' as varchar2(11)) as persnr
     from kobler_kodeverk
 )

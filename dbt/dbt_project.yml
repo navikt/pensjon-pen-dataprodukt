@@ -18,7 +18,8 @@ analysis-paths: ["analyses"]
 
 vars:
   # Defaulter til den første dagen i måneden til kjøretidspunktet
-  periode: "to_char(trunc(current_date, 'MM'), 'YYYYMMDD')"
+  # periode er på formatet YYYYMM som integer
+  periode: "to_char(trunc(current_date + interval '-1' month, 'MM'), 'YYYYMM')"
 
 
 models:
