@@ -14,9 +14,6 @@ DBT_BASE_COMMAND = ["--no-use-colors", "--log-format-file", "json"]
 SCHEMA = "pen_dataprodukt"
 DBT_DOCS_URL = "https://dbt.intern.nav.no/docs/wendelboe/pensjon-pen-dataprodukt"
 
-print("Tester om print går til loggen i Airflow")
-logging.info("Tester om logging går til loggen i Airflow")
-
 
 def set_secrets_as_envs(secret_name: str):
     secrets = secretmanager.SecretManagerServiceClient()
