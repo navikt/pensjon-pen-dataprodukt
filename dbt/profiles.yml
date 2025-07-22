@@ -9,8 +9,8 @@ pen_dataprodukt:
       service: "pen_q2"
       database: "pen_q2"
       schema: pen_dataprodukt
-      host: "{{env_var('DBT_ENV_SECRET_HOST', 'dmv36-scan.adeo.no')}}"
-      user: "{{env_var('DBT_ENV_SECRET_USER')}}"
+      host: "{{env_var('DBT_ENV_HOST', 'dmv36-scan.adeo.no')}}"
+      user: "{{env_var('DBT_ENV_USER')}}"
       pass: "{{env_var('DBT_ENV_SECRET_PASS')}}"
     pen_q1:
       type: oracle
@@ -20,8 +20,8 @@ pen_dataprodukt:
       service: "pen_q1"
       database: "pen_q1"
       schema: pen_dataprodukt
-      host: "{{env_var('DBT_ENV_SECRET_HOST', 'dmv06-scan.adeo.no')}}"
-      user: "{{env_var('DBT_ENV_SECRET_USER')}}"
+      host: "{{env_var('DBT_ENV_HOST', 'dmv06-scan.adeo.no')}}"
+      user: "{{env_var('DBT_ENV_USER')}}"
       pass: "{{env_var('DBT_ENV_SECRET_PASS')}}"
     pen_prod_lesekopi:
       type: oracle
@@ -31,8 +31,8 @@ pen_dataprodukt:
       service: "pen"
       database: "pen"
       schema: pen_dataprodukt
-      host: "{{env_var('DBT_ENV_SECRET_HOST', 'dm08-scan.adeo.no')}}"
-      user: "{{env_var('DBT_ENV_SECRET_USER')}}"
+      host: "{{env_var('DBT_ENV_HOST', 'dm08-scan.adeo.no')}}"
+      user: "{{env_var('DBT_ENV_USER')}}"
       pass: "{{env_var('DBT_ENV_SECRET_PASS')}}"
     pen_prod:
       type: oracle
@@ -42,6 +42,6 @@ pen_dataprodukt:
       service: "pen"
       database: "pen"
       schema: pen_dataprodukt
-      host: "{{env_var('DBT_ENV_SECRET_HOST', 'dmv18-scan.adeo.no')}}"
-      user: "{{env_var('DBT_ENV_SECRET_USER')}}"
+      host: "{{env_var('DBT_ENV_HOST', 'dmv18-scan.adeo.no')}}"
+      user: "{{env_var('DBT_ENV_USER')}}"
       pass: "{{env_var('DBT_ENV_SECRET_PASS')}}"

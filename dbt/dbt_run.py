@@ -23,9 +23,9 @@ def set_secrets_as_envs(secret_name: str):
     secret = secrets.access_secret_version(name=secret_name)
     secret_str = secret.payload.data.decode("UTF-8")
     secrets = json.loads(secret_str)
-    os.environ["DBT_ENV_SECRET_HOST"] = secrets["DB_HOST"]
+    os.environ["DBT_ENV_HOST"] = secrets["DB_HOST"]
     os.environ["DBT_ENV_SERVICE_NAME"] = secrets["DB_SERVICE_NAME"]
-    os.environ["DBT_ENV_SECRET_USER"] = secrets["DB_USER"]
+    os.environ["DBT_ENV_USER"] = secrets["DB_USER"]
     os.environ["DBT_ENV_SECRET_PASS"] = secrets["DB_PASSWORD"]
     logging.info("DBT miljøvariabler er lastet inn")
 
