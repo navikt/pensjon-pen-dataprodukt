@@ -8,7 +8,7 @@ from google.cloud import secretmanager
 
 from dbt.cli.main import dbtRunner, dbtRunnerResult
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, force=True)
 
 DBT_BASE_COMMAND = ["--no-use-colors", "--log-format-file", "json"]
 SCHEMA = "pen_dataprodukt"
