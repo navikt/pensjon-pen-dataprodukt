@@ -20,3 +20,5 @@ analysis/
 .idea/
 
 .env
+
+__pycache__/
