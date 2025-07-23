@@ -5,7 +5,7 @@
 -- det er uansett ikke relevant enda
 
 {{ config(
-    materialized='table',
+    materialized='incremental',
 ) }}
 
 with
