@@ -1,0 +1,19 @@
+version: 2
+
+# tester både timestamp og kolonne-basert snapshot
+
+snapshots:
+  - name: snapshot_vedtak
+    relation: ref('stg_t_vedtak_snapshot')
+    config:
+      strategy: timestamp
+      unique_key: vedtak_id
+      updated_at: dato_endret
+      hard_deletes: invalidate
+  - name: snapshot_vedtak_kolonne
+    relation: ref('stg_t_vedtak_snapshot')
+    config:
+      strategy: check
+      check_cols: [ dato_lopende_fom, dato_lopende_tom ]
+      unique_key: vedtak_id
+      hard_deletes: invalidate

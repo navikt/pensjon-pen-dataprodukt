@@ -7,6 +7,7 @@ select
     kravhode_id,
     eo_resultat_ut_id,
     k_sak_t,
+    dato_endret,
     dato_virk_fom,
     dato_virk_tom,
     dato_lopende_fom,

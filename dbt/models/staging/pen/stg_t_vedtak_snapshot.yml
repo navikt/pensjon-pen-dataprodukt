@@ -1,0 +1,19 @@
+version: 2
+
+models:
+  - name: stg_t_vedtak_snapshot
+    description: >
+        Daglig snapshot av pen.t_vedtak.
+        Brukes for å kunne spore endringer på en sak over tid når løpende_fom/tom endres.
+        Ingen løpende vedtak skal være løpende.
+    columns:
+      - name: sak_id
+        description: 'Unik id for saken som vedtaket er knyttet til. En person har i utgangspunktet samme sak_id for én ytelse hele livet.'
+      - name: vedtak_id
+        description: 'Unik id for vedtaket. Hvis en person får en endring, feks G-regulering, vil det første vedtaket få løpende_tom satt, og et nytt vedtak opprettes med ny vedtak_id.'
+      - name: dato_endret
+        description: 'Tidspunktet vedtaket ble endret i kildesystemet'
+      - name: dato_lopende_fom
+        description: 'Virkningsdatoen, fra og med, vedtaket er løpende.'
+      - name: dato_lopende_tom
+        description: 'Eventuell dato hvor vedtaket ikke lenger er løpende. Endres når det kommer nytt løpende vedtak, fordi ingen løpende vedtak er overlappende.'

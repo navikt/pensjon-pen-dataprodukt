@@ -23,6 +23,8 @@ models:
         tests:
           - accepted_values:
               values: ['ALDER', 'UFOREP', 'KRIGSP', 'BARNEP', 'AFP_PRIVAT', 'AFP', 'GJENLEV', 'GAM_YRK', 'FAM_PL', 'GENRL', 'OMSORG']
+      - name: dato_endret
+        description: 'Dato som raden sist ble endret i kildesystemet.'
       - name: dato_virk_fom
         description: 'Dato som vedtaket skal gjelde fra. NOT NULL'
       - name: dato_virk_tom
