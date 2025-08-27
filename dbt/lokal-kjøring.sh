@@ -12,8 +12,8 @@ set -a
 source "$(dirname "$0")/.env"
 set +a
 
-if [[ -z "$DBT_ENV_SECRET_USER" || -z "$DBT_ENV_SECRET_HOST" ]]; then
-    echo "Error: DBT_ENV_SECRET_USER og DBT_ENV_SECRET_HOST miljøvariabler ikke satt"
+if [[ -z "$DBT_ENV_USER" || -z "$DBT_ENV_HOST" ]]; then
+    echo "Error: DBT_ENV_USER og DBT_ENV_HOST miljøvariabler ikke satt"
 fi
 
 #!/bin/bash
@@ -40,5 +40,5 @@ export DBT_ENV_SECRET_PASS
 
 # Print environment variables
 printf "Miljøvariabler satt:\n"
-printf "DBT_ENV_SECRET_USER:    %s\n" "$DBT_ENV_SECRET_USER"
+printf "DBT_ENV_USER:    %s\n" "$DBT_ENV_USER"
 printf "ORA_PYTHON_DRIVER_TYPE: %s\n" "$ORA_PYTHON_DRIVER_TYPE"
