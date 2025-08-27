@@ -6,11 +6,11 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     # se https://github.com/navikt/dvh-images/blob/main/airflow/dbt/pyproject.toml
-    "dbt-oracle>=1.9.0",
+    "dbt-oracle>=1.9.3",
     "oracledb>=2.3.0",
     "requests>=2.32.3",
     "db-dtypes>=1.2.0",
-    "dbt-core>=1.9.1",
+    "dbt-core>=1.9.8",
 ]
 
 
