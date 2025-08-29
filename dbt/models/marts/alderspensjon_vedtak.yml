@@ -1,0 +1,67 @@
+version: 2
+
+models:
+  - name: alderspensjon_vedtak
+    description: "Vedtaksinformasjon for alderspensjon."
+    columns:
+
+# id
+      - name: periode
+      - name: person_id
+      - name: sak_id
+      - name: kravhode_id
+      - name: vedtak_id
+
+
+# plankekjøringer
+      - name: k_sak_t
+        description: "Type sak. Mulige verdier er ALDER i dette dataproduktet."
+      - name: k_vedtak_t
+        description: "Type vedtak. Mulige verdier for løpende vedtak er FORGANG, GOMR, ENDRING, REGULERING, SAMMENSTOT"
+      - name: k_regelverk_t
+        description: "Type regelverk. Kap 19. og/eller kap. 20."
+      - name: k_minstepen_nivaa
+        description: "Minstepensjonsnivå."
+      - name: grad
+        description: >
+          Pensjonsgraden i %(GJENL, UFOR, ALDER eller AFP grad) i perioden. 
+          Avhengig av hvilken stønadstype som velges i rapporten, så er denne graden; uttaksgrad for ALDER, uføregrad for UFOR, gjenlevendegrad for GJENL, og AFP grad for AFP.
+          Uttaksgrad alder er ikke bare uttaksgrad satt i PESYS, men for personer med gammelt regelverk en beregnet grad (Netto beløp på beregning dividert med brutto beløp på beregning).
+          Mulig på FF_GRAD.GRAD
+
+# gravejobber
+      - name: pro_rata_teller
+      - name: pro_rata_nevner
+      - name: pensjonsbeholdning
+      - name: yrkesskade_anvendt
+        description: "Fra grensesnitt: Indikerer om personen har yrkesskade rett ved siden av pensjonen."
+      - name: institusjonsopphold_info
+        description: "Grensesnittet har noe om avkorting på grunn av institusjonsopphold."  
+      - name: tt_anv_kap19
+        description: "Anvendt trygdetid etter kap. 19. Mulig fra beregning."
+      - name: tt_anv_kap20
+        description: "Anvendt trygdetid etter kap. 20. Mulig fra beregning."
+      - name: pensjonsbeholdning
+      - name: pensjonsbeholdning_garanti
+      - name: pensjonsbeholdning_garanti_tillegg
+      - name: bostatus_grunnlag
+        description: "Beskrivelse av grunnlag rolle. Dette vil typisk være ektefelle, barn, far og liknende."
+      - name: bostatus_bor_med
+        description: "Beskrivelse av bor med type. Dette vil typisk være ja gift, nei avdød og liknende."
+
+
+
+
+
+
+
+# datoer
+      - name: dato_lopende_fom
+        description: "Fom dato for når vedtaket er løpende/gydlig. Blir overskrevet hvis vedtaket blir erstattet."
+      - name: dato_lopende_tom
+        description: "Tom dato for når vedtaket er løpende/gydlig. Blir overskrevet hvis vedtaket blir erstattet."
+      - name: dato_virk_fom
+        description: "Fom dato for når vedtaket skal ha virkning, eller har hatt virkning. Blir ikke overskrevet hvis vedtaket blir erstattet."
+      - name: dato_virk_tom
+        description: "Tom dato for når vedtaket skal ha virkning, eller har hatt virkning. Blir ikke overskrevet hvis vedtaket blir erstattet."
+      - name: dato_vedtak
