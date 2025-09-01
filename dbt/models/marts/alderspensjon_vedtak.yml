@@ -2,18 +2,20 @@ version: 2
 
 models:
   - name: alderspensjon_vedtak
-    description: "Vedtaksinformasjon for alderspensjon."
+    config:
+      tags: "work-in-progress"
+    description: >
+      Vedtaksinformasjon for alderspensjon.
+      OBS! Tabellen er work-in-progress og har bare dummy-verdier for kolonnene.
     columns:
-
-# id
+      # id
       - name: periode
       - name: person_id
       - name: sak_id
       - name: kravhode_id
       - name: vedtak_id
 
-
-# plankekjøringer
+      # plankekjøringer
       - name: k_sak_t
         description: "Type sak. Mulige verdier er ALDER i dette dataproduktet."
       - name: k_vedtak_t
@@ -29,14 +31,14 @@ models:
           Uttaksgrad alder er ikke bare uttaksgrad satt i PESYS, men for personer med gammelt regelverk en beregnet grad (Netto beløp på beregning dividert med brutto beløp på beregning).
           Mulig på FF_GRAD.GRAD
 
-# gravejobber
+      # gravejobber
       - name: pro_rata_teller
       - name: pro_rata_nevner
       - name: pensjonsbeholdning
       - name: yrkesskade_anvendt
         description: "Fra grensesnitt: Indikerer om personen har yrkesskade rett ved siden av pensjonen."
       - name: institusjonsopphold_info
-        description: "Grensesnittet har noe om avkorting på grunn av institusjonsopphold."  
+        description: "Grensesnittet har noe om avkorting på grunn av institusjonsopphold."
       - name: tt_anv_kap19
         description: "Anvendt trygdetid etter kap. 19. Mulig fra beregning."
       - name: tt_anv_kap20
@@ -49,13 +51,7 @@ models:
       - name: bostatus_bor_med
         description: "Beskrivelse av bor med type. Dette vil typisk være ja gift, nei avdød og liknende."
 
-
-
-
-
-
-
-# datoer
+      # datoer
       - name: dato_lopende_fom
         description: "Fom dato for når vedtaket er løpende/gydlig. Blir overskrevet hvis vedtaket blir erstattet."
       - name: dato_lopende_tom

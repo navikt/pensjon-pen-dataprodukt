@@ -28,9 +28,9 @@ select
     1 as bostatus_bor_med,
     'a' as gradendringstatus,
 
-    '2024-01-01'::date as dato_lopende_fom,
-    '2024-01-01'::date as dato_lopende_tom,
-    '2024-01-01'::date as dato_virk_fom,
-    '2024-01-01'::date as dato_virk_tom,
-    '2024-01-01'::date as dato_vedtak
+    '2024-01-01' as dato_lopende_fom,
+    '2024-01-01' as dato_lopende_tom,
+    '2024-01-01' as dato_virk_fom,
+    '2024-01-01' as dato_virk_tom,
+    '2024-01-01' as dato_vedtak
 from dual
