@@ -28,10 +28,10 @@ pen_dataprodukt:
       port: 1521
       threads: 2
       protocol: tcp
-      service: "pen"
+      service: "pen_les"
       database: "pen"
       schema: pen_dataprodukt
-      host: "{{env_var('DBT_ENV_HOST', 'dm08-scan.adeo.no')}}"
+      host: "{{env_var('DBT_ENV_HOST', 'dmv14-scan.adeo.no')}}"
       user: "{{env_var('DBT_ENV_USER')}}"
       pass: "{{env_var('DBT_ENV_SECRET_PASS')}}"
     pen_prod:
