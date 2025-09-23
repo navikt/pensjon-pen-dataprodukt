@@ -10,10 +10,12 @@ snapshots:
       unique_key: vedtak_id
       updated_at: dato_endret
       hard_deletes: invalidate
-  - name: snapshot_vedtak_kolonne
-    relation: ref('stg_t_vedtak_snapshot')
+
+  - name: snapshot_vedtak_analyse
+    relation: ref('stg_t_vedtak')
     config:
-      strategy: check
-      check_cols: [ dato_lopende_fom, dato_lopende_tom ]
+      strategy: timestamp
       unique_key: vedtak_id
+      updated_at: dato_endret
       hard_deletes: invalidate
+      tags: ['work-in-progress']
