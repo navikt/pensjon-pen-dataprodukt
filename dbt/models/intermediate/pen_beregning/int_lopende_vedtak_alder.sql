@@ -31,7 +31,7 @@ join_kravhode as (
     from ref_vedtak
     inner join ref_kravhode
         on ref_vedtak.kravhode_id = ref_kravhode.kravhode_id
-),
+)
 
 select
     vedtak_id,
