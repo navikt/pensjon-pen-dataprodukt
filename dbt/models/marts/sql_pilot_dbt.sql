@@ -61,9 +61,9 @@ final as (
         {{ var("periode") }} as periode
     from ref_int_flere_joins_pilot
     where 1 = 1
-    {% if is_incremental() %}
-      and {{ var("periode") }} not in (select distinct periode from {{ this }})
-    {% endif %}
+    --{% if is_incremental() %}
+    --  and {{ var("periode") }} not in (select distinct periode from {{ this }})
+    --{% endif %}
 )
 
 select * from final
