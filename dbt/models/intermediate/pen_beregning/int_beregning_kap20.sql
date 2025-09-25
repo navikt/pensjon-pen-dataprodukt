@@ -13,7 +13,6 @@ ref_int_lopende_vedtak_alder as (
 ),
 
 ref_beregning_res as (
-    -- kapittel 19
     select
         vedtak_id,
         dato_virk_fom,
@@ -88,9 +87,12 @@ select
     k_regelverk_t,
     dato_lopende_fom,
     dato_lopende_tom,
-    uttaksgrad,
+
+    brutto,
+    netto,
+
     pen_under_utbet_id,
     beregning_info_id,
-    brutto,
-    netto
+
+    uttaksgrad
 from join_pen_under_utbet
