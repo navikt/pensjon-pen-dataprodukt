@@ -1,8 +1,11 @@
 [sqlfluff]
-dialect = ansi
+dialect = oracle
 templater = jinja
 max_line_length = 0
 exclude_rules = LT05,AL01
 
 [sqlfluff:indentation]
 tab_space_size = 4
+
+[sqlfluff:templater:jinja]
+load_macros_from_path= ./macros

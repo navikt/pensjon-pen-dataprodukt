@@ -10,9 +10,7 @@ ref_int_lopende_vedtak_alder as (
         dato_lopende_tom,
         k_regelverk_t
     from {{ ref('int_lopende_vedtak_alder') }}
-    -- from pen.t_vedtak
 ),
-
 
 ref_beregning_res as (
     -- kapittel 19
@@ -26,7 +24,6 @@ ref_beregning_res as (
         ber_res_ap_2011_2016_id,
         ber_res_ap_2025_2016_id
     from {{ ref('stg_t_beregning_res') }}
-    -- from pen.t_beregning_res
 ),
 
 ref_uttaksgrad as (
@@ -36,7 +33,6 @@ ref_uttaksgrad as (
         dato_virk_tom,
         uttaksgrad
     from {{ ref('stg_t_uttaksgrad') }}
-    -- from pen.t_uttaksgrad
 ),
 
 ref_pen_under_utbet as (
@@ -45,7 +41,6 @@ ref_pen_under_utbet as (
         total_belop_brutto,
         total_belop_netto
     from {{ ref('stg_t_pen_under_utbet') }}
-    -- from pen.t_pen_under_utbet
 ),
 
 join_uttaksgrad as (
@@ -67,9 +62,9 @@ join_beregning_res as (
         br.pen_under_utbet_id,
         br.beregning_info_id
     from join_uttaksgrad
-    inner join pen.t_beregning_res br 
-        on 
-            br.vedtak_id = join_uttaksgrad.vedtak_id
+    inner join ref_beregning_res br
+        on
+            join_uttaksgrad.vedtak_id = br.vedtak_id
             and br.dato_virk_fom <= {{ periode_sluttdato(var("periode")) }}
             and (br.dato_virk_tom is null or br.dato_virk_tom >= trunc({{ periode_sluttdato(var("periode")) }}))
 ),
