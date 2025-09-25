@@ -7,7 +7,8 @@ ref_int_lopende_vedtak_alder as (
         kravhode_id,
         k_sak_t,
         dato_lopende_fom,
-        dato_lopende_tom
+        dato_lopende_tom,
+        k_regelverk_t
     from {{ ref('int_lopende_vedtak_alder') }}
     -- from pen.t_vedtak
 ),
@@ -84,7 +85,17 @@ join_pen_under_utbet as (
         on join_beregning_res.pen_under_utbet_id = ref_pen_under_utbet.pen_under_utbet_id
 )
 
-
-select * from join_pen_under_utbet
-
-
+select
+    vedtak_id,
+    sak_id,
+    kravhode_id,
+    k_sak_t,
+    k_regelverk_t,
+    dato_lopende_fom,
+    dato_lopende_tom,
+    uttaksgrad,
+    pen_under_utbet_id,
+    beregning_info_id,
+    brutto,
+    netto
+from join_pen_under_utbet
