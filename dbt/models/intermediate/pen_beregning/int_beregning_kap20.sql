@@ -49,6 +49,7 @@ ref_beregning_info as (
         mottar_min_pensjonsniva,
         tt_anv,
         yrksk_anv,
+        yrksk_grad,
         gjenlevrett_anv,
         inst_opph_anv
     from {{ ref('stg_t_beregning_info') }}
@@ -83,42 +84,48 @@ join_beregning_res as (
             and (br.dato_virk_tom is null or br.dato_virk_tom >= trunc({{ periode_sluttdato(var("periode")) }}))
 ),
 
+-- 2025-> Nytt regelverk med NY opptjening (N_REG_N_OPPTJ)
+-- ELLER
+-- 2011->2016 Nytt regelverk med GAMMEL opptjening (N_REG_G_OPPTJ) 
 join_beregning_info_direkte as (
     select
         join_beregning_res.*,
-        ref_beregning_info.tt_anv
-        -- , ref_beregning_info.inst_opph ...
+        ref_beregning_info.mottar_min_pensjonsniva,
+        ref_beregning_info.inst_opph_anv,
+        ref_beregning_info.gjenlevrett_anv,
+        ref_beregning_info.yrksk_anv,
+        ref_beregning_info.yrksk_grad,
+        case when join_beregning_res.k_regelverk_t = 'N_REG_G_OPPTJ' then ref_beregning_info.tt_anv end as tt_anv_g_opptj,
+        case when join_beregning_res.k_regelverk_t = 'N_REG_N_OPPTJ' then ref_beregning_info.tt_anv end as tt_anv_n_opptj
     from join_beregning_res
     inner join ref_beregning_info
         on join_beregning_res.beregning_info_id = ref_beregning_info.beregning_info_id
--- where k_regelverk_t inb ('N_REG_G_OPPTJ', 'N_REG_N_OPPTJ') -- 2011 og 2025
+    where join_beregning_res.k_regelverk_t in ('N_REG_G_OPPTJ', 'N_REG_N_OPPTJ') -- 2011 og 2025
 ),
 
+-- 2016<->2025 er overgangskull
+-- Nytt regelverk med gammel OG ny opptjening (N_REG_G_N_OPPTJ) 
 join_beregning_info_overgang_2016 as (
     select
+        -- beregning_info_id alltid null for disse radene
         join_beregning_res.*,
-        -- de har både kap19 og kap 20 beregning_info, men ingen beregning_info direkte på beregning_res
-        br_2011.beregning_info_id as beregning_info_id_2011,
-        bi_2011.tt_anv as tt_anv_2011,
-        bi_2011.mottar_min_pensjonsniva as mottar_min_pensjonsniva_2011,
-        bi_2011.inst_opph_anv as inst_opph_anv_2011,
-        bi_2011.gjenlevrett_anv as gjenlevrett_anv_2011,
-        bi_2011.yrksk_anv as yrksk_anv_2011,
+        -- beregning_info gammel opptjening er kilde for inst_opph, mottar_min_pensjonsniva, gjenlevrett_anv, yrksk_anv og yrksk_grad
+        -- i beregning_info ny opptjening er ikke feltene satt (unntak tt_anv)
+        bi_2011.tt_anv as tt_anv_g_opptj,
+        bi_2011.mottar_min_pensjonsniva, -- dekker også 2025_2016 opptjening (21 rader)
+        bi_2011.inst_opph_anv, -- dekker også 2025_2016 opptjening (1 rad)
+        bi_2011.gjenlevrett_anv,
+        bi_2011.yrksk_anv,
+        bi_2011.yrksk_grad,
 
-        br_2025.beregning_info_id as beregning_info_id_2025,
-        bi_2025.tt_anv as tt_anv_2025,
-        bi_2025.mottar_min_pensjonsniva as mottar_min_pensjonsniva_2025,
-        bi_2025.inst_opph_anv as inst_opph_anv_2025,
-        bi_2025.gjenlevrett_anv as gjenlevrett_anv_2025,
-        bi_2025.yrksk_anv as yrksk_anv_2025
-
+        bi_2025.tt_anv as tt_anv_n_opptj
     from
         join_beregning_res
-        {# join på ber_res_ap_2011_2016_id og ber_res_ap_2025_2016_id #}
-        {# deretter join på to beregning_id, en for 2011 og en for 2025 #}
+    -- hent beregning info kap 19
     left join ref_beregning_res br_2011 on join_beregning_res.beregning_res_id = br_2011.ber_res_ap_2011_2016_id
     left join ref_beregning_info bi_2011 on br_2011.beregning_info_id = bi_2011.beregning_info_id
 
+    -- hent beregning info kap 20
     left join ref_beregning_res br_2025 on join_beregning_res.beregning_res_id = br_2025.ber_res_ap_2025_2016_id
     left join ref_beregning_info bi_2025 on br_2025.beregning_info_id = bi_2025.beregning_info_id
     where
@@ -126,20 +133,58 @@ join_beregning_info_overgang_2016 as (
 ),
 
 union_beregning_info as (
-    select * from join_beregning_info_direkte
+    select
+        vedtak_id,
+        sak_id,
+        kravhode_id,
+        k_sak_t,
+        dato_lopende_fom,
+        dato_lopende_tom,
+        k_regelverk_t,
+        uttaksgrad,
+        beregning_res_id,
+        pen_under_utbet_id,
+        beregning_info_id,
+        mottar_min_pensjonsniva,
+        inst_opph_anv,
+        gjenlevrett_anv,
+        yrksk_anv,
+        yrksk_grad,
+        tt_anv_g_opptj,
+        tt_anv_n_opptj
+    from join_beregning_info_direkte
     union all
-    select * from join_beregning_info_overgang_2016
+    select
+        vedtak_id,
+        sak_id,
+        kravhode_id,
+        k_sak_t,
+        dato_lopende_fom,
+        dato_lopende_tom,
+        k_regelverk_t,
+        uttaksgrad,
+        beregning_res_id,
+        pen_under_utbet_id,
+        beregning_info_id,
+        mottar_min_pensjonsniva,
+        inst_opph_anv,
+        gjenlevrett_anv,
+        yrksk_anv,
+        yrksk_grad,
+        tt_anv_g_opptj,
+        tt_anv_n_opptj
+    from join_beregning_info_overgang_2016
 ),
 
 join_pen_under_utbet as (
     -- todo: sjekke om brutto og netto er samme som i ytelse_komp eller beregning_res
     select
-        join_beregning_res.*,
+        union_beregning_info.*,
         ref_pen_under_utbet.total_belop_brutto as brutto,
         ref_pen_under_utbet.total_belop_netto as netto
-    from join_beregning_res
+    from union_beregning_info
     inner join ref_pen_under_utbet
-        on join_beregning_res.pen_under_utbet_id = ref_pen_under_utbet.pen_under_utbet_id
+        on union_beregning_info.pen_under_utbet_id = ref_pen_under_utbet.pen_under_utbet_id
 )
 
 select
@@ -147,15 +192,20 @@ select
     sak_id,
     kravhode_id,
     k_sak_t,
-    k_regelverk_t,
     dato_lopende_fom,
     dato_lopende_tom,
-
-    brutto,
-    netto,
-
+    k_regelverk_t,
+    uttaksgrad,
+    beregning_res_id,
     pen_under_utbet_id,
     beregning_info_id,
-
-    uttaksgrad
+    mottar_min_pensjonsniva,
+    inst_opph_anv,
+    gjenlevrett_anv,
+    yrksk_anv,
+    yrksk_grad,
+    tt_anv_g_opptj,
+    tt_anv_n_opptj,
+    brutto,
+    netto
 from join_pen_under_utbet
