@@ -1,4 +1,7 @@
 -- som tabell???
+
+{{ config(materialized='table') }} -- gjør at spørringene på denne blir like
+
 with
 
 ref_vedtak as (

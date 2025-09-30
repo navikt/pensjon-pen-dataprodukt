@@ -25,7 +25,7 @@ ref_vedtak as (
         k_sak_t,
         dato_lopende_fom,
         dato_lopende_tom
-    from {{ ref('stg_t_vedtak') }}
+    from {{ ref('int_lopende_vedtak_alder') }}
     -- from pen.t_vedtak
 ),
 
