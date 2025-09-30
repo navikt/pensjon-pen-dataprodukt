@@ -10,5 +10,6 @@ select
     beregning_id,
     bruk,
     netto,
+    fradrag,
     opphort
 from {{ source('pen', 't_ytelse_komp') }}

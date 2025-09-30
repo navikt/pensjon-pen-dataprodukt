@@ -3,39 +3,43 @@ version: 2
 models:
   - name: stg_t_ytelse_komp
     description: >
-        Superklassen for ytelseskomponentene.
-        Samler alle tabeller om ytelse i en felles tabell hvor feltet k_ytelse_komp_t angit typen ytelse. Eksempler:
-        - GP = grunnpensjon
-        - GAP = garantipensjon
-        - IP = inntektspensjon
-        - TP = tilleggspensjon
-        - ET = ektefelletillegg
-        - PT = pensjonstillegg
-        - ST = særtillegg
-        - TFB = barnetillegg fellesbarn
-        - TSB = barnetillegg særkullsbarn
-        - UT_ORDINER = uføretrygd ordinær
-        - SKJERMT = skjermingstillegg
-        - AP_GJT = gjenlevendetillegg
-        - AP_GJT_KAP19 = gjenlevendetillegg kapittel 19
-        - MIN_NIVA_TILL_INDV = minstenivåtillegg individuelt
-        - MIN_NIVA_TILL_PPAR = minstenivåtillegg pensjonistpar
+      Superklassen for ytelseskomponentene.
+      Samler alle tabeller om ytelse i en felles tabell hvor feltet k_ytelse_komp_t angit typen ytelse. Eksempler:
+      - GP = grunnpensjon
+      - GAP = garantipensjon
+      - IP = inntektspensjon
+      - TP = tilleggspensjon
+      - ET = ektefelletillegg
+      - PT = pensjonstillegg
+      - ST = særtillegg
+      - TFB = barnetillegg fellesbarn
+      - TSB = barnetillegg særkullsbarn
+      - UT_ORDINER = uføretrygd ordinær
+      - SKJERMT = skjermingstillegg
+      - AP_GJT = gjenlevendetillegg
+      - AP_GJT_KAP19 = gjenlevendetillegg kapittel 19
+      - MIN_NIVA_TILL_INDV = minstenivåtillegg individuelt
+      - MIN_NIVA_TILL_PPAR = minstenivåtillegg pensjonistpar
     columns:
       - name: ytelse_komp_id
-        description: 'Unik id for ytelseskomponenten'
+        description: "Unik id for ytelseskomponenten"
       - name: k_ytelse_komp_t
-        description: 'Angir typen ytelse raden tilhører. Se kodetabell t_k_ytelse_komp_t for beskrivelser.'
+        description: "Angir typen ytelse raden tilhører. Se kodetabell t_k_ytelse_komp_t for beskrivelser."
       - name: pen_under_utbet_id
-        description: '...' # todo: spørre Magne
+        description: "Id for å koble til t_beregning_res, altså kap20, dvs 2011, 2016 og 2025."
+      - name: beregning_id
+        description: "Id for å koble til t_beregning, altså kap19, dvs tom 2010."
       - name: netto
-        description: 'Avrundet månedsbeløp etter avkorting.'
+        description: "Avrundet månedsbeløp etter avkorting, altså det som faktisk utbetales."
       - name: bruk
-        description: 'Sier om denne komponenten er brukt i utregningen av pensjonen. Settes til 0 dersom saksbehandler gjør en manuell overstyring av ytelseskomponenten. Heter erBrukt i domenemodellen.'
+        description: "Sier om denne komponenten er brukt i utregningen av pensjonen. Settes til 0 dersom saksbehandler gjør en manuell overstyring av ytelseskomponenten. Heter erBrukt i domenemodellen."
       - name: ap_kap19_med_gjr
-        description: 'Sum av GP, TP og PenT for AP2011 medregnet GJR.'
+        description: "Sum av GP, TP og PenT for AP2011 medregnet GJR."
       - name: ap_kap19_uten_gjr
-        description: 'Sum av GP, TP og PenT for AP2011 uten GJR.'
+        description: "Sum av GP, TP og PenT for AP2011 uten GJR."
       - name: k_minstepen_niva
-        description: 'Minstepensjonsnivå. Kan være HOY, LAV, ORDINAER, SAERSKILT, HOY_ENSLIG eller (null).'
+        description: "Minstepensjonsnivå. Kan være HOY, LAV, ORDINAER, SAERSKILT, HOY_ENSLIG eller (null)."
       - name: opphort
-        description: 'Flagg som angir om dette er en representant for en opphort ytelseskompenent.'
+        description: "Flagg som angir om dette er en representant for en opphort ytelseskompenent."
+      - name: fradrag
+        description: "Fradraget på den enkelte ytelseskomponenten, altså brutto - netto = fradrag."
