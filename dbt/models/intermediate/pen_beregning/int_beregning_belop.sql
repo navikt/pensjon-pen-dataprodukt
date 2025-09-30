@@ -1,0 +1,141 @@
+-- henter beløp for beregninger
+
+with
+
+ref_int_beregning as (
+    select
+        vedtak_id,
+        sak_id,
+        beregning_id,
+        pen_under_utbet_id,
+        brutto,
+        netto
+    from {{ ref('int_beregning') }}
+),
+
+ref_ytelse_komp as (
+    select
+        beregning_id,
+        pen_under_utbet_id,
+        k_ytelse_komp_t,
+        ap_kap19_med_gjr, -- kobles inn tidligere?
+        ap_kap19_uten_gjr, -- kobles inn tidligere?
+        k_minstepen_niva, -- kobles inn tidligere?
+        netto,
+        opphort,
+        fradrag,
+        bruk
+    from {{ ref('stg_t_ytelse_komp') }}
+),
+
+transponert_ytelse_komp as (
+    -- selv om det er sum per type ytelse, så er det kun en rad per beregning_id eller pen_under_utbet_id
+    select
+        beregning_id,
+        pen_under_utbet_id,
+        sum(case when k_ytelse_komp_t = 'GP' and netto > 0 and fradrag > 0 then 1 else 0 end) as gp_avkorting_flagg, -- todo: sjekk output
+        sum(fradrag) as sum_fradrag, -- todo: sjekk output
+        max(k_minstepen_niva) as max_k_minstepen_niva,
+        min(k_minstepen_niva) as min_k_minstepen_niva, -- todo: sjekk diff på min og max
+
+        sum(case when k_ytelse_komp_t = 'GP' then netto end) as gp_netto,
+        sum(case when k_ytelse_komp_t = 'TP' then netto end) as tp_netto,
+        sum(case when k_ytelse_komp_t = 'PT' then netto end) as pt_netto,
+        sum(case when k_ytelse_komp_t = 'ST' then netto end) as st_netto,
+        sum(case when k_ytelse_komp_t = 'IP' then netto end) as ip_netto,
+        sum(case when k_ytelse_komp_t = 'ET' then netto end) as et_netto,
+        sum(case when k_ytelse_komp_t = 'VT' then netto end) as vt_netto,
+        sum(case when k_ytelse_komp_t = 'GAP' then netto end) as gap_netto,
+        sum(case when k_ytelse_komp_t = 'GAT' then netto end) as gat_netto,
+        sum(case when k_ytelse_komp_t = 'AP_GJT' then netto end) as gjt_netto,
+        sum(case when k_ytelse_komp_t = 'AFP_T' then netto end) as afp_t_netto,
+        sum(case when k_ytelse_komp_t = 'TSB' then netto end) as saerkull_netto,
+        sum(case when k_ytelse_komp_t = 'TFB' then netto end) as barn_felles_netto,
+        sum(case when k_ytelse_komp_t = 'SKJERMT' then netto end) as skjermt_netto,
+        sum(case when k_ytelse_komp_t = 'AP_GJT_KAP19' then netto end) as gjt_k19_netto,
+        sum(case when k_ytelse_komp_t = 'UT_ORDINER' then netto end) as ufor_sum_ut_ord_netto,
+        sum(case when k_ytelse_komp_t = 'AFP_LIVSVARIG' then netto end) as afp_livsvarig_netto,
+        sum(case when k_ytelse_komp_t = 'MIN_NIVA_TILL_INDV' then netto end) as mpn_indiv_netto,
+        sum(case when k_ytelse_komp_t = 'MIN_NIVA_TILL_PPAR' then netto end) as mpn_sstot_netto,
+        sum(case when k_ytelse_komp_t = 'AP_GJT_KAP19' then ap_kap19_med_gjr end) as ap_kap19_med_gjr_bel,
+        sum(case when k_ytelse_komp_t = 'AP_GJT_KAP19' then ap_kap19_uten_gjr end) as ap_kap19_uten_gjr_bel
+    from ref_ytelse_komp
+    where
+        bruk = '1'
+        and opphort = '0'
+    group by
+        beregning_id,
+        pen_under_utbet_id -- en rad per type ytelse, enten kap19 eller kap20
+),
+
+join_beregning as (
+    select
+        ref_int_beregning.*,
+        transponert_ytelse_komp.gp_avkorting_flagg,
+        transponert_ytelse_komp.sum_fradrag,
+        transponert_ytelse_komp.max_k_minstepen_niva,
+        transponert_ytelse_komp.min_k_minstepen_niva,
+        transponert_ytelse_komp.gp_netto,
+        transponert_ytelse_komp.tp_netto,
+        transponert_ytelse_komp.pt_netto,
+        transponert_ytelse_komp.st_netto,
+        transponert_ytelse_komp.ip_netto,
+        transponert_ytelse_komp.et_netto,
+        transponert_ytelse_komp.vt_netto,
+        transponert_ytelse_komp.gap_netto,
+        transponert_ytelse_komp.gat_netto,
+        transponert_ytelse_komp.gjt_netto,
+        transponert_ytelse_komp.afp_t_netto,
+        transponert_ytelse_komp.saerkull_netto,
+        transponert_ytelse_komp.barn_felles_netto,
+        transponert_ytelse_komp.skjermt_netto,
+        transponert_ytelse_komp.gjt_k19_netto,
+        transponert_ytelse_komp.ufor_sum_ut_ord_netto,
+        transponert_ytelse_komp.afp_livsvarig_netto,
+        transponert_ytelse_komp.mpn_indiv_netto,
+        transponert_ytelse_komp.mpn_sstot_netto,
+        transponert_ytelse_komp.ap_kap19_med_gjr_bel,
+        transponert_ytelse_komp.ap_kap19_uten_gjr_bel
+    from ref_int_beregning
+    left join transponert_ytelse_komp
+        on
+            ref_int_beregning.pen_under_utbet_id = transponert_ytelse_komp.pen_under_utbet_id
+            or ref_int_beregning.beregning_id = transponert_ytelse_komp.beregning_id
+)
+
+select
+    vedtak_id,
+    sak_id,
+    beregning_id,
+    pen_under_utbet_id,
+    brutto,
+    netto,
+
+    sum_fradrag,
+    max_k_minstepen_niva,
+    min_k_minstepen_niva,
+
+    gp_netto,
+    tp_netto,
+    pt_netto,
+    st_netto,
+    ip_netto,
+    et_netto,
+    vt_netto,
+    gap_netto,
+    gat_netto,
+    gjt_netto,
+    afp_t_netto,
+    saerkull_netto,
+    barn_felles_netto,
+    skjermt_netto,
+    gjt_k19_netto,
+    ufor_sum_ut_ord_netto,
+    afp_livsvarig_netto,
+    mpn_indiv_netto,
+    mpn_sstot_netto,
+
+    ap_kap19_med_gjr_bel,
+    ap_kap19_uten_gjr_bel,
+    gp_avkorting_flagg
+from join_beregning
