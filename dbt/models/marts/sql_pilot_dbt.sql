@@ -60,10 +60,11 @@ final as (
         sysdate as kjoretidspunkt,
         {{ var("periode") }} as periode
     from ref_int_flere_joins_pilot
-    where 1 = 1
-    --{% if is_incremental() %}
-    --  and {{ var("periode") }} not in (select distinct periode from {{ this }})
-    --{% endif %}
+    where
+        1 = 1
+    {% if is_incremental() %}
+        and {{ var("periode") }} not in (select distinct periode from {{ this }}) -- noqa
+    {% endif %}
 )
 
 select * from final
