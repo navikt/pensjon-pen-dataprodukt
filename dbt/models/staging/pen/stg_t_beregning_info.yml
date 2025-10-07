@@ -19,3 +19,5 @@ models:
         description: '...'
       - name: tt_anv
         description: '...'
+      - name: k_bereg_metode_t
+        description: '...'

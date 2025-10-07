@@ -7,5 +7,6 @@ select
     inst_opph_anv,
     yrksk_grad,
     yrksk_anv,
-    tt_anv
+    tt_anv,
+    k_bereg_metode_t
 from {{ source('pen', 't_beregning_info') }}

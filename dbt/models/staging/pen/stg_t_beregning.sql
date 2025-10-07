@@ -11,5 +11,6 @@ select
     brutto,
     netto,
     yug,
-    tt_anv
+    tt_anv,
+    k_bereg_metode_t
 from {{ source('pen', 't_beregning') }}
