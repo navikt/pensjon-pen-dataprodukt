@@ -1,3 +1,4 @@
+-- int_beregning
 -- union av kap20 og kap 19
 -- har midlertidige placeholder-verdier for noen felter
 
@@ -5,49 +6,45 @@ with
 
 kap19 as (
     select
-        vedtak_id,
         sak_id,
-        kravhode_id,
-        k_sak_t,
+        vedtak_id,
         k_regelverk_t,
-        dato_lopende_fom,
-        dato_lopende_tom,
-
         brutto,
         netto,
 
         beregning_id,
 
-        k_minstepensj_t,
-        red_pga_inst_opph,
+        -- felles
         yug,
-        tt_anv
+        tt_anv,
+        red_pga_inst_opph,
+        k_minstepensj_t
     from {{ ref('int_beregning_kap_19') }}
 ),
 
 kap20 as (
     select
-        vedtak_id,
         sak_id,
-        kravhode_id,
-        k_sak_t,
-        dato_lopende_fom,
-        dato_lopende_tom,
+        vedtak_id,
         k_regelverk_t,
+        brutto,
+        netto,
 
-        uttaksgrad,
-        --beregning_res_id,
         pen_under_utbet_id,
+        --beregning_res_id,
         --beregning_info_id,
-        mottar_min_pensjonsniva,
-        inst_opph_anv,
+
+        -- kun kap20
+        uttaksgrad,
         gjenlevrett_anv,
+
+        -- felles
         yrksk_anv,
         yrksk_grad,
         tt_anv_g_opptj,
         tt_anv_n_opptj,
-        brutto,
-        netto
+        inst_opph_anv,
+        mottar_min_pensjonsniva
     from {{ ref('int_beregning_kap_20') }}
 ),
 
@@ -55,11 +52,7 @@ kap19_nye_felter as (
     select
         vedtak_id,
         sak_id,
-        kravhode_id,
-        k_sak_t,
         k_regelverk_t,
-        dato_lopende_fom,
-        dato_lopende_tom,
         brutto,
         netto,
 
@@ -83,11 +76,7 @@ kap20_nye_felter as (
     select
         vedtak_id,
         sak_id,
-        kravhode_id,
-        k_sak_t,
         k_regelverk_t,
-        dato_lopende_fom,
-        dato_lopende_tom,
         brutto,
         netto,
 
@@ -112,13 +101,9 @@ kap20_nye_felter as (
 
 union_beregning as (
     select
-        vedtak_id,
         sak_id,
-        kravhode_id,
-        k_sak_t,
+        vedtak_id,
         k_regelverk_t,
-        dato_lopende_fom,
-        dato_lopende_tom,
         brutto,
         netto,
 
@@ -135,13 +120,9 @@ union_beregning as (
     from kap19_nye_felter
     union all
     select
-        vedtak_id,
         sak_id,
-        kravhode_id,
-        k_sak_t,
+        vedtak_id,
         k_regelverk_t,
-        dato_lopende_fom,
-        dato_lopende_tom,
         brutto,
         netto,
 
@@ -159,18 +140,12 @@ union_beregning as (
 )
 
 select
-    vedtak_id,
     sak_id,
-    kravhode_id,
-    k_sak_t,
+    vedtak_id,
     k_regelverk_t,
-    dato_lopende_fom,
-    dato_lopende_tom,
+
     brutto,
     netto,
-
-    pen_under_utbet_id,
-    beregning_id,
 
     uttaksgrad,
     tt_anv_g_opptj,
@@ -180,5 +155,9 @@ select
     cast(institusjon_opphold as varchar2(1)) as institusjon_opphold,
     cast(anvendt_yrkesskade_flagg as varchar2(1)) as anvendt_yrkesskade_flagg,
     cast(gjenlevrett_anv as varchar2(1)) as gjenlevrett_anv,
-    cast(minstepensjon as varchar2(1)) as minstepensjon
+    cast(minstepensjon as varchar2(1)) as minstepensjon,
+
+    -- id-er som ikke nødvendigvis skal til sluttproduktet
+    pen_under_utbet_id,
+    beregning_id
 from union_beregning
