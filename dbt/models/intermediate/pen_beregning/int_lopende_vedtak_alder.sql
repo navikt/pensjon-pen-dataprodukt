@@ -1,13 +1,14 @@
--- som tabell???
+-- int_lopende_vedtak_alder
 
-{{ config(materialized='table') }} -- gjør at spørringene på denne blir like
+{{ config(materialized='table') }} -- table gjør at spørringene videre i dbt-løpet får samme sett med vedtak
 
 with
 
 ref_vedtak as (
     select
-        vedtak_id,
         sak_id,
+        person_id,
+        vedtak_id,
         kravhode_id,
         k_sak_t,
         dato_lopende_fom,
@@ -37,11 +38,12 @@ join_kravhode as (
 )
 
 select
-    vedtak_id,
     sak_id,
+    person_id,
+    vedtak_id,
     kravhode_id,
     k_sak_t,
+    k_regelverk_t,
     dato_lopende_fom,
-    dato_lopende_tom,
-    k_regelverk_t
+    dato_lopende_tom
 from join_kravhode
