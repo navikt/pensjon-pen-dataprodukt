@@ -18,7 +18,8 @@ kap19 as (
         yug,
         tt_anv,
         red_pga_inst_opph,
-        k_minstepensj_t
+        k_minstepensj_t,
+        k_bereg_metode_t
     from {{ ref('int_beregning_kap_19') }}
 ),
 
@@ -44,7 +45,8 @@ kap20 as (
         tt_anv_g_opptj,
         tt_anv_n_opptj,
         inst_opph_anv,
-        mottar_min_pensjonsniva
+        mottar_min_pensjonsniva,
+        k_bereg_metode_t
     from {{ ref('int_beregning_kap_20') }}
 ),
 
@@ -65,7 +67,8 @@ kap19_nye_felter as (
         tt_anv as tt_anv_g_opptj,
         null as tt_anv_n_opptj,
         null as gjenlevrett_anv, -- todo: burde ikke denne vært satt for kap 19, og ikke bare for kap20?
-        case when k_minstepensj_t = 'ER_MINST_PEN' then '1' else '0' end as minstepensjon
+        case when k_minstepensj_t = 'ER_MINST_PEN' then '1' else '0' end as minstepensjon,
+        k_bereg_metode_t
         -- ...
         -- her kommer flere felter fra t_beregning og placeholdere fra t_beregning_info
         -- ...
@@ -92,7 +95,8 @@ kap20_nye_felter as (
         tt_anv_g_opptj,
         tt_anv_n_opptj,
         gjenlevrett_anv,
-        case when mottar_min_pensjonsniva = '1' then '1' else '0' end as minstepensjon -- heller coalesce()
+        case when mottar_min_pensjonsniva = '1' then '1' else '0' end as minstepensjon, -- heller coalesce()
+        k_bereg_metode_t
         -- ...
         -- her kommer flere felter fra t_beregning_info og placeholdere fra t_beregning
         -- ...
@@ -116,7 +120,8 @@ union_beregning as (
         tt_anv_g_opptj,
         tt_anv_n_opptj,
         gjenlevrett_anv,
-        minstepensjon
+        minstepensjon,
+        k_bereg_metode_t
     from kap19_nye_felter
     union all
     select
@@ -135,7 +140,8 @@ union_beregning as (
         tt_anv_g_opptj,
         tt_anv_n_opptj,
         gjenlevrett_anv,
-        minstepensjon
+        minstepensjon,
+        k_bereg_metode_t
     from kap20_nye_felter
 )
 
@@ -150,6 +156,7 @@ select
     uttaksgrad,
     tt_anv_g_opptj,
     tt_anv_n_opptj,
+    k_bereg_metode_t,
 
     -- flagg
     cast(institusjon_opphold as varchar2(1)) as institusjon_opphold,

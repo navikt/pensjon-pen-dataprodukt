@@ -51,7 +51,8 @@ ref_beregning_info as (
         yrksk_anv,
         yrksk_grad,
         gjenlevrett_anv,
-        inst_opph_anv
+        inst_opph_anv,
+        k_bereg_metode_t
     from {{ ref('stg_t_beregning_info') }}
 ),
 
@@ -95,6 +96,7 @@ join_beregning_info_direkte as (
         ref_beregning_info.gjenlevrett_anv,
         ref_beregning_info.yrksk_anv,
         ref_beregning_info.yrksk_grad,
+        ref_beregning_info.k_bereg_metode_t,
         case when join_beregning_res.k_regelverk_t = 'N_REG_G_OPPTJ' then ref_beregning_info.tt_anv end as tt_anv_g_opptj,
         case when join_beregning_res.k_regelverk_t = 'N_REG_N_OPPTJ' then ref_beregning_info.tt_anv end as tt_anv_n_opptj
     from join_beregning_res
@@ -117,6 +119,7 @@ join_beregning_info_overgang_2016 as (
         bi_2011.gjenlevrett_anv,
         bi_2011.yrksk_anv,
         bi_2011.yrksk_grad,
+        bi_2011.k_bereg_metode_t, -- TODO: avklare om bi_2025 ogsså skal brukes. Totalt 300 rader med forskjellige verdier
 
         bi_2025.tt_anv as tt_anv_n_opptj
     from
@@ -151,7 +154,8 @@ union_beregning_info as (
         yrksk_anv,
         yrksk_grad,
         tt_anv_g_opptj,
-        tt_anv_n_opptj
+        tt_anv_n_opptj,
+        k_bereg_metode_t
     from join_beregning_info_direkte
     union all
     select
@@ -172,7 +176,8 @@ union_beregning_info as (
         yrksk_anv,
         yrksk_grad,
         tt_anv_g_opptj,
-        tt_anv_n_opptj
+        tt_anv_n_opptj,
+        k_bereg_metode_t
     from join_beregning_info_overgang_2016
 ),
 
@@ -206,6 +211,7 @@ select
     yrksk_grad,
     tt_anv_g_opptj,
     tt_anv_n_opptj,
+    k_bereg_metode_t,
     brutto,
     netto
 from join_pen_under_utbet

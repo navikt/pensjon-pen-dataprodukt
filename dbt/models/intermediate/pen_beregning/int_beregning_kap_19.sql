@@ -25,7 +25,8 @@ ref_beregning as (
         brutto,
         netto,
         yug,
-        tt_anv
+        tt_anv,
+        k_bereg_metode_t
     from {{ ref('stg_t_beregning') }}
     -- from pen.t_beregning
 ),
@@ -39,7 +40,8 @@ join_beregning as (
         ref_beregning.brutto,
         ref_beregning.netto,
         ref_beregning.yug,
-        ref_beregning.tt_anv
+        ref_beregning.tt_anv,
+        ref_beregning.k_bereg_metode_t
     from ref_int_lopende_vedtak_alder
     inner join ref_beregning
         on
@@ -63,6 +65,7 @@ select
 
     beregning_id,
 
+    k_bereg_metode_t,
     k_minstepensj_t,
     red_pga_inst_opph,
     yug,
