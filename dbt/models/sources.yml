@@ -17,3 +17,6 @@ sources:
       # kodeverk
       - name: t_k_afp_t
       - name: t_k_regelverk_t
+      - name: t_person
+      - name: t_person_grunnlag
+      - name: t_person_det
