@@ -1,4 +1,5 @@
--- henter beløp for beregninger
+-- int_beregning_belop
+-- henter beløp for beregninger ved å pakke ut ytelse_komp, både for kap19 og kap20
 
 with
 
@@ -18,9 +19,9 @@ ref_ytelse_komp as (
         beregning_id,
         pen_under_utbet_id,
         k_ytelse_komp_t,
-        ap_kap19_med_gjr, -- kobles inn tidligere?
-        ap_kap19_uten_gjr, -- kobles inn tidligere?
-        k_minstepen_niva, -- kobles inn tidligere?
+        ap_kap19_med_gjr,
+        ap_kap19_uten_gjr,
+        k_minstepen_niva,
         netto,
         opphort,
         fradrag,
@@ -34,9 +35,8 @@ transponert_ytelse_komp as (
         beregning_id,
         pen_under_utbet_id,
         sum(case when k_ytelse_komp_t = 'GP' and netto > 0 and fradrag > 0 then 1 else 0 end) as gp_avkorting_flagg, -- todo: sjekk output
-        sum(fradrag) as sum_fradrag, -- todo: sjekk output
-        max(k_minstepen_niva) as max_k_minstepen_niva,
-        min(k_minstepen_niva) as min_k_minstepen_niva, -- todo: sjekk diff på min og max
+        sum(fradrag) as sum_fradrag, -- todo: denne er alltid 0!!!
+        max(k_minstepen_niva) as k_minstepen_niva,
 
         sum(case when k_ytelse_komp_t = 'GP' then netto end) as gp_netto,
         sum(case when k_ytelse_komp_t = 'TP' then netto end) as tp_netto,
@@ -73,8 +73,7 @@ join_beregning as (
         ref_int_beregning.*,
         transponert_ytelse_komp.gp_avkorting_flagg,
         transponert_ytelse_komp.sum_fradrag,
-        transponert_ytelse_komp.max_k_minstepen_niva,
-        transponert_ytelse_komp.min_k_minstepen_niva,
+        transponert_ytelse_komp.k_minstepen_niva,
         transponert_ytelse_komp.gp_netto,
         transponert_ytelse_komp.tp_netto,
         transponert_ytelse_komp.pt_netto,
@@ -111,9 +110,8 @@ select
     brutto,
     netto,
 
-    sum_fradrag,
-    max_k_minstepen_niva,
-    min_k_minstepen_niva,
+    sum_fradrag, -- obs! denne er alltid 0, også i prod
+    k_minstepen_niva,
 
     gp_netto,
     tp_netto,
