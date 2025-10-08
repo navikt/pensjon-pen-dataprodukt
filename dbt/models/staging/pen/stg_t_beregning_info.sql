@@ -8,5 +8,8 @@ select
     yrksk_grad,
     yrksk_anv,
     tt_anv,
-    k_bereg_metode_t
+    k_bereg_metode_t,
+    tp_restpensjon,
+    pt_restpensjon,
+    gp_restpensjon
 from {{ source('pen', 't_beregning_info') }}

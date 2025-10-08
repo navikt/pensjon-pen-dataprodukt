@@ -38,6 +38,9 @@ kap20 as (
         -- kun kap20
         uttaksgrad,
         gjenlevrett_anv,
+        tp_restpensjon,
+        pt_restpensjon,
+        gp_restpensjon,
 
         -- felles
         yrksk_anv,
@@ -68,7 +71,10 @@ kap19_nye_felter as (
         null as tt_anv_n_opptj,
         null as gjenlevrett_anv, -- todo: burde ikke denne vært satt for kap 19, og ikke bare for kap20?
         case when k_minstepensj_t = 'ER_MINST_PEN' then '1' else '0' end as minstepensjon,
-        k_bereg_metode_t
+        k_bereg_metode_t,
+        null as tp_restpensjon,
+        null as pt_restpensjon,
+        null as gp_restpensjon
         -- ...
         -- her kommer flere felter fra t_beregning og placeholdere fra t_beregning_info
         -- ...
@@ -96,7 +102,10 @@ kap20_nye_felter as (
         tt_anv_n_opptj,
         gjenlevrett_anv,
         case when mottar_min_pensjonsniva = '1' then '1' else '0' end as minstepensjon, -- heller coalesce()
-        k_bereg_metode_t
+        k_bereg_metode_t,
+        tp_restpensjon,
+        pt_restpensjon,
+        gp_restpensjon
         -- ...
         -- her kommer flere felter fra t_beregning_info og placeholdere fra t_beregning
         -- ...
@@ -121,7 +130,10 @@ union_beregning as (
         tt_anv_n_opptj,
         gjenlevrett_anv,
         minstepensjon,
-        k_bereg_metode_t
+        k_bereg_metode_t,
+        tp_restpensjon,
+        pt_restpensjon,
+        gp_restpensjon
     from kap19_nye_felter
     union all
     select
@@ -141,7 +153,10 @@ union_beregning as (
         tt_anv_n_opptj,
         gjenlevrett_anv,
         minstepensjon,
-        k_bereg_metode_t
+        k_bereg_metode_t,
+        tp_restpensjon,
+        pt_restpensjon,
+        gp_restpensjon
     from kap20_nye_felter
 )
 
@@ -157,6 +172,9 @@ select
     tt_anv_g_opptj,
     tt_anv_n_opptj,
     k_bereg_metode_t,
+    tp_restpensjon,
+    pt_restpensjon,
+    gp_restpensjon,
 
     -- flagg
     cast(institusjon_opphold as varchar2(1)) as institusjon_opphold,

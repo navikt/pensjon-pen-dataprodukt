@@ -52,7 +52,10 @@ ref_beregning_info as (
         yrksk_grad,
         gjenlevrett_anv,
         inst_opph_anv,
-        k_bereg_metode_t
+        k_bereg_metode_t,
+        tp_restpensjon,
+        pt_restpensjon,
+        gp_restpensjon
     from {{ ref('stg_t_beregning_info') }}
 ),
 
@@ -97,6 +100,9 @@ join_beregning_info_direkte as (
         ref_beregning_info.yrksk_anv,
         ref_beregning_info.yrksk_grad,
         ref_beregning_info.k_bereg_metode_t,
+        ref_beregning_info.tp_restpensjon, -- 0 for alle N_REG_N_OPPTJ
+        ref_beregning_info.pt_restpensjon, -- 0 for alle N_REG_N_OPPTJ
+        ref_beregning_info.gp_restpensjon, -- 0 for alle N_REG_N_OPPTJ
         case when join_beregning_res.k_regelverk_t = 'N_REG_G_OPPTJ' then ref_beregning_info.tt_anv end as tt_anv_g_opptj,
         case when join_beregning_res.k_regelverk_t = 'N_REG_N_OPPTJ' then ref_beregning_info.tt_anv end as tt_anv_n_opptj
     from join_beregning_res
@@ -120,6 +126,9 @@ join_beregning_info_overgang_2016 as (
         bi_2011.yrksk_anv,
         bi_2011.yrksk_grad,
         bi_2011.k_bereg_metode_t, -- TODO: avklare om bi_2025 ogsså skal brukes. Totalt 300 rader med forskjellige verdier
+        bi_2011.tp_restpensjon, -- restpensjon gjelder kun nytt regelverk med gammel opptjening 
+        bi_2011.pt_restpensjon, -- restpensjon gjelder kun nytt regelverk med gammel opptjening
+        bi_2011.gp_restpensjon, -- restpensjon gjelder kun nytt regelverk med gammel opptjening
 
         bi_2025.tt_anv as tt_anv_n_opptj
     from
@@ -155,7 +164,10 @@ union_beregning_info as (
         yrksk_grad,
         tt_anv_g_opptj,
         tt_anv_n_opptj,
-        k_bereg_metode_t
+        k_bereg_metode_t,
+        tp_restpensjon,
+        pt_restpensjon,
+        gp_restpensjon
     from join_beregning_info_direkte
     union all
     select
@@ -177,7 +189,10 @@ union_beregning_info as (
         yrksk_grad,
         tt_anv_g_opptj,
         tt_anv_n_opptj,
-        k_bereg_metode_t
+        k_bereg_metode_t,
+        tp_restpensjon,
+        pt_restpensjon,
+        gp_restpensjon
     from join_beregning_info_overgang_2016
 ),
 
@@ -213,5 +228,8 @@ select
     tt_anv_n_opptj,
     k_bereg_metode_t,
     brutto,
-    netto
+    netto,
+    tp_restpensjon,
+    pt_restpensjon,
+    gp_restpensjon
 from join_pen_under_utbet
