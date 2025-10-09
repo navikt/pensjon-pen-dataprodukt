@@ -67,7 +67,6 @@ join_uttaksgrad as (
     inner join ref_uttaksgrad
         on
             ref_int_lopende_vedtak_alder.kravhode_id = ref_uttaksgrad.kravhode_id
-            and ref_uttaksgrad.uttaksgrad != 0
             and ref_uttaksgrad.dato_virk_fom <= {{ periode_sluttdato(var("periode")) }}
             and (ref_uttaksgrad.dato_virk_tom is null or ref_uttaksgrad.dato_virk_tom >= trunc({{ periode_sluttdato(var("periode")) }}))
 ),
