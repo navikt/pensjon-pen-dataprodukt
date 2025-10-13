@@ -32,7 +32,6 @@ ref_seed_overgangsstonad as (
     -- from seed_overgangsstonad
 ),
 
-
 -- er sånn den er i sql-pilot
 -- jeg skjønner ikke helt order by her. kopiert fra sql-pilot
 tvvx as (
@@ -72,7 +71,7 @@ sette_flagg_overgangsstonad as (
     left outer join tvvx
         on ref_int_aktive_alder.vedtak_id = tvvx.vedtak_id
     left outer join ref_seed_overgangsstonad
-        on ref_seed_overgangsstonad.kode = tvvx.k_vilk_vurd_t
+        on tvvx.k_vilk_vurd_t = ref_seed_overgangsstonad.kode
 ),
 
 final as (

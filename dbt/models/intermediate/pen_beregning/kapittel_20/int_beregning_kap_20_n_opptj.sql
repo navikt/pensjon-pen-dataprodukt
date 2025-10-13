@@ -110,10 +110,6 @@ select
     gjenlevrett_anv,
     yrksk_anv,
     yrksk_grad,
-    --tt_anv_g_opptj,
     tt_anv_n_opptj,
     k_bereg_metode_t
-    -- tp_restpensjon,
-    -- pt_restpensjon,
-    -- gp_restpensjon
 from join_beregning_info
