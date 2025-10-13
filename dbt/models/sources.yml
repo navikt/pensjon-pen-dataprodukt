@@ -20,3 +20,4 @@ sources:
       - name: t_person
       - name: t_person_grunnlag
       - name: t_person_det
+      - name: t_beholdning
