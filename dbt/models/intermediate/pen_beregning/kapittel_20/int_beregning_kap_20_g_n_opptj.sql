@@ -76,6 +76,7 @@ join_beregning_info_overgang_2016 as (
         join_beregning_res.*,
         -- beregning_info gammel opptjening er kilde for inst_opph, mottar_min_pensjonsniva, gjenlevrett_anv, yrksk_anv og yrksk_grad
         -- i beregning_info ny opptjening er ikke feltene satt (unntak tt_anv)
+        bi_2025.beregning_info_id as beregning_info_id_2025, -- brukes i neste cte for å hente beholdning
         bi_2011.tt_anv as tt_anv_g_opptj,
         bi_2011.mottar_min_pensjonsniva, -- dekker også 2025_2016 opptjening (21 rader)
         bi_2011.inst_opph_anv, -- dekker også 2025_2016 opptjening (1 rad)
@@ -97,16 +98,21 @@ join_beregning_info_overgang_2016 as (
     -- hent beregning info kap 20
     left join ref_beregning_res br_2025 on join_beregning_res.beregning_res_id = br_2025.ber_res_ap_2025_2016_id
     left join ref_beregning_info bi_2025 on br_2025.beregning_info_id = bi_2025.beregning_info_id
-)
+),
 
--- -- Legg til beholdninginfo, gjelder kun de med NY OPPTJ
--- join_beholdning as (
---     select 
---         join_beregning_info_overgang_2016.*,
---         b.*
---     from join_beregning_info_overgang_2016 j
---     left join ref_beholdning b on b.beregning_info_id = join_beregning_info_overgang_2016.beregning_info_id
--- )
+-- Legg til beholdninginfo, kun for N_REG_N_OPPTJ
+-- OBS - bruker beregning_info_id_2025 (nytt regelverk)
+join_beholdning as (
+    select
+        join_beregning_info_overgang_2016.*,
+        beh_pen_b.totalbelop as beh_pen_b_totalbelop,
+        beh_gar_pen_b.totalbelop as beh_gar_pen_b_totalbelop,
+        beh_gar_t_b.totalbelop as beh_gar_t_b_totalbelop
+    from join_beregning_info_overgang_2016
+    left join ref_beholdning beh_pen_b on join_beregning_info_overgang_2016.beregning_info_id_2025 = beh_pen_b.beregning_info_id and beh_pen_b.k_beholdning_t = 'PEN_B'
+    left join ref_beholdning beh_gar_pen_b on join_beregning_info_overgang_2016.beregning_info_id_2025 = beh_gar_pen_b.beregning_info_id and beh_gar_pen_b.k_beholdning_t = 'GAR_PEN_B'
+    left join ref_beholdning beh_gar_t_b on join_beregning_info_overgang_2016.beregning_info_id_2025 = beh_gar_t_b.beregning_info_id and beh_gar_t_b.k_beholdning_t = 'GAR_T_B'
+)
 
 select
     vedtak_id,
@@ -129,5 +135,8 @@ select
     k_bereg_metode_t,
     tp_restpensjon,
     pt_restpensjon,
-    gp_restpensjon
-from join_beregning_info_overgang_2016
+    gp_restpensjon,
+    beh_pen_b_totalbelop,
+    beh_gar_pen_b_totalbelop,
+    beh_gar_t_b_totalbelop
+from join_beholdning
