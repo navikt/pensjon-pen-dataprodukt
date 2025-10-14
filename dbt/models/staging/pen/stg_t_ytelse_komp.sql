@@ -4,6 +4,7 @@ select
     ytelse_komp_id,
     k_ytelse_komp_t,
     k_minstepen_niva,
+    min_pen_niva_id,
     ap_kap19_med_gjr,
     ap_kap19_uten_gjr,
     pen_under_utbet_id,

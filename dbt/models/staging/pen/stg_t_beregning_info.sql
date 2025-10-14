@@ -3,6 +3,7 @@
 select
     beregning_info_id,
     mottar_min_pensjonsniva,
+    mottar_min_pensjniva_arsak,
     gjenlevrett_anv,
     inst_opph_anv,
     yrksk_grad,

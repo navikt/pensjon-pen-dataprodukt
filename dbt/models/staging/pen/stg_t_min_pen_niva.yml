@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: stg_t_min_pen_niva
+    description: >
+        ...
+    columns:
+      - name: min_pen_niva_id
+        description: '...'
+      - name: sats
+        description: '...'

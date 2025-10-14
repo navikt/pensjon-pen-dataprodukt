@@ -21,3 +21,4 @@ sources:
       - name: t_person_grunnlag
       - name: t_person_det
       - name: t_beholdning
+      - name: t_min_pen_niva

@@ -1,4 +1,4 @@
--- stg_t_beholdning.sql
+-- stg_t_beholdning
 
 select
     beholdning_id,

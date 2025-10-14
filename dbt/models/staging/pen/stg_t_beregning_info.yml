@@ -9,6 +9,8 @@ models:
         description: '...'
       - name: mottar_min_pensjonsniva
         description: '...'
+      - name: mottar_min_pensjniva_arsak
+        description: '...'
       - name: gjenlevrett_anv
         description: '...'
       - name: inst_opph_anv

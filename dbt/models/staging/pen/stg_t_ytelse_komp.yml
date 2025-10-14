@@ -39,6 +39,8 @@ models:
         description: "Sum av GP, TP og PenT for AP2011 uten GJR."
       - name: k_minstepen_niva
         description: "Minstepensjonsnivå. Kan være HOY, LAV, ORDINAER, SAERSKILT, HOY_ENSLIG eller (null)."
+      - name: min_pen_niva_id
+        description: "brukes for å hente min_pen_niva sats"
       - name: opphort
         description: "Flagg som angir om dette er en representant for en opphort ytelseskompenent."
       - name: fradrag
