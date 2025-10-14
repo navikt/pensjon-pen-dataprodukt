@@ -32,6 +32,7 @@ ref_beregning_info as (
     select
         beregning_info_id,
         mottar_min_pensjonsniva,
+        mottar_min_pensjniva_arsak,
         tt_anv,
         yrksk_anv,
         yrksk_grad,
@@ -79,6 +80,7 @@ join_beregning_info_overgang_2016 as (
         bi_2025.beregning_info_id as beregning_info_id_2025, -- brukes i neste cte for å hente beholdning
         bi_2011.tt_anv as tt_anv_g_opptj,
         bi_2011.mottar_min_pensjonsniva, -- dekker også 2025_2016 opptjening (21 rader)
+        bi_2011.mottar_min_pensjniva_arsak, -- ser lik ut for 2011 og 2025
         bi_2011.inst_opph_anv, -- dekker også 2025_2016 opptjening (1 rad)
         bi_2011.gjenlevrett_anv,
         bi_2011.yrksk_anv,
@@ -126,6 +128,7 @@ select
     pen_under_utbet_id,
     beregning_info_id,
     mottar_min_pensjonsniva,
+    mottar_min_pensjniva_arsak,
     inst_opph_anv,
     gjenlevrett_anv,
     yrksk_anv,

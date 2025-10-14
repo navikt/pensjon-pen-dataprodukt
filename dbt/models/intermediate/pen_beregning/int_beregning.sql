@@ -19,6 +19,7 @@ kap19 as (
         tt_anv,
         red_pga_inst_opph,
         k_minstepensj_t,
+        k_minstepensj_arsak,
         k_bereg_metode_t
     from {{ ref('int_beregning_kap_19') }}
 ),
@@ -49,6 +50,7 @@ kap20 as (
         tt_anv_n_opptj,
         inst_opph_anv,
         mottar_min_pensjonsniva,
+        mottar_min_pensjniva_arsak,
         k_bereg_metode_t,
         beh_pen_b_totalbelop,
         beh_gar_pen_b_totalbelop,
@@ -74,6 +76,7 @@ union_beregning as (
         null as tt_anv_n_opptj,
         null as gjenlevrett_anv, -- todo: burde ikke denne vært satt for kap 19, og ikke bare for kap20?
         case when k_minstepensj_t = 'ER_MINST_PEN' then '1' else '0' end as minstepensjon,
+        k_minstepensj_arsak as minstepen_niva_arsak,
         k_bereg_metode_t,
         null as tp_restpensjon,
         null as pt_restpensjon,
@@ -106,6 +109,7 @@ union_beregning as (
         tt_anv_n_opptj,
         gjenlevrett_anv,
         case when mottar_min_pensjonsniva = '1' then '1' else '0' end as minstepensjon, -- heller coalesce()
+        mottar_min_pensjniva_arsak as minstepen_niva_arsak,
         k_bereg_metode_t,
         tp_restpensjon,
         pt_restpensjon,
@@ -137,6 +141,7 @@ select
     beh_pen_b_totalbelop,
     beh_gar_pen_b_totalbelop,
     beh_gar_t_b_totalbelop,
+    minstepen_niva_arsak,
 
     -- flagg
     cast(institusjon_opphold as varchar2(1)) as institusjon_opphold,

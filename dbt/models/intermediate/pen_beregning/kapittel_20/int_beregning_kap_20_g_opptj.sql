@@ -31,6 +31,7 @@ ref_beregning_info as (
     select
         beregning_info_id,
         mottar_min_pensjonsniva,
+        mottar_min_pensjniva_arsak,
         tt_anv,
         yrksk_anv,
         yrksk_grad,
@@ -65,6 +66,7 @@ join_beregning_info_direkte as (
     select
         join_beregning_res.*,
         ref_beregning_info.mottar_min_pensjonsniva,
+        ref_beregning_info.mottar_min_pensjniva_arsak,
         ref_beregning_info.inst_opph_anv,
         ref_beregning_info.gjenlevrett_anv,
         ref_beregning_info.yrksk_anv,
@@ -91,6 +93,7 @@ select
     pen_under_utbet_id,
     beregning_info_id,
     mottar_min_pensjonsniva,
+    mottar_min_pensjniva_arsak,
     inst_opph_anv,
     gjenlevrett_anv,
     yrksk_anv,
