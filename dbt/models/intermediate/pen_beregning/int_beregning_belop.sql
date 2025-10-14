@@ -22,11 +22,19 @@ ref_ytelse_komp as (
         ap_kap19_med_gjr,
         ap_kap19_uten_gjr,
         k_minstepen_niva,
+        min_pen_niva_id,
         netto,
         opphort,
         fradrag,
         bruk
     from {{ ref('stg_t_ytelse_komp') }}
+),
+
+ref_min_pen_niva as (
+    select
+        min_pen_niva_id,
+        sats
+    from {{ ref('stg_t_min_pen_niva') }}
 ),
 
 transponert_ytelse_komp as (
@@ -36,7 +44,8 @@ transponert_ytelse_komp as (
         pen_under_utbet_id,
         sum(case when k_ytelse_komp_t = 'GP' and netto > 0 and fradrag > 0 then 1 else 0 end) as gp_avkorting_flagg, -- todo: sjekk output
         sum(fradrag) as sum_fradrag, -- todo: denne er alltid 0!!!
-        max(k_minstepen_niva) as k_minstepen_niva,
+        max(case when k_ytelse_komp_t = 'PT' then k_minstepen_niva end) as k_minstepen_niva,
+        max(case when k_ytelse_komp_t = 'MIN_NIVA_TILL_INDV' then min_pen_niva_id end) as min_pen_niva_id,
 
         sum(case when k_ytelse_komp_t = 'GP' then netto end) as gp_netto,
         sum(case when k_ytelse_komp_t = 'TP' then netto end) as tp_netto,
@@ -74,6 +83,7 @@ join_beregning as (
         transponert_ytelse_komp.gp_avkorting_flagg,
         transponert_ytelse_komp.sum_fradrag,
         transponert_ytelse_komp.k_minstepen_niva,
+        transponert_ytelse_komp.min_pen_niva_id,
         transponert_ytelse_komp.gp_netto,
         transponert_ytelse_komp.tp_netto,
         transponert_ytelse_komp.pt_netto,
@@ -100,6 +110,15 @@ join_beregning as (
         on
             ref_int_beregning.pen_under_utbet_id = transponert_ytelse_komp.pen_under_utbet_id
             or ref_int_beregning.beregning_id = transponert_ytelse_komp.beregning_id
+),
+
+legger_til_minstepen_niva_sats as (
+    select
+        join_beregning.*,
+        ref_min_pen_niva.sats as minstepen_niva_sats
+    from join_beregning
+    left join ref_min_pen_niva
+        on join_beregning.min_pen_niva_id = ref_min_pen_niva.min_pen_niva_id
 )
 
 select
@@ -112,6 +131,7 @@ select
 
     sum_fradrag, -- obs! denne er alltid 0, også i prod
     k_minstepen_niva,
+    minstepen_niva_sats,
 
     gp_netto,
     tp_netto,
@@ -136,4 +156,4 @@ select
     ap_kap19_med_gjr_bel,
     ap_kap19_uten_gjr_bel,
     gp_avkorting_flagg
-from join_beregning
+from legger_til_minstepen_niva_sats
