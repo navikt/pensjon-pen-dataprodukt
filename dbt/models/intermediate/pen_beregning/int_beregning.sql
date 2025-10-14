@@ -53,7 +53,8 @@ kap20 as (
     from {{ ref('int_beregning_kap_20') }}
 ),
 
-kap19_nye_felter as (
+
+union_beregning as (
     select
         vedtak_id,
         sak_id,
@@ -79,9 +80,7 @@ kap19_nye_felter as (
         -- her kommer flere felter fra t_beregning og placeholdere fra t_beregning_info
         -- ...
     from kap19
-),
-
-kap20_nye_felter as (
+    union all
     select
         vedtak_id,
         sak_id,
@@ -110,54 +109,6 @@ kap20_nye_felter as (
         -- her kommer flere felter fra t_beregning_info og placeholdere fra t_beregning
         -- ...
     from kap20
-),
-
-union_beregning as (
-    select
-        sak_id,
-        vedtak_id,
-        k_regelverk_t,
-        brutto,
-        netto,
-
-        pen_under_utbet_id,
-        beregning_id,
-
-        uttaksgrad,
-        institusjon_opphold,
-        anvendt_yrkesskade_flagg,
-        tt_anv_g_opptj,
-        tt_anv_n_opptj,
-        gjenlevrett_anv,
-        minstepensjon,
-        k_bereg_metode_t,
-        tp_restpensjon,
-        pt_restpensjon,
-        gp_restpensjon
-    from kap19_nye_felter
-    union all
-    select
-        sak_id,
-        vedtak_id,
-        k_regelverk_t,
-        brutto,
-        netto,
-
-        pen_under_utbet_id,
-        beregning_id,
-
-        uttaksgrad,
-        institusjon_opphold,
-        anvendt_yrkesskade_flagg,
-        tt_anv_g_opptj,
-        tt_anv_n_opptj,
-        gjenlevrett_anv,
-        minstepensjon,
-        k_bereg_metode_t,
-        tp_restpensjon,
-        pt_restpensjon,
-        gp_restpensjon
-    from kap20_nye_felter
 )
 
 select
