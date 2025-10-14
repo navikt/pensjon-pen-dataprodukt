@@ -65,8 +65,8 @@ union_beregning as (
         brutto,
         netto,
 
-        beregning_id,
         null as pen_under_utbet_id,
+        beregning_id,
 
         100 as uttaksgrad,
         red_pga_inst_opph as institusjon_opphold,
