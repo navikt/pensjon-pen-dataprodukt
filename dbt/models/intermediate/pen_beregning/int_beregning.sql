@@ -143,6 +143,10 @@ select
     cast(anvendt_yrkesskade_flagg as varchar2(1)) as anvendt_yrkesskade_flagg,
     cast(gjenlevrett_anv as varchar2(1)) as gjenlevrett_anv,
     cast(minstepensjon as varchar2(1)) as minstepensjon,
+    case
+        when netto > 0 then 1
+        else 0
+    end as alderspensjon_ytelse_flagg,
 
     -- id-er som ikke nødvendigvis skal til sluttproduktet
     pen_under_utbet_id,
