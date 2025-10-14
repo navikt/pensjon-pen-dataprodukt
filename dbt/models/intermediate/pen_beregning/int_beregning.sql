@@ -56,7 +56,6 @@ kap20 as (
     from {{ ref('int_beregning_kap_20') }}
 ),
 
-
 union_beregning as (
     select
         vedtak_id,
@@ -81,7 +80,7 @@ union_beregning as (
         null as gp_restpensjon,
         null as beh_pen_b_totalbelop,
         null as beh_gar_pen_b_totalbelop,
-        null as beh_gar_t_b_totalbelop        
+        null as beh_gar_t_b_totalbelop
         -- ...
         -- her kommer flere felter fra t_beregning og placeholdere fra t_beregning_info
         -- ...
@@ -113,7 +112,7 @@ union_beregning as (
         gp_restpensjon,
         beh_pen_b_totalbelop,
         beh_gar_pen_b_totalbelop,
-        beh_gar_t_b_totalbelop        
+        beh_gar_t_b_totalbelop
         -- ...
         -- her kommer flere felter fra t_beregning_info og placeholdere fra t_beregning
         -- ...
