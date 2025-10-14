@@ -49,7 +49,10 @@ kap20 as (
         tt_anv_n_opptj,
         inst_opph_anv,
         mottar_min_pensjonsniva,
-        k_bereg_metode_t
+        k_bereg_metode_t,
+        beh_pen_b_totalbelop,
+        beh_gar_pen_b_totalbelop,
+        beh_gar_t_b_totalbelop
     from {{ ref('int_beregning_kap_20') }}
 ),
 
@@ -75,7 +78,10 @@ union_beregning as (
         k_bereg_metode_t,
         null as tp_restpensjon,
         null as pt_restpensjon,
-        null as gp_restpensjon
+        null as gp_restpensjon,
+        null as beh_pen_b_totalbelop,
+        null as beh_gar_pen_b_totalbelop,
+        null as beh_gar_t_b_totalbelop        
         -- ...
         -- her kommer flere felter fra t_beregning og placeholdere fra t_beregning_info
         -- ...
@@ -104,7 +110,10 @@ union_beregning as (
         k_bereg_metode_t,
         tp_restpensjon,
         pt_restpensjon,
-        gp_restpensjon
+        gp_restpensjon,
+        beh_pen_b_totalbelop,
+        beh_gar_pen_b_totalbelop,
+        beh_gar_t_b_totalbelop        
         -- ...
         -- her kommer flere felter fra t_beregning_info og placeholdere fra t_beregning
         -- ...
@@ -126,6 +135,9 @@ select
     tp_restpensjon,
     pt_restpensjon,
     gp_restpensjon,
+    beh_pen_b_totalbelop,
+    beh_gar_pen_b_totalbelop,
+    beh_gar_t_b_totalbelop,
 
     -- flagg
     cast(institusjon_opphold as varchar2(1)) as institusjon_opphold,
