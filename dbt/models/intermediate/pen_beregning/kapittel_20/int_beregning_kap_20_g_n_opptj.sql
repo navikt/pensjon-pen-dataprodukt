@@ -37,6 +37,7 @@ ref_beregning_info as (
         yrksk_anv,
         yrksk_grad,
         gjenlevrett_anv,
+        rett_pa_gjlevenderett,
         inst_opph_anv,
         k_bereg_metode_t,
         tp_restpensjon,
@@ -83,6 +84,7 @@ join_beregning_info_overgang_2016 as (
         bi_2011.mottar_min_pensjniva_arsak, -- ser lik ut for 2011 og 2025
         bi_2011.inst_opph_anv, -- dekker også 2025_2016 opptjening (1 rad)
         bi_2011.gjenlevrett_anv,
+        bi_2011.rett_pa_gjlevenderett,
         bi_2011.yrksk_anv,
         bi_2011.yrksk_grad,
         bi_2011.k_bereg_metode_t, -- TODO: avklare om bi_2025 ogsså skal brukes. Totalt 300 rader med forskjellige verdier
@@ -131,6 +133,7 @@ select
     mottar_min_pensjniva_arsak,
     inst_opph_anv,
     gjenlevrett_anv,
+    rett_pa_gjlevenderett,
     yrksk_anv,
     yrksk_grad,
     tt_anv_g_opptj,

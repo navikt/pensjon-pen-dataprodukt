@@ -39,6 +39,7 @@ kap20 as (
         -- kun kap20
         uttaksgrad,
         gjenlevrett_anv,
+        rett_pa_gjlevenderett,
         tp_restpensjon,
         pt_restpensjon,
         gp_restpensjon,
@@ -75,6 +76,7 @@ union_beregning as (
         tt_anv as tt_anv_g_opptj,
         null as tt_anv_n_opptj,
         null as gjenlevrett_anv, -- todo: burde ikke denne vært satt for kap 19, og ikke bare for kap20?
+        null as rett_pa_gjlevenderett,
         case when k_minstepensj_t = 'ER_MINST_PEN' then '1' else '0' end as minstepensjon,
         k_minstepensj_arsak as minstepen_niva_arsak,
         k_bereg_metode_t,
@@ -108,6 +110,7 @@ union_beregning as (
         tt_anv_g_opptj,
         tt_anv_n_opptj,
         gjenlevrett_anv,
+        rett_pa_gjlevenderett,
         case when mottar_min_pensjonsniva = '1' then '1' else '0' end as minstepensjon, -- heller coalesce()
         mottar_min_pensjniva_arsak as minstepen_niva_arsak,
         k_bereg_metode_t,
@@ -147,6 +150,7 @@ select
     cast(institusjon_opphold as varchar2(1)) as institusjon_opphold,
     cast(anvendt_yrkesskade_flagg as varchar2(1)) as anvendt_yrkesskade_flagg,
     cast(gjenlevrett_anv as varchar2(1)) as gjenlevrett_anv,
+    cast(rett_pa_gjlevenderett as varchar2(1)) as rett_pa_gjlevenderett,
     cast(minstepensjon as varchar2(1)) as minstepensjon,
     case
         when netto > 0 then 1

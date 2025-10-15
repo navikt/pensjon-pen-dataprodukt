@@ -5,6 +5,7 @@ select
     mottar_min_pensjonsniva,
     mottar_min_pensjniva_arsak,
     gjenlevrett_anv,
+    rett_pa_gjlevenderett,
     inst_opph_anv,
     yrksk_grad,
     yrksk_anv,

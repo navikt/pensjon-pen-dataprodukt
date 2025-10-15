@@ -13,6 +13,8 @@ models:
         description: '...'
       - name: gjenlevrett_anv
         description: '...'
+      - name: rett_pa_gjlevenderett
+        description: '...'
       - name: inst_opph_anv
         description: '...'
       - name: yrksk_grad
