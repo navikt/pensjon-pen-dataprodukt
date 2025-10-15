@@ -3,7 +3,6 @@
 select
     person_grunnlag_id,
     k_sivilstand_t,
-    k_bor_med_t,
     rolle_fom,
     rolle_tom,
     bruk

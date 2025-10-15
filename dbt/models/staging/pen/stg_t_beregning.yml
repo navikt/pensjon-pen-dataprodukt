@@ -19,6 +19,8 @@ models:
         description: '...'
       - name: k_minstepensj_arsak
         description: '...'
+      - name: k_bor_med_t
+        description: '...'
       - name: red_pga_inst_opph
         description: '...'
       - name: brutto

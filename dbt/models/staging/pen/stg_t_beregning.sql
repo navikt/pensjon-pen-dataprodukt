@@ -8,6 +8,7 @@ select
     dato_virk_tom,
     k_minstepensj_t,
     k_minstepensj_arsak,
+    k_bor_med_t,
     red_pga_inst_opph,
     brutto,
     netto,

@@ -37,8 +37,7 @@ ref_person_det as (
     -- join via t_person_grunnlag
     select
         person_grunnlag_id,
-        k_sivilstand_t,
-        k_bor_med_t
+        k_sivilstand_t
     from {{ ref('stg_t_person_det') }}
     where
         bruk = 1
@@ -74,8 +73,7 @@ join_lopende_person_grunnlag as (
 join_lopende_person_det as (
     select
         v.*,
-        pd.k_sivilstand_t,
-        pd.k_bor_med_t
+        pd.k_sivilstand_t
     from join_lopende_person_grunnlag v
     left join ref_person_det pd
         on v.person_grunnlag_id = pd.person_grunnlag_id
@@ -96,7 +94,6 @@ select
 
     person_grunnlag_id,
 
-    k_sivilstand_t,
-    k_bor_med_t
+    k_sivilstand_t
 
 from join_lopende_person_det

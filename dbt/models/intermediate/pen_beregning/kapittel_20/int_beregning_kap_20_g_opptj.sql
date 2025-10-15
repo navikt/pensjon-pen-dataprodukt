@@ -22,6 +22,7 @@ ref_beregning_res as (
         beregning_info_id,
         pen_under_utbet_id,
         beregning_info_avdod,
+        k_bor_med_t,
         ber_res_ap_2011_2016_id,
         ber_res_ap_2025_2016_id
     from {{ ref('stg_t_beregning_res') }}
@@ -51,6 +52,7 @@ join_beregning_res as (
         br.beregning_res_id,
         br.ber_res_ap_2011_2016_id,
         br.ber_res_ap_2025_2016_id,
+        br.k_bor_med_t,
         br.pen_under_utbet_id,
         br.beregning_info_id
     from ref_int_lopende_vedtak_alder
@@ -94,6 +96,7 @@ select
     beregning_res_id,
     pen_under_utbet_id,
     beregning_info_id,
+    k_bor_med_t,
     mottar_min_pensjonsniva,
     mottar_min_pensjniva_arsak,
     inst_opph_anv,

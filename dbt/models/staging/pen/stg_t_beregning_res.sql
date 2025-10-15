@@ -8,6 +8,7 @@ select
     beregning_info_id,
     pen_under_utbet_id,
     beregning_info_avdod,
+    k_bor_med_t,
     ber_res_ap_2011_2016_id,
     ber_res_ap_2025_2016_id
 from {{ source('pen', 't_beregning_res') }}

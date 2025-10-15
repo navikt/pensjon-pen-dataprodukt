@@ -15,6 +15,8 @@ models:
         description: '...'
       - name: beregning_info_id
         description: '...'
+      - name: k_bor_med_t
+        description: '...'
       - name: pen_under_utbet_id
         description: '...' # todo: spør Magne
       - name: beregning_info_avdod

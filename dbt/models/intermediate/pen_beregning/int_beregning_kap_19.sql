@@ -22,6 +22,7 @@ ref_beregning as (
         dato_virk_tom,
         k_minstepensj_t,
         k_minstepensj_arsak,
+        k_bor_med_t,
         red_pga_inst_opph,
         brutto,
         netto,
@@ -38,6 +39,7 @@ join_beregning as (
         ref_beregning.beregning_id,
         ref_beregning.k_minstepensj_t,
         ref_beregning.k_minstepensj_arsak,
+        ref_beregning.k_bor_med_t,
         ref_beregning.red_pga_inst_opph,
         ref_beregning.brutto,
         ref_beregning.netto,
@@ -70,6 +72,7 @@ select
     k_bereg_metode_t,
     k_minstepensj_t,
     k_minstepensj_arsak,
+    k_bor_med_t,
     red_pga_inst_opph,
     yug,
     tt_anv

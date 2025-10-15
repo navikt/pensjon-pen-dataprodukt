@@ -20,7 +20,8 @@ kap19 as (
         red_pga_inst_opph,
         k_minstepensj_t,
         k_minstepensj_arsak,
-        k_bereg_metode_t
+        k_bereg_metode_t,
+        k_bor_med_t
     from {{ ref('int_beregning_kap_19') }}
 ),
 
@@ -53,6 +54,7 @@ kap20 as (
         mottar_min_pensjonsniva,
         mottar_min_pensjniva_arsak,
         k_bereg_metode_t,
+        k_bor_med_t,
         beh_pen_b_totalbelop,
         beh_gar_pen_b_totalbelop,
         beh_gar_t_b_totalbelop
@@ -83,6 +85,7 @@ union_beregning as (
         case when k_minstepensj_t = 'ER_MINST_PEN' then '1' else '0' end as minstepensjon,
         k_minstepensj_arsak as minstepen_niva_arsak,
         k_bereg_metode_t,
+        k_bor_med_t,
         null as tp_restpensjon,
         null as pt_restpensjon,
         null as gp_restpensjon,
@@ -117,6 +120,7 @@ union_beregning as (
         case when mottar_min_pensjonsniva = '1' then '1' else '0' end as minstepensjon, -- heller coalesce()
         mottar_min_pensjniva_arsak as minstepen_niva_arsak,
         k_bereg_metode_t,
+        k_bor_med_t,
         tp_restpensjon,
         pt_restpensjon,
         gp_restpensjon,
@@ -141,6 +145,7 @@ select
     tt_anv_g_opptj,
     tt_anv_n_opptj,
     k_bereg_metode_t,
+    k_bor_med_t,
     tp_restpensjon,
     pt_restpensjon,
     gp_restpensjon,
