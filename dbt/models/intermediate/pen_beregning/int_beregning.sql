@@ -70,7 +70,10 @@ union_beregning as (
         null as pen_under_utbet_id,
         beregning_id,
 
-        100 as uttaksgrad,
+        case
+            when netto <= 0 or brutto <= 0 or netto > brutto then 0
+            else 100
+        end as uttaksgrad, -- i kap 19 eksisterer ikke konseptet uttaksgrad
         red_pga_inst_opph as institusjon_opphold,
         case when yug > 0 then '1' else '0' end as anvendt_yrkesskade_flagg,
         tt_anv as tt_anv_g_opptj,
