@@ -11,6 +11,8 @@ ref_vedtak as (
         vedtak_id,
         kravhode_id,
         k_sak_t,
+        k_vedtak_s,
+        k_vedtak_t,
         dato_lopende_fom,
         dato_lopende_tom
     from {{ ref('stg_t_vedtak') }}
@@ -43,6 +45,8 @@ select
     vedtak_id,
     kravhode_id,
     k_sak_t,
+    k_vedtak_s,
+    k_vedtak_t,
     k_regelverk_t,
     dato_lopende_fom,
     dato_lopende_tom

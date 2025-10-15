@@ -10,6 +10,8 @@ ref_int_lopende_vedtak_alder as (
         kravhode_id,
         k_sak_t,
         k_regelverk_t,
+        k_vedtak_s,
+        k_vedtak_t,
         dato_lopende_fom,
         dato_lopende_tom
     from {{ ref('int_lopende_vedtak_alder') }}
@@ -84,6 +86,8 @@ select
     sak_id,
     kravhode_id,
     k_sak_t,
+    k_vedtak_s,
+    k_vedtak_t,
     dato_lopende_fom,
     dato_lopende_tom,
     k_regelverk_t,
