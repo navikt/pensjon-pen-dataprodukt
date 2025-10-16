@@ -23,7 +23,7 @@ ref_t_vilkar_vedtak as (
         k_vilk_vurd_t,
         dato_virk_fom,
         dato_virk_tom
-    from {{ source('pen', 't_vilkar_vedtak') }}
+    from {{ ref('stg_t_vilkar_vedtak') }}
 ),
 
 ref_person as (
