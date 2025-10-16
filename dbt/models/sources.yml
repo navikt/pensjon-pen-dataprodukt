@@ -7,7 +7,6 @@ sources:
       - name: t_beregning
       - name: t_beregning_info
       - name: t_beregning_res
-      - name: t_eo_resultat_ut
       - name: t_kravhode
       - name: t_pen_under_utbet
       - name: t_uttaksgrad
@@ -15,8 +14,6 @@ sources:
       - name: t_vilkar_vedtak
       - name: t_ytelse_komp
       # kodeverk
-      - name: t_k_afp_t
-      - name: t_k_regelverk_t
       - name: t_person
       - name: t_person_grunnlag
       - name: t_person_det
