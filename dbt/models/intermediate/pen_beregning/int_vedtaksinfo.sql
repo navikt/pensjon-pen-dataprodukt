@@ -17,6 +17,15 @@ ref_int_lopende_vedtak_alder as (
     from {{ ref('int_lopende_vedtak_alder') }}
 ),
 
+ref_t_vilkar_vedtak as (
+    select
+        vedtak_id,
+        k_vilk_vurd_t,
+        dato_virk_fom,
+        dato_virk_tom
+    from {{ source('pen', 't_vilkar_vedtak') }}
+),
+
 ref_person as (
     select
         person_id,
@@ -50,11 +59,72 @@ ref_person_det as (
         )
 ),
 
+-- setter flagg for overgangsstønad via vilkår-vedtak
+join_mange_til_en_vilkar_pa_vedtak as (
+    -- joiner mot vilkår, og får da mange rader per vedtak
+    select
+        v.*,
+        vilk.k_vilk_vurd_t
+    from ref_int_lopende_vedtak_alder v
+    left join ref_t_vilkar_vedtak vilk
+        on
+            v.vedtak_id = vilk.vedtak_id
+            -- mulig dette datofilteret er redundant mtp join mot faktisk løpende vedtak
+            and (vilk.dato_virk_tom is null or vilk.dato_virk_tom > {{ periode_sluttdato(var("periode")) }})
+            and vilk.dato_virk_fom <= {{ periode_sluttdato(var("periode")) }}
+),
+
+-- group by på vedtak, så går tilbake til 1 rad per vedtak
+setter_overgangsstonad_flagg as (
+    select
+        sak_id,
+        person_id,
+        vedtak_id,
+        kravhode_id,
+        k_sak_t,
+        k_regelverk_t,
+        k_vedtak_s,
+        k_vedtak_t,
+        dato_lopende_fom,
+        dato_lopende_tom,
+        max(case
+            when
+                k_vilk_vurd_t in (
+                    -- alle kodene under har dekode som slutter med " - Overgangsstønad"
+                    'EGNE_BARN_FP',
+                    'EGNE_BARN_GJP',
+                    'EGNE_BARN_GJR',
+                    'OMS_AVD_BARN_FP',
+                    'OMS_AVD_BARN_GJP',
+                    'OMS_AVD_BARN_GJR',
+                    'OMSTILL_FP',
+                    'OMSTILL_GJP',
+                    'OMSTILL_GJR',
+                    'UTDAN_FP',
+                    'UTDAN_GJP',
+                    'UTDAN_GJR'
+                ) then 1
+            else 0
+        end) as overgangsstonad_flagg
+    from join_mange_til_en_vilkar_pa_vedtak
+    group by
+        sak_id,
+        person_id,
+        vedtak_id,
+        kravhode_id,
+        k_sak_t,
+        k_regelverk_t,
+        k_vedtak_s,
+        k_vedtak_t,
+        dato_lopende_fom,
+        dato_lopende_tom
+),
+
 join_lopende_person as (
     select
         v.*,
         p.bostedsland
-    from ref_int_lopende_vedtak_alder v
+    from setter_overgangsstonad_flagg v
     left join ref_person p
         on v.person_id = p.person_id
 ),
@@ -89,6 +159,8 @@ select
     dato_lopende_fom,
     dato_lopende_tom,
     k_regelverk_t,
+
+    overgangsstonad_flagg,
 
     bostedsland,
 
