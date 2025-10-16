@@ -42,12 +42,3 @@ models:
       +tags: ['marts']
       +docs:
         node_color: '#a176b3'
-
-seeds:
-  pen_dataprodukt:
-    +persist_docs:
-      relation: true
-      columns: true
-    +tags: ['seed']
-    +docs:
-      node_color: '#065903'
