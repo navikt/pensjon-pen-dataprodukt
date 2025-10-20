@@ -9,3 +9,8 @@ models:
         description: '...'
       - name: sats
         description: '...'
+      - name: pro_rata_teller_mnd
+        description: '...'
+      - name: pro_rata_nevner_mnd
+        description: '...'
+

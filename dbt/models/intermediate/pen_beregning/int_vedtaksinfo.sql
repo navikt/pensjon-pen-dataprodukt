@@ -17,6 +17,29 @@ ref_int_lopende_vedtak_alder as (
     from {{ ref('int_lopende_vedtak_alder') }}
 ),
 
+ref_int_inntektsinfo as (
+    select
+        person_id,
+        kravhode_id,
+        inntekt_sfakpi_belop,
+        inntekt_penskd_belop,
+        inntekt_fki_belop,
+        inntekt_fpi_belop,
+        inntekt_pent_belop
+    from {{ ref('int_inntektsinfo') }}
+),
+
+ref_int_eps_inntektsinfo as (
+    select
+        vedtak_id,
+        inntekt_sfakpi_belop,
+        inntekt_penskd_belop,
+        inntekt_fki_belop,
+        inntekt_fpi_belop,
+        inntekt_pent_belop
+    from {{ ref('int_eps_inntektsinfo') }}
+),
+
 ref_t_vilkar_vedtak as (
     select
         vedtak_id,
@@ -147,6 +170,30 @@ join_lopende_person_det as (
     from join_lopende_person_grunnlag v
     left join ref_person_det pd
         on v.person_grunnlag_id = pd.person_grunnlag_id
+),
+
+join_inntektsinfo as (
+    select
+        v.*,
+        ii.inntekt_fpi_belop as inntekt,
+        eii.inntekt_fpi_belop as inntekt_eps,
+        case
+            when eii.inntekt_sfakpi_belop > 0
+                then eii.inntekt_sfakpi_belop
+
+            else (
+                coalesce(eii.inntekt_penskd_belop, 0)
+                + coalesce(eii.inntekt_fki_belop, 0)
+                + coalesce(eii.inntekt_fpi_belop, 0)
+                + coalesce(eii.inntekt_pent_belop, 0)
+            )
+        end as eps_aarlig_inntekt
+    from join_lopende_person_det v
+    left join ref_int_inntektsinfo ii
+        on
+            v.person_id = ii.person_id
+            and v.kravhode_id = ii.kravhode_id
+    left join ref_int_eps_inntektsinfo eii on v.vedtak_id = eii.vedtak_id
 )
 
 select
@@ -163,9 +210,12 @@ select
     overgangsstonad_flagg,
 
     bostedsland,
+    inntekt,
+    inntekt_eps,
+    eps_aarlig_inntekt,
 
     person_grunnlag_id,
 
     k_sivilstand_t
 
-from join_lopende_person_det
+from join_inntektsinfo
