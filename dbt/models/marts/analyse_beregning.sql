@@ -14,21 +14,23 @@ select
     uttaksgrad,
     tt_anv_g_opptj,
     tt_anv_n_opptj,
+    k_bereg_metode_t,
+    k_bor_med_t,
+    tp_restpensjon,
+    pt_restpensjon,
+    gp_restpensjon,
+    beh_pen_b_totalbelop,
+    beh_gar_pen_b_totalbelop,
+    beh_gar_t_b_totalbelop,
+    minstepen_niva_arsak,
 
     -- flagg
     institusjon_opphold,
     anvendt_yrkesskade_flagg,
     gjenlevrett_anv,
+    rett_pa_gjlevenderett,
     minstepensjon,
-
-    pen_under_utbet_id,
-    beregning_id,
-
-    -- fjern etter analyse, hører hjemme i vedtak
-    cast(null as number) as kravhode_id,  -- fjern etter analyse, hører hjemme i vedtak
-    cast(null as varchar2(5)) as k_sak_t,  -- fjern etter analyse, hører hjemme i vedtak
-    cast(null as date) as dato_lopende_fom,  -- fjern etter analyse, hører hjemme i vedtak
-    cast(null as date) as dato_lopende_tom,  -- fjern etter analyse, hører hjemme i vedtak
+    alderspensjon_ytelse_flagg,
 
     {{ var("periode") }} as periode,
     sysdate as kjoretidspunkt

@@ -13,8 +13,8 @@ select
     netto,
 
     sum_fradrag,
-    k_minstepen_niva as max_k_minstepen_niva,
-    k_minstepen_niva as min_k_minstepen_niva, -- denne kan fjernes fra denne inkrementell modellen, er alltid lik max
+    k_minstepen_niva,
+    minstepen_niva_sats,
 
     gp_netto,
     tp_netto,
