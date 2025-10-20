@@ -160,10 +160,13 @@ select
     cast(gjenlevrett_anv as varchar2(1)) as gjenlevrett_anv,
     cast(rett_pa_gjlevenderett as varchar2(1)) as rett_pa_gjlevenderett,
     cast(minstepensjon as varchar2(1)) as minstepensjon,
-    case
-        when netto > 0 then 1
-        else 0
-    end as alderspensjon_ytelse_flagg,
+    cast(
+        case
+            when netto > 0 then 1
+            else 0
+        end
+        as varchar2(1)
+    ) as alderspensjon_ytelse_flagg,
 
     -- id-er som ikke nødvendigvis skal til sluttproduktet
     pen_under_utbet_id,
