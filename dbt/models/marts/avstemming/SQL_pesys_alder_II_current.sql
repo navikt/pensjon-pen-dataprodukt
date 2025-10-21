@@ -1,3 +1,4 @@
+
 --create or replace view vw_pesys_alder_ii_current as
 -------------------------------------------------------------------------------
 -- Eirik Grønli
@@ -77,12 +78,12 @@ yk_prorata as (
                                           and br.dato_virk_fom <= current_date
                                           and (br.dato_virk_tom is null or br.dato_virk_tom >= trunc(current_date))
          left outer join pen.t_BEREGNING_RES BRES_2011 ON BRES_2011.ber_res_ap_2011_2016_id = br.beregning_res_id 
-         left outer join pen.t_beregning_2011 ber_2011 
-                           on ber_2011.BEREGNING_RES_ID = case
-                                                             when k.k_regelverk_t = 'N_REG_G_N_OPPTJ'
-                                                                      then bres_2011.beregning_res_id 
-                                                             else br.beregning_res_id 
-                                                          end  
+         left outer join pen.t_beregning_2011 ber_2011 on ber_2011.BEREGNING_RES_ID = 
+                                                                              case
+                                                                                  when k.k_regelverk_t = 'N_REG_G_N_OPPTJ'
+                                                                                        then bres_2011.beregning_res_id 
+                                                                                  else br.beregning_res_id 
+                                                                              end  
          inner join pen.t_basispensjon bp on bp.basispensjon_id = ber_2011.basispensjon
          inner join pen.t_ytelse_komp yk2 on yk2.ytelse_komp_id = bp.pensjonstillegg
                                          and yk2.bruk = '1'
@@ -510,9 +511,9 @@ SELECT --distinct
        aktive.prorata_nevner,
        
        -- inntekter og beholdninger
-       round(aktive.BEHOLDNING_PENSJON_BELOP,5),
-       round(aktive.BEHOLDNING_GARAN_PEN_BELOP,5),
-       round(aktive.BEHOLDNING_GARAN_TLG_BELOP,5),
+       aktive.BEHOLDNING_PENSJON_BELOP,
+       aktive.BEHOLDNING_GARAN_PEN_BELOP,
+       aktive.BEHOLDNING_GARAN_TLG_BELOP,
        inntekt.INNTEKT_FPI_BELOP inntekt,
        
        -- inntekter ektefelle/partner/samboer (eps)
@@ -538,9 +539,9 @@ SELECT --distinct
        --
        
        aktive.brutto - aktive.netto as sum_fradrag,
-       round(coalesce(bi.gp_restpensjon, bi_2016.gp_restpensjon),5) as gp_restpensjon,
-       round(coalesce(bi.pt_restpensjon, bi_2016.pt_restpensjon),5) as pt_restpensjon,
-       round(coalesce(bi.tp_restpensjon, bi_2016.tp_restpensjon),5) as tp_restpensjon,
+       coalesce(bi.gp_restpensjon, bi_2016.gp_restpensjon) as gp_restpensjon,
+       coalesce(bi.pt_restpensjon, bi_2016.pt_restpensjon) as pt_restpensjon,
+       coalesce(bi.tp_restpensjon, bi_2016.tp_restpensjon) as tp_restpensjon,
        --
        to_timestamp(to_char(current_timestamp, 'DD.MM.YYYY HH24.MI.SS,FF9')) as kjoretidspunkt
   FROM aktive 
