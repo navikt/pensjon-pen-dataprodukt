@@ -200,6 +200,7 @@ select
     vedtak_id,
     sak_id,
     kravhode_id,
+    person_id,
     k_sak_t,
     k_vedtak_s,
     k_vedtak_t,
