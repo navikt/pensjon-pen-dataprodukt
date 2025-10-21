@@ -1,4 +1,3 @@
-
 --create or replace view vw_pesys_alder_i_current as
 -------------------------------------------------------------------------------
 -- Eirik Grønli
@@ -380,8 +379,8 @@ SELECT to_number(to_char(current_date,'YYYYMMDDHH24MI')) as periode,
        aktive.vedtak_id,
        aktive.sak_id,
        aktive.kravhode_id,
-       aktive.k_vedtak_t,
-       aktive.k_vedtak_s,
+       aktive.k_vedtak_t as vedtak_type,
+       aktive.k_vedtak_s as vedtak_status,
 --       person.fnr_fk as persnr,
        null as persnr,
        aktive.person_id,
