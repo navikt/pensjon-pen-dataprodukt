@@ -85,13 +85,8 @@ ref_person_det as (
 
 ref_vedtak as (
     select
-        sak_id,
         person_id,
-        vedtak_id,
-        kravhode_id,
         k_sak_t,
-        k_vedtak_s,
-        k_vedtak_t,
         dato_lopende_fom,
         dato_lopende_tom
     from {{ ref('stg_t_vedtak') }}
@@ -123,6 +118,7 @@ setter_overgangsstonad_flagg as (
         k_regelverk_t,
         k_vedtak_s,
         k_vedtak_t,
+        k_afp_t,
         dato_lopende_fom,
         dato_lopende_tom,
         max(case
@@ -154,6 +150,7 @@ setter_overgangsstonad_flagg as (
         k_regelverk_t,
         k_vedtak_s,
         k_vedtak_t,
+        k_afp_t,
         dato_lopende_fom,
         dato_lopende_tom
 ),
@@ -203,9 +200,8 @@ sett_afp_privat_flagg as (
     select
         v.*,
         case
-            when afp_privat.vedtak_id is not null then 1 else 0
+            when afp_privat.k_sak_t = 'AFP_PRIVAT' then 1 else 0 -- kunne bare vært is not null
         end as afp_privat_flagg
-
     from join_inntektsinfo v
     left join ref_vedtak afp_privat
         on
