@@ -143,33 +143,21 @@ setter_overgangsstonad_flagg as (
         dato_lopende_tom
 ),
 
-join_lopende_person as (
+join_person_detaljer as (
     select
         v.*,
-        p.bostedsland
+        p.bostedsland,
+        pd.k_sivilstand_t
+        -- her kan fnr legges til
     from setter_overgangsstonad_flagg v
     left join ref_person p
         on v.person_id = p.person_id
-),
-
-join_lopende_person_grunnlag as (
-    select
-        v.*,
-        pg.person_grunnlag_id
-    from join_lopende_person v
     left join ref_person_grunnlag pg
         on
             v.kravhode_id = pg.kravhode_id
             and v.person_id = pg.person_id -- må også ha med person_id for å treffe personen i grunnlaget
-),
-
-join_lopende_person_det as (
-    select
-        v.*,
-        pd.k_sivilstand_t
-    from join_lopende_person_grunnlag v
     left join ref_person_det pd
-        on v.person_grunnlag_id = pd.person_grunnlag_id
+        on pg.person_grunnlag_id = pd.person_grunnlag_id
 ),
 
 join_inntektsinfo as (
@@ -188,7 +176,7 @@ join_inntektsinfo as (
                 + coalesce(eii.inntekt_pent_belop, 0)
             )
         end as eps_aarlig_inntekt
-    from join_lopende_person_det v
+    from join_person_detaljer v
     left join ref_int_inntektsinfo ii
         on
             v.person_id = ii.person_id
@@ -214,8 +202,6 @@ select
     inntekt,
     inntekt_eps,
     eps_aarlig_inntekt,
-
-    person_grunnlag_id,
 
     k_sivilstand_t
 

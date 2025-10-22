@@ -20,7 +20,7 @@ select
     inntekt,
     inntekt_eps,
     eps_aarlig_inntekt,
-    person_grunnlag_id,
+    cast(null as number) as person_grunnlag_id,
     k_sivilstand_t,
 
     {{ var("periode") }} as periode,
