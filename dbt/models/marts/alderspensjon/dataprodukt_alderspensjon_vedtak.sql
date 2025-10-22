@@ -1,3 +1,5 @@
+-- dataprodukt_alderspensjon_vedtak
+
 {{
   config(
     materialized = 'incremental'
@@ -20,7 +22,6 @@ select
     inntekt,
     inntekt_eps,
     eps_aarlig_inntekt,
-    cast(null as number) as person_grunnlag_id,
     k_sivilstand_t,
     k_afp_t,
     afp_privat_flagg,

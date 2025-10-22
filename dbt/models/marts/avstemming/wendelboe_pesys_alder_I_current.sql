@@ -1,3 +1,5 @@
+-- wendelboe_pesys_alder_I_current
+
 with
 
 ref_int_beregning as (
@@ -24,7 +26,8 @@ dataprodukt_1 as (
         v.person_id,
         v.dato_lopende_fom,
         v.dato_lopende_tom,
-        -- afp_ordning,
+        v.k_afp_t as afp_ordning,
+        v.afp_privat_flagg,
         v.k_regelverk_t as regelverk,
         v.k_sak_t as sakstype,
         b.uttaksgrad,
@@ -55,7 +58,6 @@ dataprodukt_1 as (
         b.institusjon_opphold as red_pga_inst_opph_flagg,
         b.tt_anv_g_opptj as tt_anvendt_kap19_antall,
         b.tt_anv_n_opptj as tt_anvendt_kap20_antall,
-        -- afp_privat_flagg,
         b.rett_pa_gjlevenderett as innv_gj_rett -- TODO 
         -- kommunal_ytelse,
         -- kjoretidspunkt
