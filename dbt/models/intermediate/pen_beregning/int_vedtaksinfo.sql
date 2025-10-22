@@ -199,9 +199,7 @@ join_inntektsinfo as (
 sett_afp_privat_flagg as (
     select
         v.*,
-        case
-            when afp_privat.k_sak_t = 'AFP_PRIVAT' then 1 else 0 -- kunne bare vært is not null
-        end as afp_privat_flagg
+        cast(case when afp_privat.k_sak_t = 'AFP_PRIVAT' then 1 else 0 end as varchar2(1)) as afp_privat_flagg -- kunne bare vært is not null
     from join_inntektsinfo v
     left join ref_vedtak afp_privat
         on
