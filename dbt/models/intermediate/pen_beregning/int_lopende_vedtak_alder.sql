@@ -26,14 +26,16 @@ ref_kravhode as (
     select
         sak_id,
         kravhode_id,
-        k_regelverk_t
+        k_regelverk_t,
+        k_afp_t
     from {{ ref('stg_t_kravhode') }}
 ),
 
 join_kravhode as (
     select
         ref_vedtak.*,
-        ref_kravhode.k_regelverk_t
+        ref_kravhode.k_regelverk_t,
+        ref_kravhode.k_afp_t
     from ref_vedtak
     inner join ref_kravhode
         on ref_vedtak.kravhode_id = ref_kravhode.kravhode_id
@@ -48,6 +50,7 @@ select
     k_vedtak_s,
     k_vedtak_t,
     k_regelverk_t,
+    k_afp_t,
     dato_lopende_fom,
     dato_lopende_tom
 from join_kravhode

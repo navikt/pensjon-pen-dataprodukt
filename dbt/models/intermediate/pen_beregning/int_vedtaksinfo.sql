@@ -12,6 +12,7 @@ ref_int_lopende_vedtak_alder as (
         k_regelverk_t,
         k_vedtak_s,
         k_vedtak_t,
+        k_afp_t,
         dato_lopende_fom,
         dato_lopende_tom
     from {{ ref('int_lopende_vedtak_alder') }}
@@ -80,6 +81,20 @@ ref_person_det as (
                 or rolle_tom >= {{ periode_sluttdato(var("periode")) }}
             )
         )
+),
+
+ref_vedtak as (
+    select
+        sak_id,
+        person_id,
+        vedtak_id,
+        kravhode_id,
+        k_sak_t,
+        k_vedtak_s,
+        k_vedtak_t,
+        dato_lopende_fom,
+        dato_lopende_tom
+    from {{ ref('stg_t_vedtak') }}
 ),
 
 -- setter flagg for overgangsstønad via vilkår-vedtak
@@ -182,6 +197,22 @@ join_inntektsinfo as (
             v.person_id = ii.person_id
             and v.kravhode_id = ii.kravhode_id
     left join ref_int_eps_inntektsinfo eii on v.vedtak_id = eii.vedtak_id
+),
+
+sett_afp_privat_flagg as (
+    select
+        v.*,
+        case
+            when afp_privat.vedtak_id is not null then 1 else 0
+        end as afp_privat_flagg
+
+    from join_inntektsinfo v
+    left join ref_vedtak afp_privat
+        on
+            v.person_id = afp_privat.person_id
+            and afp_privat.k_sak_t = 'AFP_PRIVAT'
+            and afp_privat.dato_lopende_fom <= {{ periode_sluttdato(var("periode")) }}
+            and (afp_privat.dato_lopende_tom is null or afp_privat.dato_lopende_tom >= trunc({{ periode_sluttdato(var("periode")) }}))
 )
 
 select
@@ -202,7 +233,9 @@ select
     inntekt,
     inntekt_eps,
     eps_aarlig_inntekt,
+    afp_privat_flagg,
+    k_afp_t,
 
     k_sivilstand_t
 
-from join_inntektsinfo
+from sett_afp_privat_flagg
