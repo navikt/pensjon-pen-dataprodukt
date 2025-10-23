@@ -20,3 +20,7 @@ sources:
       - name: t_beholdning
       - name: t_min_pen_niva
       - name: t_inntekt
+      - name: t_anvendt_trygdetid
+      - name: t_brok
+      - name: t_f_min_pen_niva
+      

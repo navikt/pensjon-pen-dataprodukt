@@ -41,6 +41,10 @@ models:
         description: "Minstepensjonsnivå. Kan være HOY, LAV, ORDINAER, SAERSKILT, HOY_ENSLIG eller (null)."
       - name: min_pen_niva_id
         description: "brukes for å hente min_pen_niva sats"
+      - name: f_min_pen_niva_id
+        description: "brukes for å hente prorata for kapittel 20"
+      - name: anvendt_trygdetid
+        description: "brukes for å hente prorata for kapittel 19"
       - name: opphort
         description: "Flagg som angir om dette er en representant for en opphort ytelseskompenent."
       - name: fradrag

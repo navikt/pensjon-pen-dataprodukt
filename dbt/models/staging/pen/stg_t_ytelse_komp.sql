@@ -9,6 +9,8 @@ select
     ap_kap19_uten_gjr,
     pen_under_utbet_id,
     beregning_id,
+    f_min_pen_niva_id,
+    anvendt_trygdetid,
     bruk,
     netto,
     fradrag,
