@@ -220,16 +220,13 @@ select
     dato_lopende_fom,
     dato_lopende_tom,
     k_regelverk_t,
-
     overgangsstonad_flagg,
-
     bostedsland,
     inntekt,
     inntekt_eps,
     eps_aarlig_inntekt,
     afp_privat_flagg,
     k_afp_t,
-
     k_sivilstand_t
 
 from sett_afp_privat_flagg
