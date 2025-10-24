@@ -23,6 +23,7 @@ ref_ytelse_komp as (
         ap_kap19_uten_gjr,
         k_minstepen_niva,
         min_pen_niva_id,
+        anvendt_trygdetid,
         netto,
         opphort,
         fradrag,
@@ -37,6 +38,21 @@ ref_min_pen_niva as (
     from {{ ref('stg_t_min_pen_niva') }}
 ),
 
+ref_stg_t_anvendt_trygdetid as (
+    select
+        anvendt_trygdetid_id,
+        pro_rata
+    from {{ ref('stg_t_anvendt_trygdetid') }}
+),
+
+ref_stg_t_brok as (
+    select
+        brok_id,
+        teller,
+        nevner
+    from {{ ref('stg_t_brok') }}
+),
+
 transponert_ytelse_komp as (
     -- selv om det er sum per type ytelse, så er det kun en rad per beregning_id eller pen_under_utbet_id
     select
@@ -46,6 +62,7 @@ transponert_ytelse_komp as (
         sum(fradrag) as sum_fradrag, -- todo: denne er alltid 0!!!
         max(case when k_ytelse_komp_t = 'PT' then k_minstepen_niva end) as k_minstepen_niva,
         max(case when k_ytelse_komp_t = 'MIN_NIVA_TILL_INDV' then min_pen_niva_id end) as min_pen_niva_id,
+        max(case when k_ytelse_komp_t = 'GP' then anvendt_trygdetid end) as yk_anvendt_trygdetid, -- id for å joine t_anvendt_trygdetid -> t_brok -> pro_rata
 
         sum(case when k_ytelse_komp_t = 'GP' then netto end) as gp_netto,
         sum(case when k_ytelse_komp_t = 'TP' then netto end) as tp_netto,
@@ -84,6 +101,7 @@ join_beregning as (
         transponert_ytelse_komp.sum_fradrag,
         transponert_ytelse_komp.k_minstepen_niva,
         transponert_ytelse_komp.min_pen_niva_id,
+        transponert_ytelse_komp.yk_anvendt_trygdetid,
         transponert_ytelse_komp.gp_netto,
         transponert_ytelse_komp.tp_netto,
         transponert_ytelse_komp.pt_netto,
@@ -119,6 +137,18 @@ legger_til_minstepen_niva_sats as (
     from join_beregning
     left join ref_min_pen_niva
         on join_beregning.min_pen_niva_id = ref_min_pen_niva.min_pen_niva_id
+),
+
+-- Prorata kan også hentes fra:
+-- yk.f_min_pen_niva_id -> t_f_min_pen_niva_id -> t_min_pen_niva.pro_rata_teller/nevner_mnd
+legger_til_prorata as (
+    select
+        v.*,
+        brok.teller as prorata_teller,
+        brok.nevner as prorata_nevner
+    from legger_til_minstepen_niva_sats v
+    left join ref_stg_t_anvendt_trygdetid tat on v.yk_anvendt_trygdetid = tat.anvendt_trygdetid_id
+    left join ref_stg_t_brok brok on tat.pro_rata = brok.brok_id
 )
 
 select
@@ -132,6 +162,8 @@ select
     sum_fradrag, -- obs! denne er alltid 0, også i prod
     k_minstepen_niva,
     minstepen_niva_sats,
+    prorata_teller,
+    prorata_nevner,
 
     gp_netto,
     tp_netto,
@@ -156,4 +188,4 @@ select
     ap_kap19_med_gjr_bel,
     ap_kap19_uten_gjr_bel,
     gp_avkorting_flagg
-from legger_til_minstepen_niva_sats
+from legger_til_prorata

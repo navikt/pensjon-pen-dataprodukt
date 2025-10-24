@@ -13,7 +13,6 @@ sources:
       - name: t_vedtak
       - name: t_vilkar_vedtak
       - name: t_ytelse_komp
-      # kodeverk
       - name: t_person
       - name: t_person_grunnlag
       - name: t_person_det
@@ -22,5 +21,4 @@ sources:
       - name: t_inntekt
       - name: t_anvendt_trygdetid
       - name: t_brok
-      - name: t_f_min_pen_niva
       
