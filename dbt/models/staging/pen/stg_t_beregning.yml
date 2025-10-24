@@ -33,3 +33,5 @@ models:
         description: '...'
       - name: k_bereg_metode_t
         description: '...'
+      - name: k_resultat_t
+        description: '...'

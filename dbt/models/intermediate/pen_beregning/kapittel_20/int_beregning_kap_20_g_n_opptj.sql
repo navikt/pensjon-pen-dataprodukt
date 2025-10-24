@@ -37,6 +37,7 @@ ref_beregning_info as (
         tt_anv,
         yrksk_anv,
         yrksk_grad,
+        yrksk_reg,
         gjenlevrett_anv,
         rett_pa_gjlevenderett,
         inst_opph_anv,
@@ -89,11 +90,14 @@ join_beregning_info_overgang_2016 as (
         bi_2011.rett_pa_gjlevenderett,
         bi_2011.yrksk_anv,
         bi_2011.yrksk_grad,
+        bi_2011.yrksk_reg,
         bi_2011.k_bereg_metode_t, -- TODO: avklare om bi_2025 ogsså skal brukes. Totalt 300 rader med forskjellige verdier
         bi_2011.tp_restpensjon, -- restpensjon gjelder kun nytt regelverk med gammel opptjening 
         bi_2011.pt_restpensjon, -- restpensjon gjelder kun nytt regelverk med gammel opptjening
         bi_2011.gp_restpensjon, -- restpensjon gjelder kun nytt regelverk med gammel opptjening
 
+        bi_avdod.yrksk_reg as yrksk_reg_avdod,
+        bi_avdod.yrksk_anv as yrksk_anv_avdod,
         bi_2025.tt_anv as tt_anv_n_opptj
     from
         join_beregning_res
@@ -104,6 +108,9 @@ join_beregning_info_overgang_2016 as (
     -- hent beregning info kap 20
     left join ref_beregning_res br_2025 on join_beregning_res.beregning_res_id = br_2025.ber_res_ap_2025_2016_id
     left join ref_beregning_info bi_2025 on br_2025.beregning_info_id = bi_2025.beregning_info_id
+
+    -- hent beregning_info avdod
+    left join ref_beregning_info bi_avdod on br_2011.beregning_info_avdod = bi_avdod.beregning_info_id
 ),
 
 -- Legg til beholdninginfo, kun for N_REG_N_OPPTJ
@@ -139,6 +146,9 @@ select
     rett_pa_gjlevenderett,
     yrksk_anv,
     yrksk_grad,
+    yrksk_reg,
+    yrksk_reg_avdod,
+    yrksk_anv_avdod,
     tt_anv_g_opptj,
     tt_anv_n_opptj,
     k_bereg_metode_t,

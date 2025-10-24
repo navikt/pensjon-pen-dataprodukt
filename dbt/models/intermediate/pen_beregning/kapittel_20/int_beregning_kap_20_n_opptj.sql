@@ -36,6 +36,7 @@ ref_beregning_info as (
         tt_anv,
         yrksk_anv,
         yrksk_grad,
+        yrksk_reg,
         gjenlevrett_anv,
         rett_pa_gjlevenderett,
         inst_opph_anv,
@@ -62,7 +63,8 @@ join_beregning_res as (
         br.ber_res_ap_2025_2016_id,
         br.k_bor_med_t,
         br.pen_under_utbet_id,
-        br.beregning_info_id
+        br.beregning_info_id,
+        br.beregning_info_avdod
     from ref_int_lopende_vedtak_alder
     inner join ref_beregning_res br
         on
@@ -84,11 +86,16 @@ join_beregning_info as (
         ref_beregning_info.rett_pa_gjlevenderett,
         ref_beregning_info.yrksk_anv,
         ref_beregning_info.yrksk_grad,
+        ref_beregning_info.yrksk_reg,
         ref_beregning_info.k_bereg_metode_t,
-        ref_beregning_info.tt_anv as tt_anv_n_opptj
+        ref_beregning_info.tt_anv as tt_anv_n_opptj,
+        bi_avdod.yrksk_reg as yrksk_reg_avdod,
+        bi_avdod.yrksk_anv as yrksk_anv_avdod
     from join_beregning_res
     inner join ref_beregning_info
         on join_beregning_res.beregning_info_id = ref_beregning_info.beregning_info_id
+    left join ref_beregning_info bi_avdod
+        on join_beregning_res.beregning_info_avdod = bi_avdod.beregning_info_id
 ),
 
 -- Legg til beholdninginfo, kun for N_REG_N_OPPTJ
@@ -123,6 +130,9 @@ select
     rett_pa_gjlevenderett,
     yrksk_anv,
     yrksk_grad,
+    yrksk_reg,
+    yrksk_reg_avdod,
+    yrksk_anv_avdod,
     tt_anv_n_opptj,
     k_bereg_metode_t,
     beh_pen_b_totalbelop,

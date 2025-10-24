@@ -23,6 +23,7 @@ ref_beregning as (
         k_minstepensj_t,
         k_minstepensj_arsak,
         k_bor_med_t,
+        k_resultat_t,
         red_pga_inst_opph,
         brutto,
         netto,
@@ -40,6 +41,7 @@ join_beregning as (
         ref_beregning.k_minstepensj_t,
         ref_beregning.k_minstepensj_arsak,
         ref_beregning.k_bor_med_t,
+        ref_beregning.k_resultat_t,
         ref_beregning.red_pga_inst_opph,
         ref_beregning.brutto,
         ref_beregning.netto,
@@ -61,6 +63,7 @@ select
     kravhode_id,
     k_sak_t,
     k_regelverk_t,
+    k_resultat_t,
     dato_lopende_fom,
     dato_lopende_tom,
 

@@ -21,6 +21,8 @@ models:
         description: '...'
       - name: yrksk_anv
         description: '...'
+      - name: yrksk_reg
+        description: '...'
       - name: tt_anv
         description: '...'
       - name: k_bereg_metode_t

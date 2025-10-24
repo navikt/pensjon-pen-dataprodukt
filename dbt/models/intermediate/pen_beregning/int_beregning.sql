@@ -21,7 +21,8 @@ kap19 as (
         k_minstepensj_t,
         k_minstepensj_arsak,
         k_bereg_metode_t,
-        k_bor_med_t
+        k_bor_med_t,
+        k_resultat_t
     from {{ ref('int_beregning_kap_19') }}
 ),
 
@@ -48,6 +49,9 @@ kap20 as (
         -- felles
         yrksk_anv,
         yrksk_grad,
+        yrksk_reg,
+        yrksk_reg_avdod,
+        yrksk_anv_avdod,
         tt_anv_g_opptj,
         tt_anv_n_opptj,
         inst_opph_anv,
@@ -77,7 +81,16 @@ union_beregning as (
             else 100
         end as uttaksgrad, -- i kap 19 eksisterer ikke konseptet uttaksgrad
         red_pga_inst_opph as institusjon_opphold,
-        case when yug > 0 then '1' else '0' end as anvendt_yrkesskade_flagg,
+
+        case
+            when
+                yug > 0
+                or k_resultat_t in ('UP_GJP_UP_YP', 'GJP_UP_YP', 'AP_GJP_UP_YP', 'UP_YP', 'AP2011_GJP_UP_YP')
+                then '1'
+            else '0'
+        end as yrkesskade_rett_flagg,
+        case when yug > 0 then '1' else '0' end as yrkesskade_anv_flagg,
+
         tt_anv as tt_anv_g_opptj,
         null as tt_anv_n_opptj,
         null as gjenlevrett_anv, -- todo: burde ikke denne vært satt for kap 19, og ikke bare for kap20?
@@ -110,9 +123,15 @@ union_beregning as (
         uttaksgrad,
         inst_opph_anv as institusjon_opphold,
         case
-            when yrksk_anv = '1' and yrksk_grad > 0 then '1'
+            when yrksk_reg = '1' or (rett_pa_gjlevenderett = '1' and yrksk_reg_avdod = '1') then '1'
             else '0'
-        end as anvendt_yrkesskade_flagg,
+        end as yrkesskade_rett_flagg,
+
+        case
+            when yrksk_anv = '1' or (rett_pa_gjlevenderett = '1' and yrksk_anv_avdod = '1') then '1'
+            else '0'
+        end as yrkesskade_anv_flagg,
+
         tt_anv_g_opptj,
         tt_anv_n_opptj,
         gjenlevrett_anv,
@@ -156,7 +175,8 @@ select
 
     -- flagg
     cast(institusjon_opphold as varchar2(1)) as institusjon_opphold,
-    cast(anvendt_yrkesskade_flagg as varchar2(1)) as anvendt_yrkesskade_flagg,
+    cast(yrkesskade_anv_flagg as varchar2(1)) as yrkesskade_anv_flagg,
+    cast(yrkesskade_rett_flagg as varchar2(1)) as yrkesskade_rett_flagg,
     cast(gjenlevrett_anv as varchar2(1)) as gjenlevrett_anv,
     cast(rett_pa_gjlevenderett as varchar2(1)) as rett_pa_gjlevenderett,
     cast(minstepensjon as varchar2(1)) as minstepensjon,

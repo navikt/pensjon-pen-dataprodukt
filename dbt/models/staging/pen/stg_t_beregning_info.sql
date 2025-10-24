@@ -9,6 +9,7 @@ select
     inst_opph_anv,
     yrksk_grad,
     yrksk_anv,
+    yrksk_reg,
     tt_anv,
     k_bereg_metode_t,
     tp_restpensjon,

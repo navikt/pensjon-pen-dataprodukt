@@ -27,7 +27,8 @@ ref_ytelse_komp as (
         netto,
         opphort,
         fradrag,
-        bruk
+        bruk,
+        psats_gp
     from {{ ref('stg_t_ytelse_komp') }}
 ),
 

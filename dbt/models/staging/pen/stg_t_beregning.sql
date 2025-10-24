@@ -9,6 +9,7 @@ select
     k_minstepensj_t,
     k_minstepensj_arsak,
     k_bor_med_t,
+    k_resultat_t,
     red_pga_inst_opph,
     brutto,
     netto,
