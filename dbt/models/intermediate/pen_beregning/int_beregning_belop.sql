@@ -58,11 +58,11 @@ transponert_ytelse_komp as (
     select
         beregning_id,
         pen_under_utbet_id,
-        sum(case when k_ytelse_komp_t = 'GP' and netto > 0 and fradrag > 0 then 1 else 0 end) as gp_avkorting_flagg, -- todo: sjekk output
         sum(fradrag) as sum_fradrag, -- todo: denne er alltid 0!!!
         max(case when k_ytelse_komp_t = 'PT' then k_minstepen_niva end) as k_minstepen_niva,
         max(case when k_ytelse_komp_t = 'MIN_NIVA_TILL_INDV' then min_pen_niva_id end) as min_pen_niva_id,
         max(case when k_ytelse_komp_t = 'GP' then anvendt_trygdetid end) as yk_anvendt_trygdetid, -- id for å joine t_anvendt_trygdetid -> t_brok -> pro_rata
+        max(case when k_ytelse_komp_t = 'GP' then psats_gp end) as psats_gp,
 
         sum(case when k_ytelse_komp_t = 'GP' then netto end) as gp_netto,
         sum(case when k_ytelse_komp_t = 'TP' then netto end) as tp_netto,
@@ -97,11 +97,11 @@ transponert_ytelse_komp as (
 join_beregning as (
     select
         ref_int_beregning.*,
-        transponert_ytelse_komp.gp_avkorting_flagg,
         transponert_ytelse_komp.sum_fradrag,
         transponert_ytelse_komp.k_minstepen_niva,
         transponert_ytelse_komp.min_pen_niva_id,
         transponert_ytelse_komp.yk_anvendt_trygdetid,
+        transponert_ytelse_komp.psats_gp,
         transponert_ytelse_komp.gp_netto,
         transponert_ytelse_komp.tp_netto,
         transponert_ytelse_komp.pt_netto,
@@ -164,6 +164,7 @@ select
     minstepen_niva_sats,
     prorata_teller,
     prorata_nevner,
+    psats_gp,
 
     gp_netto,
     tp_netto,
@@ -186,6 +187,5 @@ select
     mpn_sstot_netto,
 
     ap_kap19_med_gjr_bel,
-    ap_kap19_uten_gjr_bel,
-    gp_avkorting_flagg
+    ap_kap19_uten_gjr_bel
 from legger_til_prorata

@@ -45,6 +45,8 @@ models:
         description: "brukes for å hente prorata for kapittel 20"
       - name: anvendt_trygdetid
         description: "brukes for å hente prorata for kapittel 19"
+      - name: psats_gp
+        description: "psats_gp"
       - name: opphort
         description: "Flagg som angir om dette er en representant for en opphort ytelseskompenent."
       - name: fradrag

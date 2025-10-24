@@ -11,6 +11,7 @@ select
     beregning_id,
     f_min_pen_niva_id,
     anvendt_trygdetid,
+    psats_gp,
     bruk,
     netto,
     fradrag,
