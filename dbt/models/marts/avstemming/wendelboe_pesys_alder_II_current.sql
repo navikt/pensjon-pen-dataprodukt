@@ -37,15 +37,17 @@ dataprodukt_2 as (
         b.k_bereg_metode_t as beregning_kode,
         b.k_bor_med_t,
         --k_grnl_rolle_t,
-        bb.k_minstepen_niva, -- mpn_arsak_sats, mpn_aarsak_kode, mpn_aarsak_flagg,
-        bb.minstepen_niva_sats, -- mpn_arsak_sats, mpn_aarsak_kode, mpn_aarsak_flagg,
-        b.minstepen_niva_arsak, -- mpn_arsak_sats, mpn_aarsak_kode, mpn_aarsak_flagg,
+        bb.minstepen_niva_sats as mpn_arsak_sats,
+        b.minstepen_niva_arsak as mpn_arsak_kode,
+        -- mpn_aarsak_flagg Vi dropper denne for nå
 
-        case when v.k_regelverk_t != 'G_REG' then 0 else 1 end as nytt_regelverk_flagg,
-        bb.gp_avkorting_flagg as gp_avkortet_flagg,
-        -- gp_sats_belop, Legges til fra YK
-        -- prorata_teller,
-        -- prorata_nevner,
+        case
+            when bb.psats_gp > 0 then 1
+            else 0
+        end as gp_avkortet_flagg,
+        bb.psats_gp as gp_sats_belop,
+        bb.prorata_teller,
+        bb.prorata_nevner,
         b.beh_pen_b_totalbelop as beholdning_pensjon_belop,
         b.beh_gar_pen_b_totalbelop as beholdning_garan_pen_belop,
         b.beh_gar_t_b_totalbelop as beholdning_garan_tlg_belop,

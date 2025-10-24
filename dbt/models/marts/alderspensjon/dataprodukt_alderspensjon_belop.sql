@@ -15,8 +15,9 @@ select
     sum_fradrag, -- obs! denne er alltid 0, også i prod
     k_minstepen_niva,
     minstepen_niva_sats,
-    --pro_rata_teller_mnd,
-    --pro_rata_nevner_mnd,
+    prorata_teller,
+    prorata_nevner,
+    psats_gp,
 
     gp_netto,
     tp_netto,
@@ -40,7 +41,6 @@ select
 
     ap_kap19_med_gjr_bel,
     ap_kap19_uten_gjr_bel,
-    gp_avkorting_flagg,
     {{ var("periode") }} as periode,
     sysdate as kjoretidspunkt
 from {{ ref('int_beregning_belop') }}
