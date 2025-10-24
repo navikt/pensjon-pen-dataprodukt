@@ -53,8 +53,8 @@ dataprodukt_1 as (
         bb.ap_kap19_uten_gjr_bel,
         bb.ip_netto,
         bb.gap_netto,
-        -- b.anvendt_yrkesskade_flagg as yrkesskade_rett_flagg, -- TODO
-        -- yrkesskade_anv_flagg, -- TODO
+        b.yrkesskade_anv_flagg,
+        b.yrkesskade_rett_flagg,
         b.institusjon_opphold as red_pga_inst_opph_flagg,
         b.tt_anv_g_opptj as tt_anvendt_kap19_antall,
         b.tt_anv_n_opptj as tt_anvendt_kap20_antall,

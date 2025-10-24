@@ -172,21 +172,13 @@ select
     beh_gar_pen_b_totalbelop,
     beh_gar_t_b_totalbelop,
     minstepen_niva_arsak,
-
-    -- flagg
     cast(institusjon_opphold as varchar2(1)) as institusjon_opphold,
     cast(yrkesskade_anv_flagg as varchar2(1)) as yrkesskade_anv_flagg,
     cast(yrkesskade_rett_flagg as varchar2(1)) as yrkesskade_rett_flagg,
     cast(gjenlevrett_anv as varchar2(1)) as gjenlevrett_anv,
     cast(rett_pa_gjlevenderett as varchar2(1)) as rett_pa_gjlevenderett,
     cast(minstepensjon as varchar2(1)) as minstepensjon,
-    cast(
-        case
-            when netto > 0 then 1
-            else 0
-        end
-        as varchar2(1)
-    ) as alderspensjon_ytelse_flagg,
+    cast(case when netto > 0 then 1 else 0 end as varchar2(1)) as alderspensjon_ytelse_flagg,
 
     -- id-er som ikke nødvendigvis skal til sluttproduktet
     pen_under_utbet_id,
