@@ -21,15 +21,19 @@ dataprodukt_1 as (
         v.sak_id,
         v.kravhode_id,
         v.k_vedtak_t,
+        {{ dekode('v.k_vedtak_t') }} as vedtak_type,
         v.k_vedtak_s,
+        {{ dekode('v.k_vedtak_s') }} as vedtak_status,
         null as persnr,
         v.person_id,
         v.dato_lopende_fom,
         v.dato_lopende_tom,
-        v.k_afp_t as afp_ordning,
-        v.afp_privat_flagg,
-        v.k_regelverk_t as regelverk,
-        v.k_sak_t as sakstype,
+        v.k_afp_t,
+        {{ dekode('v.k_afp_t') }} as afp_ordning,
+        v.k_regelverk_t,
+        {{ dekode('v.k_regelverk_t') }} as regelverk,
+        v.k_sak_t,
+        {{ dekode('v.k_sak_t') }} as sakstype,
         b.uttaksgrad,
         b.netto,
         b.alderspensjon_ytelse_flagg as aldersytelseflagg,
@@ -53,14 +57,15 @@ dataprodukt_1 as (
         bb.ap_kap19_uten_gjr_bel,
         bb.ip_netto,
         bb.gap_netto,
-        b.yrkesskade_anv_flagg,
         b.yrkesskade_rett_flagg,
+        b.yrkesskade_anv_flagg,
         b.institusjon_opphold as red_pga_inst_opph_flagg,
         b.tt_anv_g_opptj as tt_anvendt_kap19_antall,
         b.tt_anv_n_opptj as tt_anvendt_kap20_antall,
-        b.rett_pa_gjlevenderett as innv_gj_rett -- TODO 
+        v.afp_privat_flagg,
+        b.rett_pa_gjlevenderett as innv_gj_rett, -- TODO 
         -- kommunal_ytelse,
-        -- kjoretidspunkt
+        v.kjoretidspunkt
 
     from ref_int_vedtaksinfo v
     inner join ref_int_beregning b

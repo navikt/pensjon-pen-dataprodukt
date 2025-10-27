@@ -22,8 +22,10 @@ dataprodukt_2 as (
         v.person_id,
         v.dato_lopende_fom,
         v.dato_lopende_tom,
-        v.k_regelverk_t as regelverk,
-        v.k_sak_t as sakstype,
+        v.k_regelverk_t,
+        {{ dekode('v.k_regelverk_t') }} as regelverk,
+        v.k_sak_t,
+        {{ dekode('v.k_sak_t') }} as sakstype,
         b.uttaksgrad,
         b.alderspensjon_ytelse_flagg as aldersytelseflagg,
         b.minstepensjon,
@@ -34,17 +36,15 @@ dataprodukt_2 as (
         bb.pt_netto,
         bb.afp_t_netto,
         bb.afp_livsvarig_netto,
-        b.k_bereg_metode_t as beregning_kode,
+        b.k_bereg_metode_t,
+        {{ dekode('b.k_bereg_metode_t') }} as beregning_kode,
         b.k_bor_med_t,
-        --k_grnl_rolle_t,
+        {{ k_bor_med_t__k_grnl_rolle_t('b.k_bor_med_t') }} as k_grnl_rolle_t,
         bb.minstepen_niva_sats as mpn_arsak_sats,
         b.minstepen_niva_arsak as mpn_arsak_kode,
         -- mpn_aarsak_flagg Vi dropper denne for nå
-
-        case
-            when bb.psats_gp > 0 then 1
-            else 0
-        end as gp_avkortet_flagg,
+        case when v.k_regelverk_t = 'G_REG' then 0 else 1 end as nytt_regelverk_flagg,
+        case when bb.psats_gp > 0 then 1 else 0 end as gp_avkortet_flagg,
         bb.psats_gp as gp_sats_belop,
         bb.prorata_teller,
         bb.prorata_nevner,
@@ -57,8 +57,8 @@ dataprodukt_2 as (
         bb.sum_fradrag,
         b.gp_restpensjon,
         b.pt_restpensjon,
-        b.tp_restpensjon
-        --kjoretidspunkt
+        b.tp_restpensjon,
+        v.kjoretidspunkt
 
     from ref_int_vedtaksinfo v
     inner join ref_int_beregning b
