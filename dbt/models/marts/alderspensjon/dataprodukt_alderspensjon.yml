@@ -1,0 +1,331 @@
+models:
+  - name: dataprodukt_alderspensjon_vedtak
+    description: |
+      Vedtaksinformasjon for månedlige løpende alderspensjonsvedtak.
+      Henter blant annet informasjon om personen, inntekt og andre løpende vedtak, feks AFP.
+
+      **Unik nøkkel er kombinasjonen av vedtak_id og periode.**
+    columns:
+      - name: vedtak_id
+        description: ID for det løpende vedtaket. Månedlig unik i kombinasjon med periode.
+        data_type: number
+        data_tests:
+          - not_null
+      - name: sak_id
+        description: ID for saken i Pesys
+        data_type: number
+        data_tests:
+          - not_null
+      - name: kravhode_id
+        description: ID for det fremmede kravet
+        data_type: number
+        data_tests:
+          - not_null
+      - name: person_id
+        description: ID for mottakeren. Pesys-ID
+        data_type: number
+        data_tests:
+          - not_null
+      - name: k_sak_t
+        description: Sakstypen. Denne er alltid ALDER
+        data_type: varchar2
+        data_tests:
+          - accepted_values:
+              values:
+                - ALDER
+          - not_null
+      - name: k_vedtak_s
+        description: Status for vedtaket. Typisk LOPENDE, men er i noen tilfeller feks STOPPET. Det er vedtak som fortsatt er løpende, men som saksbehandler manuelt har stopet feks på grunn av innmeldt dødsfall i forkant av offisiell dødsmelding
+        data_type: varchar2
+      - name: k_regelverk_t
+        description: |
+          Typen regelverk som er anvendt i utrengingen av ytelsen. Angir regelverk og type opptjening.
+
+          | Kap | Kode            | Beskrivelse                                                | Dekode                |
+          |-----|-----------------|------------------------------------------------------------|-----------------------|
+          | 19  | G_REG           | Til og med 2010, gammelt regelverk                         | AP kap 19 tom 2010    | 
+          | 20  | N_REG_G_OPPTJ   | 2011-2015 nytt regelverk, gammel opptjening                | AP kap. 19 og kap. 20 | 
+          | 20  | N_REG_G_N_OPPTJ | 2016-2024 nytt regelverk, kombo av gammel og ny opptjening | AP kap 19 fom 2011    | 
+          | 20  | N_REG_N_OPPTJ   | Fra og med 2025, nytt regelverk og ny opptjening           | AP kap. 20            | 
+
+          Overgangskullene (N_REG_G_N_OPPTJ), født 1954-1962, får en kombinasjon av gammel og ny opptjening.
+          En født i 1954 får 90% gammel og 10% ny opptjening.
+        data_type: varchar2
+        data_tests:
+          - not_null
+
+      - name: dato_lopende_fom
+        description: "Vedtakets løpende dato fra og med"
+        data_type: date
+
+      - name: dato_lopende_tom
+        description: "Vedtakets løpende dato til og med"
+        data_type: date
+
+      - name: overgangsstonad_flagg
+        description: "sann om k_vilk_vurd_t inneholder order overgangsstonad"
+        data_type: varchar2
+
+      - name: bostedsland
+        description: "Bostedsland for personen. Hentet fra t_person"
+        data_type: varchar2
+
+      - name: inntekt
+        description: ""
+        data_type: number
+
+      - name: inntekt_eps
+        description: ""
+        data_type: number
+
+      - name: eps_aarlig_inntekt
+        description: ""
+        data_type: number
+
+      - name: afp_privat_flagg
+        description: ""
+        data_type: varchar2
+
+      - name: k_afp_t
+        description: ""
+        data_type: varchar2
+
+      - name: k_sivilstand_t
+        description: ""
+        data_type: varchar2
+
+      - name: periode
+        description: ""
+        data_type: varchar2
+
+      - name: kjoretidspunkt
+        description: ""
+        data_type: date
+
+  - name: dataprodukt_alderspensjon_beregning
+    description: |
+      Beregningsinformasjon knyttet til dataprodukt alderspensjon.
+    columns:
+      - name: sak_id
+        description: ID for saken i Pesys
+        data_type: number
+      - name: vedtak_id
+        description: ID for det løpende vedtaket. Månedlig unik i kombinasjon med periode.
+        data_type: number
+        data_tests:
+          - not_null
+      - name: k_regelverk_t
+        description: |
+          Typen regelverk som er anvendt i utrengingen av ytelsen. Angir regelverk og type opptjening.
+
+          | Kap | Kode            | Beskrivelse                                                | Dekode                |
+          |-----|-----------------|------------------------------------------------------------|-----------------------|
+          | 19  | G_REG           | Til og med 2010, gammelt regelverk                         | AP kap 19 tom 2010    | 
+          | 20  | N_REG_G_OPPTJ   | 2011-2015 nytt regelverk, gammel opptjening                | AP kap. 19 og kap. 20 | 
+          | 20  | N_REG_G_N_OPPTJ | 2016-2024 nytt regelverk, kombo av gammel og ny opptjening | AP kap 19 fom 2011    | 
+          | 20  | N_REG_N_OPPTJ   | Fra og med 2025, nytt regelverk og ny opptjening           | AP kap. 20            | 
+
+          Overgangskullene (N_REG_G_N_OPPTJ), født 1954-1962, får en kombinasjon av gammel og ny opptjening.
+          En født i 1954 får 90% gammel og 10% ny opptjening.
+
+      - name: brutto
+        description: ""
+        data_type: number
+
+      - name: netto
+        description: ""
+        data_type: number
+
+      - name: uttaksgrad
+        description: ""
+        data_type: number
+
+      - name: tt_anv_g_opptj
+        description: ""
+        data_type: number
+
+      - name: tt_anv_n_opptj
+        description: ""
+        data_type: number
+
+      - name: k_bereg_metode_t
+        description: ""
+        data_type: varchar2
+
+      - name: k_bor_med_t
+        description: ""
+        data_type: varchar2
+
+      - name: tp_restpensjon
+        description: ""
+        data_type: number
+
+      - name: pt_restpensjon
+        description: ""
+        data_type: number
+
+      - name: gp_restpensjon
+        description: ""
+        data_type: number
+
+      - name: beh_pen_b_totalbelop
+        description: ""
+        data_type: number
+
+      - name: beh_gar_pen_b_totalbelop
+        description: ""
+        data_type: number
+
+      - name: beh_gar_t_b_totalbelop
+        description: ""
+        data_type: number
+
+      - name: minstepen_niva_arsak
+        description: ""
+        data_type: varchar2
+
+      - name: institusjon_opphold
+        description: ""
+        data_type: varchar2
+
+      - name: yrkesskade_anv_flagg
+        description: ""
+        data_type: varchar2
+
+      - name: yrkesskade_rett_flagg
+        description: ""
+        data_type: varchar2
+
+      - name: gjenlevrett_anv
+        description: ""
+        data_type: varchar2
+
+      - name: rett_pa_gjlevenderett
+        description: ""
+        data_type: varchar2
+
+      - name: minstepensjon
+        description: ""
+        data_type: number
+
+      - name: alderspensjon_ytelse_flagg
+        description: ""
+        data_type: varchar2
+
+      - name: periode
+        description: ""
+        data_type: varchar2
+
+      - name: kjoretidspunkt
+        description: ""
+        data_type: date
+
+  - name: dataprodukt_alderspensjon_belop
+    description: |
+      Beløpsdetaljer
+    columns:
+      - name: vedtak_id
+        description: ""
+        data_type: number
+      - name: sak_id
+        description: ""
+        data_type: number
+      - name: beregning_id
+        description: ""
+        data_type: number
+      - name: pen_under_utbet_id
+        description: ""
+        data_type: number
+      - name: brutto
+        description: ""
+        data_type: number
+      - name: netto
+        description: ""
+        data_type: number
+      - name: sum_fradrag
+        description: ""
+        data_type: number
+      - name: k_minstepen_niva
+        description: ""
+        data_type: varchar2
+      - name: minstepen_niva_sats
+        description: ""
+        data_type: number
+      - name: prorata_teller
+        description: ""
+        data_type: number
+      - name: prorata_nevner
+        description: ""
+        data_type: number
+      - name: psats_gp
+        description: ""
+        data_type: number
+      - name: gp_netto
+        description: ""
+        data_type: number
+      - name: tp_netto
+        description: ""
+        data_type: number
+      - name: pt_netto
+        description: ""
+        data_type: number
+      - name: st_netto
+        description: ""
+        data_type: number
+      - name: ip_netto
+        description: ""
+        data_type: number
+      - name: et_netto
+        description: ""
+        data_type: number
+      - name: vt_netto
+        description: ""
+        data_type: number
+      - name: gap_netto
+        description: ""
+        data_type: number
+      - name: gat_netto
+        description: ""
+        data_type: number
+      - name: gjt_netto
+        description: ""
+        data_type: number
+      - name: afp_t_netto
+        description: ""
+        data_type: number
+      - name: saerkull_netto
+        description: ""
+        data_type: number
+      - name: barn_felles_netto
+        description: ""
+        data_type: number
+      - name: skjermt_netto
+        description: ""
+        data_type: number
+      - name: gjt_k19_netto
+        description: ""
+        data_type: number
+      - name: ufor_sum_ut_ord_netto
+        description: ""
+        data_type: number
+      - name: afp_livsvarig_netto
+        description: ""
+        data_type: number
+      - name: mpn_indiv_netto
+        description: ""
+        data_type: number
+      - name: mpn_sstot_netto
+        description: ""
+        data_type: number
+      - name: ap_kap19_med_gjr_bel
+        description: ""
+        data_type: number
+      - name: ap_kap19_uten_gjr_bel
+        description: ""
+        data_type: number
+      - name: periode
+        description: ""
+        data_type: varchar2
+      - name: kjoretidspunkt
+        description: ""
+        data_type: date
