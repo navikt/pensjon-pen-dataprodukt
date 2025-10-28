@@ -11,6 +11,7 @@ dependencies = [
     "requests>=2.32.3",
     "db-dtypes>=1.2.0",
     "dbt-core>=1.9.8",
+    "cryptography>=46.0.3",
 ]
 
 

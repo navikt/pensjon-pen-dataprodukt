@@ -1331,6 +1331,7 @@ name = "pen-dataprodukt"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "cryptography" },
     { name = "db-dtypes" },
     { name = "dbt-core" },
     { name = "dbt-oracle" },
@@ -1348,6 +1349,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "cryptography", specifier = ">=46.0.3" },
     { name = "db-dtypes", specifier = ">=1.2.0" },
     { name = "dbt-core", specifier = ">=1.9.8" },
     { name = "dbt-oracle", specifier = ">=1.9.3" },
