@@ -175,8 +175,8 @@ join_person_detaljer as (
 join_inntektsinfo as (
     select
         v.*,
-        ii.inntekt_fpi_belop as inntekt,
-        eii.inntekt_fpi_belop as inntekt_eps,
+        ii.inntekt_fpi_belop,
+        eii.inntekt_fpi_belop as inntekt_fpi_belop_eps,
         case
             when eii.inntekt_sfakpi_belop > 0
                 then eii.inntekt_sfakpi_belop
@@ -199,14 +199,16 @@ join_inntektsinfo as (
 sett_afp_privat_flagg as (
     select
         v.*,
-        cast(case when afp_privat.k_sak_t = 'AFP_PRIVAT' then 1 else 0 end as varchar2(1)) as afp_privat_flagg -- kunne bare vært is not null
+        case when exists (
+            select null
+            from ref_vedtak afp_privat
+            where
+                v.person_id = afp_privat.person_id
+                and afp_privat.k_sak_t = 'AFP_PRIVAT'
+                and afp_privat.dato_lopende_fom <= {{ periode_sluttdato(var("periode")) }}
+                and (afp_privat.dato_lopende_tom is null or afp_privat.dato_lopende_tom >= trunc({{ periode_sluttdato(var("periode")) }}))
+        ) then '1' else '0' end as afp_privat_flagg
     from join_inntektsinfo v
-    left join ref_vedtak afp_privat
-        on
-            v.person_id = afp_privat.person_id
-            and afp_privat.k_sak_t = 'AFP_PRIVAT'
-            and afp_privat.dato_lopende_fom <= {{ periode_sluttdato(var("periode")) }}
-            and (afp_privat.dato_lopende_tom is null or afp_privat.dato_lopende_tom >= trunc({{ periode_sluttdato(var("periode")) }}))
 )
 
 select
@@ -222,8 +224,8 @@ select
     k_regelverk_t,
     overgangsstonad_flagg,
     bostedsland,
-    inntekt,
-    inntekt_eps,
+    inntekt_fpi_belop,
+    inntekt_fpi_belop_eps,
     eps_aarlig_inntekt,
     afp_privat_flagg,
     k_afp_t,
