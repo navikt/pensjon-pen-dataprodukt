@@ -26,6 +26,8 @@ vars:
 
 models:
   pen_dataprodukt:
+    +contract:
+      enforced: false
     +materialized: view # alle modeller blir views
     +persist_docs:
       relation: true
