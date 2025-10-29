@@ -1,2 +1,3 @@
 analysis/_sql_pilot.sql
 models/marts/sql_pilot_original.sql
+**/target/

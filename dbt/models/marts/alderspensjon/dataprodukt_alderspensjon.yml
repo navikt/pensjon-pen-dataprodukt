@@ -70,20 +70,26 @@ models:
         description: "Bostedsland for personen. Hentet fra t_person"
         data_type: varchar2
 
-      - name: inntekt
-        description: ""
+      - name: inntekt_fpi_belop
+        description: "inntekt_fpi_belop fra t_inntekt gjennom int_inntektsinfo"
         data_type: number
 
-      - name: inntekt_eps
-        description: ""
+      - name: inntekt_fpi_belop_eps
+        description: "inntekt_fpi_belop fra t_inntekt gjennom int_eps_inntektsinfo"
         data_type: number
 
       - name: eps_aarlig_inntekt
-        description: ""
+        description: |
+          sum av 
+            inntekt_penskd_belop 
+            inntekt_fki_belop 
+            inntekt_fpi_belop 
+            inntekt_pent_belop 
+          fra t_inntekt gjennom int_eps_inntektsinfo
         data_type: number
 
       - name: afp_privat_flagg
-        description: ""
+        description: "Alle løpende ALDER vedtak som også har et løpende vedtak med k_sak_t=AFP_PRIVATE"
         data_type: varchar2
 
       - name: k_afp_t
@@ -95,7 +101,7 @@ models:
         data_type: varchar2
 
       - name: periode
-        description: ""
+        description: "ÅÅÅÅMM, beregnet ved utgangen av måneden"
         data_type: varchar2
 
       - name: kjoretidspunkt
@@ -129,31 +135,31 @@ models:
           En født i 1954 får 90% gammel og 10% ny opptjening.
 
       - name: brutto
-        description: ""
-        data_type: number
+        description: "Brutto beløp for beregning fra t_pen_under_utbet (KAP 20) eller t_beregning (KAP 19)"
+        data_type: nBrutto beløp for beregning fra t_pen_under_utbet (KAP 20) eller t_beregning (KAP 19)r
 
       - name: netto
-        description: ""
+        description: "Netto beløp for beregning fra t_pen_under_utbet (KAP 20) eller t_beregning (KAP 19)Netto beløp for beregning fra t_pen_under_utbet (KAP 20) eller t_beregning (KAP 19)"
         data_type: number
 
       - name: uttaksgrad
-        description: ""
+        description: "Uttagsgrad [0,1], eksisterer ikke for KAP 19"
         data_type: number
 
       - name: tt_anv_g_opptj
-        description: ""
+        description: "Trygdetid etter gammel opptjening"
         data_type: number
 
       - name: tt_anv_n_opptj
-        description: ""
+        description: "Trygdetid etter ny opptjening"
         data_type: number
 
       - name: k_bereg_metode_t
-        description: ""
+        description: "Beregning metode"
         data_type: varchar2
 
       - name: k_bor_med_t
-        description: ""
+        description: "Bor med"
         data_type: varchar2
 
       - name: tp_restpensjon
@@ -189,35 +195,35 @@ models:
         data_type: varchar2
 
       - name: yrkesskade_anv_flagg
-        description: ""
+        description: "Indikerer om personen har yrkesskade ytelse ved siden av pensjonen."
         data_type: varchar2
 
       - name: yrkesskade_rett_flagg
-        description: ""
+        description: "Indikerer om personen har rett til yrkesskade ytelse ved siden av pensjonen."
         data_type: varchar2
 
       - name: gjenlevrett_anv
-        description: ""
+        description: "gjenlevrett anvendt"
         data_type: varchar2
 
       - name: rett_pa_gjlevenderett
-        description: ""
+        description: "rett på gjenlevenderett"
         data_type: varchar2
 
       - name: minstepensjon
-        description: ""
-        data_type: number
+        description: "1 | 0"
+        data_type: varchar
 
       - name: alderspensjon_ytelse_flagg
-        description: ""
+        description: "1 | 0"
         data_type: varchar2
 
       - name: periode
-        description: ""
+        description: "ÅÅÅÅMM"
         data_type: varchar2
 
       - name: kjoretidspunkt
-        description: ""
+        description: "Tidspunkt for kjøring av transformasjonen"
         data_type: date
 
   - name: dataprodukt_alderspensjon_belop
@@ -237,94 +243,94 @@ models:
         description: ""
         data_type: number
       - name: brutto
-        description: ""
+        description: "Brutto beløp for beregning fra t_pen_under_utbet (KAP 20) eller t_beregning (KAP 19)"
         data_type: number
       - name: netto
-        description: ""
+        description: "Netto beløp for beregning fra t_pen_under_utbet (KAP 20) eller t_beregning (KAP 19)"
         data_type: number
       - name: sum_fradrag
-        description: ""
+        description: "sum av fradrag fra ytelses_komp"
         data_type: number
       - name: k_minstepen_niva
-        description: ""
+        description: "HOY_ENSLIG,SAERSKILT,LAV,ORDINAER,HOY"
         data_type: varchar2
       - name: minstepen_niva_sats
         description: ""
         data_type: number
       - name: prorata_teller
-        description: ""
+        description: "hentes gjenn om relasjon ytelse_kome -> t_anvendt_trygdetid -> t_brok"
         data_type: number
       - name: prorata_nevner
-        description: ""
+        description: "hentes gjenn om relasjon ytelse_kome -> t_anvendt_trygdetid -> t_brok"
         data_type: number
       - name: psats_gp
-        description: ""
+        description: "ytelse komp"
         data_type: number
       - name: gp_netto
-        description: ""
+        description: "ytelse komp"
         data_type: number
       - name: tp_netto
-        description: ""
+        description: "ytelse komp"
         data_type: number
       - name: pt_netto
-        description: ""
+        description: "ytelse komp"
         data_type: number
       - name: st_netto
-        description: ""
+        description: "ytelse komp"
         data_type: number
       - name: ip_netto
-        description: ""
+        description: "ytelse komp"
         data_type: number
       - name: et_netto
-        description: ""
+        description: "ytelse komp"
         data_type: number
       - name: vt_netto
-        description: ""
+        description: "ytelse komp"
         data_type: number
       - name: gap_netto
-        description: ""
+        description: "ytelse komp"
         data_type: number
       - name: gat_netto
-        description: ""
+        description: "ytelse komp"
         data_type: number
       - name: gjt_netto
-        description: ""
+        description: "ytelse komp"
         data_type: number
       - name: afp_t_netto
-        description: ""
+        description: "ytelse komp"
         data_type: number
       - name: saerkull_netto
-        description: ""
+        description: "ytelse komp"
         data_type: number
       - name: barn_felles_netto
-        description: ""
+        description: "ytelse komp"
         data_type: number
       - name: skjermt_netto
-        description: ""
+        description: "ytelse komp"
         data_type: number
       - name: gjt_k19_netto
-        description: ""
+        description: "ytelse komp"
         data_type: number
       - name: ufor_sum_ut_ord_netto
-        description: ""
+        description: "ytelse komp"
         data_type: number
       - name: afp_livsvarig_netto
-        description: ""
+        description: "ytelse komp"
         data_type: number
       - name: mpn_indiv_netto
-        description: ""
+        description: "ytelse komp"
         data_type: number
       - name: mpn_sstot_netto
-        description: ""
+        description: "ytelse komp"
         data_type: number
       - name: ap_kap19_med_gjr_bel
-        description: ""
+        description: "ytelse komp"
         data_type: number
       - name: ap_kap19_uten_gjr_bel
-        description: ""
+        description: "ytelse komp"
         data_type: number
       - name: periode
-        description: ""
+        description: "ÅÅÅÅMM"
         data_type: varchar2
       - name: kjoretidspunkt
         description: ""

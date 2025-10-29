@@ -2,7 +2,7 @@
 
 {{
   config(
-    materialized = 'incremental'
+    materialized = 'table'
     )
 }}
 
@@ -19,8 +19,8 @@ select
     k_regelverk_t,
     overgangsstonad_flagg,
     bostedsland,
-    inntekt_fpi_belop as inntekt, -- TODO endre til inntekt_fpi_belop. Må også endres i DB.
-    inntekt_fpi_belop_eps as inntekt_eps, -- TODO endre til inntekt_fpi_belop_eps. Må også endres i DB.
+    inntekt_fpi_belop, -- TODO endre til inntekt_fpi_belop. Må også endres i DB.
+    inntekt_fpi_belop_eps, -- TODO endre til inntekt_fpi_belop_eps. Må også endres i DB.
     eps_aarlig_inntekt,
     afp_privat_flagg,
     k_afp_t,
