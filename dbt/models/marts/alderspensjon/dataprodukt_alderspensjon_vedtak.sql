@@ -2,7 +2,7 @@
 
 {{
   config(
-    materialized = 'table'
+    materialized = 'incremental',
     )
 }}
 
