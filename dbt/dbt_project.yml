@@ -21,7 +21,7 @@ snapshot-paths: ["snapshots"]
 vars:
   # Defaulter til den første dagen i måneden til kjøretidspunktet
   # periode er på formatet YYYYMM som integer
-  periode: "to_char(trunc(current_date + interval '-1' month, 'MM'), 'YYYYMM')"
+  periode: "to_char(trunc(add_months(current_date, -1)), 'YYYYMM')"
 
 
 models:
