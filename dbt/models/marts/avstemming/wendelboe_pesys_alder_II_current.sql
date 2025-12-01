@@ -44,7 +44,7 @@ dataprodukt_2 as (
         b.minstepen_niva_arsak as mpn_arsak_kode,
         -- mpn_aarsak_flagg Vi dropper denne for nå
         case when v.k_regelverk_t = 'G_REG' then 0 else 1 end as nytt_regelverk_flagg,
-        case when bb.psats_gp > 0 then 1 else 0 end as gp_avkortet_flagg,
+        case when (bb.psats_gp > 0 and bb.psats_gp < 1) then 1 else 0 end as gp_avkortet_flagg,
         bb.psats_gp as gp_sats_belop,
         bb.prorata_teller,
         bb.prorata_nevner,
