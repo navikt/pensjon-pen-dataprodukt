@@ -3,7 +3,14 @@
 select
     sak_id,
     kravhode_id,
-    k_regelverk_t,
+    kravhode_id_for,
     k_krav_gjelder,
-    k_afp_t
+    k_behandling_t,
+    k_regelverk_t,
+    k_afp_t,
+    k_krav_s,
+    opprettet_av,
+    dato_opprettet,
+    dato_onsket_virk,
+    dato_mottatt_krav
 from {{ source('pen', 't_kravhode') }}

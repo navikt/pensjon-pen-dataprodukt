@@ -16,7 +16,8 @@ behandlinger_kravhode as (
         kh.opprettet_av, -- opprettetAv**
         kh.k_behandling_t -- metode
         -- kh.endret_av
-    from pen.t_kravhode kh
+    -- from pen.t_kravhode kh
+    from {{ ref('stg_t_kravhode') }} kh
     order by
         kh.sak_id desc,
         kh.dato_mottatt_krav desc
