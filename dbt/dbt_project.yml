@@ -23,7 +23,7 @@ vars:
   # periode er på formatet YYYYMM som integer
   periode: "to_char(trunc(add_months(current_date, -1)), 'YYYYMM')"
 
-
+# modellene er tagget med sak eller ytelse for om de skal til dv-team-pensjon eller team sak
 models:
   pen_dataprodukt:
     +contract:
@@ -33,14 +33,21 @@ models:
       relation: true
       columns: true
     staging:
-      +tags: ['staging']
       +docs:
         node_color: '#a3c785'
     intermediate:
-      +tags: ['intermediate']
       +docs:
         node_color: '#49a8b3'
+      behandlingsstatistikk:
+        +tags: ['sak']
+      pen_beregning:
+        +tags: ['ytelse']
     marts:
-      +tags: ['marts']
       +docs:
         node_color: '#a176b3'
+      alderspensjon:
+        +tags: ['ytelse']
+      avstemming:
+        +tags: ['ytelse']
+      behandlingsstatistikk:
+        +tags: ['sak']
