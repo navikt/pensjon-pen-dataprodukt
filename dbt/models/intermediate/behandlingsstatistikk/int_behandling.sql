@@ -44,25 +44,25 @@ behandlinger_vedtak as (
 -- kan også være fint å mappe om kolonnenavn til det team sak vil ha for å holde tunga rett i munnen
 
 select
-    kravhode_id as kh_kravhode_id,
-    kravhode_id_for as kh_kravhode_id_for,
-    sak_id as kh_sak_id,
-    dato_mottatt_krav as kh_dato_mottatt_krav,
-    dato_opprettet as kh_dato_opprettet,
-    dato_onsket_virk as kh_dato_onsket_virk,
-    k_krav_gjelder as kh_k_krav_gjelder,
-    k_krav_s as kh_k_krav_s,
-    opprettet_av as kh_opprettet_av,
-    k_behandling_t as kh_k_behandling_t,
-    vedtak_id as v_vedtak_id,
-    k_sak_t as v_k_sak_t,
-    k_vedtak_t as v_k_vedtak_t,
-    dato_vedtak as v_dato_vedtak,
-    dato_virk_fom as v_dato_virk_fom,
-    k_vilkar_resul_t as v_k_vilkar_resul_t
+    kravhode_id, -- kh
+    kravhode_id_for, -- kh
+    sak_id, -- kh
+    dato_mottatt_krav, -- kh
+    dato_opprettet, -- kh
+    dato_onsket_virk, -- kh
+    k_krav_gjelder, -- kh
+    k_krav_s, -- kh
+    opprettet_av, -- kh
+    k_behandling_t, -- kh
+    vedtak_id, -- v
+    k_sak_t, -- v
+    k_vedtak_t, -- v
+    dato_vedtak, -- v
+    dato_virk_fom, -- v
+    k_vilkar_resul_t -- v
 from behandlinger_vedtak
 order by
-    kh_sak_id desc,
-    kh_kravhode_id desc,
-    kh_dato_mottatt_krav desc,
-    v_vedtak_id desc
+    sak_id desc,
+    kravhode_id desc,
+    dato_mottatt_krav desc,
+    vedtak_id desc
