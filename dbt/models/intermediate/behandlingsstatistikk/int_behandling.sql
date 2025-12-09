@@ -13,7 +13,11 @@ behandlinger_kravhode as (
         kh.dato_onsket_virk, -- forventetOppstartTid
         kh.k_krav_gjelder, -- behandlingType*
         kh.k_krav_s, -- behandlingStatus*
-        kh.opprettet_av, -- opprettetAv**
+        case
+            when substr(kh.opprettet_av, 1, 1) in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
+                then 'BRUKER-FNR'
+            else kh.opprettet_av
+        end as opprettet_av, -- opprettetAv** med skjuling av fnr
         kh.k_behandling_t -- metode
         -- kh.endret_av
     -- from pen.t_kravhode kh
