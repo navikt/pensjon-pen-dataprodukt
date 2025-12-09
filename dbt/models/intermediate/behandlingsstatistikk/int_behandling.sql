@@ -60,7 +60,9 @@ select
     k_krav_gjelder, -- kh
     k_krav_s, -- kh
     k_sak_t, -- v
-    k_vilkar_resul_t, -- v
+    k_vilkar_resul_t, -- v behandlingResultat
+    k_klageank_res_t, -- v behandlingResultat
+    k_vedtak_s, -- v behandlingResultat
     k_krav_arsak_t, -- ka
     k_vedtak_t, -- v
     k_behandling_t, -- kh
