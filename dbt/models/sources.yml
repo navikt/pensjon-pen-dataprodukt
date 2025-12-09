@@ -21,4 +21,4 @@ sources:
       - name: t_inntekt
       - name: t_anvendt_trygdetid
       - name: t_brok
-      
+      - name: t_krav_arsak
