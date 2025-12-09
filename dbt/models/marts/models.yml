@@ -1,5 +1,0 @@
-version: 2
-
-models:
-  - name: sql_pilot_original
-    description: "Model for SQL Pilot original. Add a detailed description here."
