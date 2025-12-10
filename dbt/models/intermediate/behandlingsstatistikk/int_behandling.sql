@@ -54,7 +54,17 @@ behandlinger_vedtak as (
     -- left join pen.t_vedtak v
     left join {{ ref('stg_t_vedtak') }} v
         on beh.kravhode_id = v.kravhode_id
-    order by beh.sak_id desc, v.dato_vedtak desc
+),
+
+behandlinger_sak as (
+    select
+        beh.*,
+        s.k_sak_s,
+        s.k_utlandstilknytning
+    from behandlinger_vedtak beh
+    inner join {{ ref('stg_t_sak') }} s
+        on beh.sak_id = s.sak_id
+    where s.k_sak_t = 'UFOREP'
 )
 
 select
@@ -64,12 +74,14 @@ select
     k_krav_gjelder, -- kh
     k_krav_s, -- kh
     k_sak_t, -- v
+    k_sak_s, -- sak
     k_vilkar_resul_t, -- v behandlingResultat
     k_klageank_res_t, -- v behandlingResultat
     k_vedtak_s, -- v behandlingResultat
     k_krav_arsak_t, -- ka
     k_vedtak_t, -- v
     k_behandling_t, -- kh
+    k_utlandstilknytning, -- sak
     opprettet_av, -- kh
     dato_opprettet, -- kh
     dato_vedtak, -- v
@@ -77,9 +89,4 @@ select
     dato_onsket_virk, -- kh
     dato_mottatt_krav, -- kh
     kravhode_id_for -- kh
-from behandlinger_vedtak
-order by
-    sak_id desc,
-    kravhode_id desc,
-    dato_mottatt_krav desc,
-    vedtak_id desc
+from behandlinger_sak
