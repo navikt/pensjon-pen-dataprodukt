@@ -17,6 +17,8 @@ ref_int_behandling as (
         k_krav_arsak_t, -- ka
         k_vedtak_t, -- v
         k_behandling_t, -- kh
+        k_utlandstilknytning, -- sak
+        k_sak_s, -- sak
         opprettet_av, -- kh
         dato_opprettet, -- kh
         dato_vedtak, -- v
@@ -29,24 +31,41 @@ ref_int_behandling as (
 
 final as (
     select
+        kravhode_id as behandling_id,
+        kravhode_id_for as relatertbehandling_id,
+        'PESYS' as relatert_fagsystem,
         sak_id,
-        kravhode_id as b_id,
-        vedtak_id, -- bonuskolonne
-        k_krav_arsak_t as b_arsak,
-        k_krav_s as b_status,
-        k_krav_gjelder as b_type,
-        k_vilkar_resul_t as b_resultat_vilkar_resul_t,
-        k_klageank_res_t as b_resultat_klageank_res_t,
-        k_vedtak_s as b_resultat_vedtak_s,
-        k_behandling_t as b_metode,
-        k_sak_t as sak_ytelse,
+        '-1' as saksnummer,
+        '-1' as aktor_id,
         dato_mottatt_krav as mottatt_tid,
         dato_opprettet as registrert_tid,
-        dato_onsket_virk as forventetoppstart_tid,
-        opprettet_av,
+        null as ferdigbehandlet_tid,
         dato_virk_fom as utbetalt_tid,
-        kravhode_id_for as relatertbehandling_id,
+        null as funksjonell_tid,
+        dato_onsket_virk as forventetoppstart_tid,
+        null as teknisk_tid,
+        k_sak_t as sak_ytelse,
+        k_utlandstilknytning as sak_utland,
+        k_krav_gjelder as behandling_type,
+        k_krav_s as behandling_status,
+        k_vilkar_resul_t as behandling_resultat_vilkar_resul_t,
+        k_klageank_res_t as behandling_resultat_klageank_res_t,
+        k_vedtak_s as behandling_resultat_vedtak_s,
+        k_sak_s as behandling_resultat_sak_s,
+        '-1' as resultat_begrunnelse,
+        k_behandling_t as behandling_metode,
+        k_krav_arsak_t as behandling_arsak,
+        opprettet_av,
+        '-1' as saksbehandler,
+        '-1' as ansvarlig_beslutter,
+        '-1' as ansvarlig_enhet,
+        '-1' as tilbakekrev_belop,
+        '-1' as funksjonell_periode_fom,
+        '-1' as funksjonell_periode_tom,
+        'PESYS' as fagsystem_navn,
+        '-1' as fagsystem_versjon,
         'bonuskolonner til høyre' as bonus,
+        vedtak_id, -- bonuskolonne
         k_vedtak_t
     from ref_int_behandling
 )
