@@ -22,3 +22,4 @@ sources:
       - name: t_anvendt_trygdetid
       - name: t_brok
       - name: t_krav_arsak
+      - name: t_sak
