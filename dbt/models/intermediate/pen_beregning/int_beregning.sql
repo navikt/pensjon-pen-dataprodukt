@@ -4,6 +4,16 @@
 
 with
 
+ref_stg_t_vilkar_vedtak as (
+    select
+        vedtak_id,
+        k_kravlinje_t,
+        k_vilkar_resul_t,
+        dato_virk_fom,
+        dato_virk_tom
+    from pen.t_vilkar_vedtak
+),
+
 kap19 as (
     select
         sak_id,
@@ -150,6 +160,24 @@ union_beregning as (
         -- her kommer flere felter fra t_beregning_info og placeholdere fra t_beregning
         -- ...
     from kap20
+),
+
+sett_inv_gj_rett as (
+    select
+        ber.*,
+        case when (vv.vedtak_id is not null) then 1 else 0 end as innv_gj_rett
+    from union_beregning ber
+    left join
+        ref_stg_t_vilkar_vedtak
+            vv on ber.vedtak_id = vv.vedtak_id
+    and vv.k_kravlinje_t = 'GJR'
+    and vv.k_vilkar_resul_t = 'INNV'
+    and vv.dato_virk_fom < current_date
+    and (
+        vv.dato_virk_tom >= trunc(current_date)
+        or vv.dato_virk_tom is null
+    )
+
 )
 
 select
@@ -176,11 +204,12 @@ select
     cast(yrkesskade_anv_flagg as varchar2(1)) as yrkesskade_anv_flagg,
     cast(yrkesskade_rett_flagg as varchar2(1)) as yrkesskade_rett_flagg,
     cast(gjenlevrett_anv as varchar2(1)) as gjenlevrett_anv,
-    cast(rett_pa_gjlevenderett as varchar2(1)) as rett_pa_gjlevenderett,
+    cast(innv_gj_rett as varchar2(1)) as innv_gj_rett,
+
     cast(minstepensjon as varchar2(1)) as minstepensjon,
     cast(case when netto > 0 then 1 else 0 end as varchar2(1)) as alderspensjon_ytelse_flagg,
 
     -- id-er som ikke nødvendigvis skal til sluttproduktet
     pen_under_utbet_id,
     beregning_id
-from union_beregning
+from sett_inv_gj_rett

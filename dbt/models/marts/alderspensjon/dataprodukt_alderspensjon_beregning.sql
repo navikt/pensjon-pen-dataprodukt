@@ -26,7 +26,7 @@ select
     yrkesskade_anv_flagg,
     yrkesskade_rett_flagg,
     gjenlevrett_anv,
-    rett_pa_gjlevenderett,
+    innv_gj_rett,
     minstepensjon,
     alderspensjon_ytelse_flagg,
 

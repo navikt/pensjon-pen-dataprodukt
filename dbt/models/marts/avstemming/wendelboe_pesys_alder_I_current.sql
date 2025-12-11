@@ -63,7 +63,7 @@ dataprodukt_1 as (
         b.tt_anv_g_opptj as tt_anvendt_kap19_antall,
         b.tt_anv_n_opptj as tt_anvendt_kap20_antall,
         v.afp_privat_flagg,
-        b.rett_pa_gjlevenderett as innv_gj_rett, -- TODO 
+        b.innv_gj_rett,
         -- kommunal_ytelse,
         v.kjoretidspunkt
 

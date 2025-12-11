@@ -206,8 +206,8 @@ models:
         description: "gjenlevrett anvendt"
         data_type: varchar2
 
-      - name: rett_pa_gjlevenderett
-        description: "rett på gjenlevenderett"
+      - name: innv_gj_rett
+        description: "innvilget gjenlevenderett"
         data_type: varchar2
 
       - name: minstepensjon
