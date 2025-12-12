@@ -91,9 +91,9 @@ union_beregning_info as (
         0 as tp_restpensjon,
         0 as pt_restpensjon,
         0 as gp_restpensjon,
-        beh_pen_b_totalbelop,
-        beh_gar_pen_b_totalbelop,
-        beh_gar_t_b_totalbelop
+        null as beh_pen_b_totalbelop,
+        null as beh_gar_pen_b_totalbelop,
+        null as beh_gar_t_b_totalbelop
     from kap_20_n_opptj
     union all
     select

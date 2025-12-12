@@ -96,19 +96,6 @@ join_beregning_info as (
         on join_beregning_res.beregning_info_id = ref_beregning_info.beregning_info_id
     left join ref_beregning_info bi_avdod
         on join_beregning_res.beregning_info_avdod = bi_avdod.beregning_info_id
-),
-
--- Legg til beholdninginfo, kun for N_REG_N_OPPTJ
-join_beholdning as (
-    select
-        join_beregning_info.*,
-        beh_pen_b.totalbelop as beh_pen_b_totalbelop,
-        beh_gar_pen_b.totalbelop as beh_gar_pen_b_totalbelop,
-        beh_gar_t_b.totalbelop as beh_gar_t_b_totalbelop
-    from join_beregning_info
-    left join ref_beholdning beh_pen_b on join_beregning_info.beregning_info_id = beh_pen_b.beregning_info_id and beh_pen_b.k_beholdning_t = 'PEN_B'
-    left join ref_beholdning beh_gar_pen_b on join_beregning_info.beregning_info_id = beh_gar_pen_b.beregning_info_id and beh_gar_pen_b.k_beholdning_t = 'GAR_PEN_B'
-    left join ref_beholdning beh_gar_t_b on join_beregning_info.beregning_info_id = beh_gar_t_b.beregning_info_id and beh_gar_t_b.k_beholdning_t = 'GAR_T_B'
 )
 
 select
@@ -134,8 +121,5 @@ select
     yrksk_reg_avdod,
     yrksk_anv_avdod,
     tt_anv_n_opptj,
-    k_bereg_metode_t,
-    beh_pen_b_totalbelop,
-    beh_gar_pen_b_totalbelop,
-    beh_gar_t_b_totalbelop
-from join_beholdning
+    k_bereg_metode_t
+from join_beregning_info
