@@ -53,7 +53,9 @@ behandlinger_vedtak as (
     from behandlinger_kravarsak beh
     -- left join pen.t_vedtak v
     left join {{ ref('stg_t_vedtak') }} v
-        on beh.kravhode_id = v.kravhode_id
+        on
+            beh.kravhode_id = v.kravhode_id
+            and v.k_vedtak_t != 'REGULERING' -- ekskluderer reguleringsvedtak, de er ikke relevante
 ),
 
 behandlinger_sak as (
