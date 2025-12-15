@@ -10,12 +10,3 @@ snapshots:
       unique_key: vedtak_id
       updated_at: dato_endret
       hard_deletes: invalidate
-
-  - name: snapshot_vedtak_analyse
-    relation: ref('stg_t_vedtak')
-    config:
-      strategy: timestamp
-      unique_key: vedtak_id
-      updated_at: dato_endret
-      hard_deletes: invalidate
-      tags: ['work-in-progress']
