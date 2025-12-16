@@ -19,21 +19,7 @@ kravlinjer_normalisert as (
     -- gir alle kravlinjer, ikke bare uføre
     select
         kravhode_id,
-        rtrim( -- fjerner bare siste komma
-            max(case when k_kravlinje_t = 'UT' then 'UT,' else '' end)
-            || max(case when k_kravlinje_t = 'BT' then 'BT,' else '' end)
-            || max(case when k_kravlinje_t = 'ET' then 'ET,' else '' end)
-            || max(case when k_kravlinje_t = 'ET' then 'ET,' else '' end)
-            || max(case when k_kravlinje_t = 'TK' then 'TK,' else '' end)
-            || max(case when k_kravlinje_t = 'UP' then 'UP,' else '' end)
-            || max(case when k_kravlinje_t = 'GJR' then 'GJR,' else '' end)
-            || max(case when k_kravlinje_t = 'ANKE' then 'ANKE,' else '' end)
-            || max(case when k_kravlinje_t = 'KLAGE' then 'KLAGE,' else '' end)
-            || max(case when k_kravlinje_t = 'UT_GJT' then 'UT_GJT,' else '' end)
-            || max(case when k_kravlinje_t = 'FAST_UTG_INST' then 'FAST_UTG_INST,' else '' end),
-            ','
-        ) as kravlinjer
-        -- listagg(k_kravlinje_t, ', ') within group (order by kravhode_id) as kravlinjer_listagg -- funker ikke pga order og BT-duplikater
+        listagg(distinct k_kravlinje_t, ',') within group (order by kravhode_id asc, k_kravlinje_t desc) as kravlinjer
     from pen.t_kravlinje
     group by kravhode_id
 ),
