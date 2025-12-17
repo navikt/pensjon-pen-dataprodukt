@@ -12,7 +12,7 @@ ref_int_behandling as (
         k_krav_s, -- kh
         k_sak_t, -- v
         k_vilkar_resul_t, -- v behandlingResultat
-        k_klageank_res_t, -- v behandlingResultat
+        -- k_klageank_res_t, -- v behandlingResultat
         k_vedtak_s, -- v behandlingResultat
         k_krav_arsak_t, -- ka
         k_vedtak_t, -- v
@@ -26,7 +26,7 @@ ref_int_behandling as (
         dato_onsket_virk, -- kh
         dato_mottatt_krav, -- kh
         kravhode_id_for -- kh
-    from {{ ref('int_behandling') }}
+    from {{ ref('int_behandling_ferdig') }}
 ),
 
 final as (
@@ -49,7 +49,7 @@ final as (
         k_krav_gjelder as behandling_type,
         k_krav_s as behandling_status,
         k_vilkar_resul_t as behandling_resultat_vilkar_resul_t,
-        k_klageank_res_t as behandling_resultat_klageank_res_t,
+        '-1' as behandling_resultat_klageank_res_t,
         k_vedtak_s as behandling_resultat_vedtak_s,
         k_sak_s as behandling_resultat_sak_s,
         '-1' as resultat_begrunnelse,

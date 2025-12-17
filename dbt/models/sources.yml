@@ -23,3 +23,5 @@ sources:
       - name: t_brok
       - name: t_krav_arsak
       - name: t_sak
+      - name: t_kravlinje
+      - name: t_kravlinje_s

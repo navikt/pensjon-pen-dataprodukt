@@ -10,8 +10,11 @@
 with
 
 behandlinger as (
-    select * from pen_dataprodukt.int_behandling
-    --select * from {{ ref('int_behandling') }}
+    select * from {{ ref('int_behandling') }}
+),
+
+ref_stg_t_kravlinje as (
+    select * from {{ ref('stg_t_kravlinje') }}
 ),
 
 kravlinjer_normalisert as (
@@ -20,7 +23,7 @@ kravlinjer_normalisert as (
     select
         kravhode_id,
         listagg(distinct k_kravlinje_t, ',') within group (order by kravhode_id asc, k_kravlinje_t desc) as kravlinjer
-    from pen.t_kravlinje
+    from ref_stg_t_kravlinje
     group by kravhode_id
 ),
 
@@ -38,28 +41,17 @@ final as (
     select
         sak_id, -- kh
         kravhode_id, -- kh
-        vedtak_id, -- v
         kravlinjer,
         k_krav_gjelder, -- kh
         k_krav_s, -- kh
         k_krav_arsak_t, -- ka
-        k_vedtak_t, -- v
-        k_vilkar_resul_t, -- v
-        k_sak_t, -- v
         k_behandling_t, -- kh
-        dato_vedtak, -- v
-        dato_virk_fom, -- v
         opprettet_av, -- kh
         kravhode_id_for, -- kh
         dato_mottatt_krav, -- kh
         dato_opprettet, -- kh
         dato_onsket_virk -- kh
     from behandlinger_kravlinjer
-    order by
-        sak_id desc,
-        kravhode_id desc,
-        dato_mottatt_krav desc,
-        vedtak_id desc
 )
 
 select * from final

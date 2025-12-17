@@ -1,12 +1,27 @@
 -- int_behandling
+{{
+  config(
+    materialized = 'table',
+    )
+}}
 
 with
+
+ref_stg_t_sak as (
+    select *
+    from {{ ref('stg_t_sak') }}
+),
+
+ref_stg_t_krav_arsak as (
+    select *
+    from {{ ref('stg_t_krav_arsak') }}
+),
 
 behandlinger_kravhode as (
 -- en sak kan ha flere behandlinger (kravhoder)
     select
         kh.kravhode_id, -- behandlingId
-        kh.kravhode_id_for, -- relatertBehandlingId
+        kh.kravhode_id_for, -- relatertBehandlingId 
         kh.sak_id, -- sakId
         kh.dato_mottatt_krav, -- mottattTid
         kh.dato_opprettet, -- registrertTid
@@ -22,9 +37,6 @@ behandlinger_kravhode as (
         -- kh.endret_av
     -- from pen.t_kravhode kh
     from {{ ref('stg_t_kravhode') }} kh
-    order by
-        kh.sak_id desc,
-        kh.dato_mottatt_krav desc
 ),
 
 behandlinger_kravarsak as (
@@ -34,28 +46,8 @@ behandlinger_kravarsak as (
         ka.k_krav_arsak_t -- behandlingAarsak*
     from behandlinger_kravhode beh
     -- left join pen.t_krav_arsak ka
-    left join {{ ref('stg_t_krav_arsak') }} ka
+    left join ref_stg_t_krav_arsak ka
         on beh.kravhode_id = ka.kravhode_id
-),
-
-behandlinger_vedtak as (
--- en behandling kan ha flere vedtak
-    select
-        beh.*,
-        v.vedtak_id,
-        v.k_sak_t, -- sakYtelse
-        v.k_vedtak_t,
-        v.dato_vedtak,
-        v.dato_virk_fom, -- utbetaltTid
-        v.k_vedtak_s, -- mulig deler av behandlingResultat (feks AVBR, men kan også være fra k_krav_s)
-        v.k_klageank_res_t, -- deler av behandlingResultat
-        v.k_vilkar_resul_t -- deler av behandlingResultat
-    from behandlinger_kravarsak beh
-    -- left join pen.t_vedtak v
-    left join {{ ref('stg_t_vedtak') }} v
-        on
-            beh.kravhode_id = v.kravhode_id
-            and v.k_vedtak_t != 'REGULERING' -- ekskluderer reguleringsvedtak, de er ikke relevante
 ),
 
 behandlinger_sak as (
@@ -63,8 +55,8 @@ behandlinger_sak as (
         beh.*,
         s.k_sak_s,
         s.k_utlandstilknytning
-    from behandlinger_vedtak beh
-    inner join {{ ref('stg_t_sak') }} s
+    from behandlinger_kravarsak beh
+    inner join ref_stg_t_sak s
         on beh.sak_id = s.sak_id
     where s.k_sak_t = 'UFOREP'
 )
@@ -72,22 +64,14 @@ behandlinger_sak as (
 select
     sak_id, -- kh
     kravhode_id, -- kh
-    vedtak_id, -- v
     k_krav_gjelder, -- kh
     k_krav_s, -- kh
-    k_sak_t, -- v
     k_sak_s, -- sak
-    k_vilkar_resul_t, -- v behandlingResultat
-    k_klageank_res_t, -- v behandlingResultat
-    k_vedtak_s, -- v behandlingResultat
     k_krav_arsak_t, -- ka
-    k_vedtak_t, -- v
     k_behandling_t, -- kh
     k_utlandstilknytning, -- sak
     opprettet_av, -- kh
     dato_opprettet, -- kh
-    dato_vedtak, -- v
-    dato_virk_fom, -- v
     dato_onsket_virk, -- kh
     dato_mottatt_krav, -- kh
     kravhode_id_for -- kh
