@@ -5,11 +5,10 @@ ref_behandling as (
     from {{ ref('int_behandling') }}
     where
         k_krav_s = 'FERDIG'
-        and k_krav_gjelder not in ('KLAGE', 'ANKE')
 ),
 
 ref_behandling_vedtak as (
-    select * from {{ ref('int_behandling_vedtak') }}
+    select * from {{ ref('int_forste_vedtak_uforep') }}
 ),
 
 ref_vilkar_vedtak as (
@@ -32,7 +31,8 @@ behandlinger_vedtak as (
         v.dato_vedtak,
         v.dato_virk_fom, -- utbetaltTid
         v.k_vedtak_s, -- mulig deler av behandlingResultat (feks AVBR, men kan også være fra k_krav_s)
-        v.k_vilkar_resul_t -- resultat for hovedkravlinjen
+        v.k_vilkar_resul_t, -- resultat for hovedkravlinjen
+        v.k_klageank_res_t
     from ref_behandling beh
     -- left join pen.t_vedtak v
     left join ref_behandling_vedtak v
@@ -72,11 +72,11 @@ sette_resultat as (
         dato_virk_fom,
         case when vedtak_id is not null then 'vedtak' end as vedtak,
         case
+            when k_krav_gjelder in ('KLAGE', 'ANKE') then k_klageank_res_t
+            when k_krav_gjelder = 'REGULERING' then 'IVERKS' -- TODO hva gjør vi med disse?
             when k_vilkar_resul_t is not null then k_vilkar_resul_t
-            when k_krav_arsak_t = 'OPPHOR' then k_vedtak_s
             when vv__k_vilkar_resul_t is not null then vv__k_vilkar_resul_t
-            when k_krav_gjelder = 'TILBAKEKR' then k_vedtak_s
-            when k_krav_gjelder = 'OMGJ_TILBAKE' then k_vedtak_s
+            when k_krav_gjelder in ('TILBAKEKR', 'OMGJ_TILBAKE', 'UTSEND_AVTALELAND') then k_vedtak_s -- blir alltid IVERKS
         end as behandling_resultat,
         k_vedtak_s,
         k_vilkar_resul_t
@@ -104,4 +104,4 @@ select * from sette_resultat
 --     k_krav_gjelder
 -- order by
 --     ant desc
--- 
+

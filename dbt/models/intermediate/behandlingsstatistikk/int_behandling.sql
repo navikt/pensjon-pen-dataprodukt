@@ -17,6 +17,11 @@ ref_stg_t_krav_arsak as (
     from {{ ref('stg_t_krav_arsak') }}
 ),
 
+ref_stg_t_kravhode as (
+    select *
+    from {{ ref('stg_t_kravhode') }}
+),
+
 behandlinger_kravhode as (
 -- en sak kan ha flere behandlinger (kravhoder)
     select
@@ -33,10 +38,15 @@ behandlinger_kravhode as (
                 then 'BRUKER-FNR'
             else kh.opprettet_av
         end as opprettet_av, -- opprettetAv** med skjuling av fnr
-        kh.k_behandling_t -- metode
+        kh.k_behandling_t, -- metode
+        s.k_sak_s,
+        s.k_utlandstilknytning
         -- kh.endret_av
     -- from pen.t_kravhode kh
-    from {{ ref('stg_t_kravhode') }} kh
+    from ref_stg_t_kravhode kh
+    inner join ref_stg_t_sak s
+        on kh.sak_id = s.sak_id
+    where s.k_sak_t = 'UFOREP'
 ),
 
 behandlinger_kravarsak as (
@@ -48,17 +58,6 @@ behandlinger_kravarsak as (
     -- left join pen.t_krav_arsak ka
     left join ref_stg_t_krav_arsak ka
         on beh.kravhode_id = ka.kravhode_id
-),
-
-behandlinger_sak as (
-    select
-        beh.*,
-        s.k_sak_s,
-        s.k_utlandstilknytning
-    from behandlinger_kravarsak beh
-    inner join ref_stg_t_sak s
-        on beh.sak_id = s.sak_id
-    where s.k_sak_t = 'UFOREP'
 )
 
 select
@@ -75,4 +74,4 @@ select
     dato_onsket_virk, -- kh
     dato_mottatt_krav, -- kh
     kravhode_id_for -- kh
-from behandlinger_sak
+from behandlinger_kravarsak
