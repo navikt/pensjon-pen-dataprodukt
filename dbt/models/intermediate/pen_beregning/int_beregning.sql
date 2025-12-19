@@ -2,6 +2,12 @@
 -- union av kap20 og kap 19
 -- har midlertidige placeholder-verdier for noen felter
 
+{{
+  config(
+    materialized = 'table',
+    )
+}}
+
 with
 
 ref_stg_t_vilkar_vedtak as (
