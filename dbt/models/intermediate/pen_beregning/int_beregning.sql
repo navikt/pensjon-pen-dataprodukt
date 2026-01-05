@@ -171,19 +171,23 @@ union_beregning as (
 sett_inv_gj_rett as (
     select
         ber.*,
-        case when (vv.vedtak_id is not null) then 1 else 0 end as innv_gj_rett
+        --case when (vv.vedtak_id is not null) then 1 else 0 end as innv_gj_rett
+        case when exists (
+            select 1
+            from
+                ref_stg_t_vilkar_vedtak vv
+            where
+                ber.vedtak_id = vv.vedtak_id
+                and vv.k_kravlinje_t = 'GJR'
+                and vv.k_vilkar_resul_t = 'INNV'
+                and vv.dato_virk_fom < {{ periode_sluttdato(var("periode")) }}
+                and (
+                    vv.dato_virk_tom >= trunc( {{ periode_sluttdato(var("periode")) }} )
+                    or vv.dato_virk_tom is null
+                )
+        ) then 1
+        else 0 end as innv_gj_rett
     from union_beregning ber
-    left join
-        ref_stg_t_vilkar_vedtak
-            vv on ber.vedtak_id = vv.vedtak_id
-    and vv.k_kravlinje_t = 'GJR'
-    and vv.k_vilkar_resul_t = 'INNV'
-    and vv.dato_virk_fom < current_date
-    and (
-        vv.dato_virk_tom >= trunc(current_date)
-        or vv.dato_virk_tom is null
-    )
-
 )
 
 select
