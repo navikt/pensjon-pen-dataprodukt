@@ -25,3 +25,5 @@ sources:
       - name: t_sak
       - name: t_kravlinje
       - name: t_kravlinje_s
+      - name: t_pen_org_enhet
+      - name: t_kode67_kravhode

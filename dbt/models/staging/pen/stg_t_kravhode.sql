@@ -10,6 +10,8 @@ select
     k_afp_t,
     k_krav_s,
     opprettet_av,
+    endret_av,
+    pen_org_enhet_id,
     dato_opprettet,
     dato_onsket_virk,
     dato_mottatt_krav
