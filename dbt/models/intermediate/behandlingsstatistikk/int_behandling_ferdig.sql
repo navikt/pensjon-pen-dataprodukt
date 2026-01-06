@@ -32,7 +32,8 @@ behandlinger_vedtak as (
         v.dato_virk_fom, -- utbetaltTid
         v.k_vedtak_s, -- mulig deler av behandlingResultat (feks AVBR, men kan også være fra k_krav_s)
         v.k_vilkar_resul_t, -- resultat for hovedkravlinjen
-        v.k_klageank_res_t
+        v.k_klageank_res_t,
+        v.attesterer
     from ref_behandling beh
     -- left join pen.t_vedtak v
     left join ref_behandling_vedtak v
@@ -61,7 +62,9 @@ sette_resultat as (
         k_behandling_t,
         k_utlandstilknytning,
         opprettet_av,
+        attesterer,
         dato_opprettet,
+        dato_endret,
         dato_onsket_virk,
         dato_mottatt_krav,
         kravhode_id_for,
@@ -84,24 +87,3 @@ sette_resultat as (
 )
 
 select * from sette_resultat
-
--- select
---     count(*) as ant,
---     behandling_resultat,
---     k_sak_s,
---     vedtak,
---     k_krav_arsak_t,
---     k_vedtak_t,
---     k_krav_gjelder
--- from sette_resultat
--- where behandling_resultat is null
--- group by
---     behandling_resultat,
---     vedtak,
---     k_sak_s,
---     k_krav_arsak_t,
---     k_vedtak_t,
---     k_krav_gjelder
--- order by
---     ant desc
-

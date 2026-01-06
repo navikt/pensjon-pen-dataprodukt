@@ -36,9 +36,12 @@ union_behandling as (
         k_behandling_t, -- kh
         k_utlandstilknytning, -- sak
         opprettet_av, -- kh
+        attesterer, -- vedtak
         dato_opprettet, -- kh
         dato_onsket_virk, -- kh
         dato_mottatt_krav, -- kh
+        dato_endret, -- kh
+        dato_vedtak as ferdigbehandlet_tid,
         kravhode_id_for -- kh
     from behandling_ferdig
     union all
@@ -53,9 +56,12 @@ union_behandling as (
         k_behandling_t, -- kh
         k_utlandstilknytning, -- sak
         opprettet_av, -- kh
+        null as attesterer,
         dato_opprettet, -- kh
         dato_onsket_virk, -- kh
         dato_mottatt_krav, -- kh
+        dato_endret, -- kh
+        dato_endret as ferdigbehandlet_tid, --kh
         kravhode_id_for -- kh
     from behandling_avbrutt
     union all
@@ -70,9 +76,12 @@ union_behandling as (
         k_behandling_t, -- kh
         k_utlandstilknytning, -- sak
         opprettet_av, -- kh
+        null as attesterer,
         dato_opprettet, -- kh
         dato_onsket_virk, -- kh
         dato_mottatt_krav, -- kh
+        dato_endret, -- kh
+        null as ferdigbehandlet_tid,
         kravhode_id_for -- kh
     from behandling_andre
 )
@@ -88,8 +97,11 @@ select
     k_behandling_t, -- kh
     k_utlandstilknytning, -- sak
     opprettet_av, -- kh
+    attesterer, -- vedtak
     dato_opprettet, -- kh
     dato_onsket_virk, -- kh
     dato_mottatt_krav, -- kh
+    dato_endret, -- kh
+    ferdigbehandlet_tid,
     kravhode_id_for -- kh
 from union_behandling

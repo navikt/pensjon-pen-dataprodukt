@@ -13,6 +13,7 @@ select
     endret_av,
     pen_org_enhet_id,
     dato_opprettet,
+    dato_endret,
     dato_onsket_virk,
     dato_mottatt_krav
 from {{ source('pen', 't_kravhode') }}

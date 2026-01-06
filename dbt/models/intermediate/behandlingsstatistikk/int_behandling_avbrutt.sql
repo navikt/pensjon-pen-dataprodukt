@@ -5,21 +5,7 @@
 with
 
 ref_behandling as (
-    select
-        sak_id, -- kh
-        kravhode_id, -- kh
-        k_krav_gjelder, -- kh
-        k_krav_s, -- kh
-        k_sak_s, -- sak
-        k_krav_arsak_t, -- ka
-        k_behandling_t, -- kh
-        k_utlandstilknytning, -- sak
-        opprettet_av, -- kh
-        dato_opprettet, -- kh
-        dato_onsket_virk, -- kh
-        dato_mottatt_krav, -- kh
-        kravhode_id_for -- kh
-    from {{ ref('int_behandling') }}
+    select * from {{ ref('int_behandling') }}
     where k_krav_s = 'AVBRUTT'
 ),
 
@@ -77,6 +63,7 @@ final as (
         k_utlandstilknytning, -- sak
         opprettet_av, -- kh
         dato_opprettet, -- kh
+        dato_endret, -- kh
         dato_onsket_virk, -- kh
         dato_mottatt_krav, -- kh
         kravhode_id_for -- kh

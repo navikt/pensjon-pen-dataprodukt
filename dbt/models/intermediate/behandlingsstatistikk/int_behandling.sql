@@ -38,6 +38,7 @@ behandlinger_kravhode as (
         kh.dato_mottatt_krav, -- mottattTid
         kh.dato_opprettet, -- registrertTid
         kh.dato_onsket_virk, -- forventetOppstartTid
+        kh.dato_endret,
         kh.k_krav_gjelder, -- behandlingType*
         kh.k_krav_s, -- behandlingStatus*
         case
@@ -53,7 +54,7 @@ behandlinger_kravhode as (
         kh.pen_org_enhet_id,
         kh.k_behandling_t, -- metode
         s.k_sak_s,
-        s.k_utlandstilknytning
+        coalesce(s.k_utlandstilknytning, 'NASJONAL') as k_utlandstilknytning
     from ref_stg_t_kravhode kh
     inner join ref_stg_t_sak s
         on kh.sak_id = s.sak_id
@@ -96,6 +97,7 @@ final as (
         endret_av, -- kh
         ansvarlig_enhet, -- pen_org_enhet
         dato_opprettet, -- kh
+        dato_endret, -- kh
         dato_onsket_virk, -- kh
         dato_mottatt_krav, -- kh
         kravhode_id_for -- kh

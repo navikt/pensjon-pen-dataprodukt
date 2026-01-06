@@ -10,6 +10,7 @@ select
     k_vedtak_s,
     k_vilkar_resul_t,
     k_klageank_res_t,
+    attesterer,
     versjon,
     dato_vedtak,
     dato_endret,
