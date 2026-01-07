@@ -61,6 +61,8 @@ final as (
         k_krav_arsak_t, -- ka
         k_behandling_t, -- kh
         k_utlandstilknytning, -- sak
+        ansvarlig_enhet,
+        endret_av,
         opprettet_av, -- kh
         dato_opprettet, -- kh
         dato_endret, -- kh

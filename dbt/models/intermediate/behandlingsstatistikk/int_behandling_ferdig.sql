@@ -81,6 +81,8 @@ sette_resultat as (
         k_krav_arsak_t,
         k_behandling_t,
         k_utlandstilknytning,
+        ansvarlig_enhet,
+        endret_av,
         opprettet_av,
         attesterer,
         dato_opprettet,

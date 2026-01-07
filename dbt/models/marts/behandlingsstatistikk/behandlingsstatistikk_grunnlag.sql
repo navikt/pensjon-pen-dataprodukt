@@ -35,6 +35,8 @@ union_behandling as (
         k_krav_arsak_t, -- ka
         k_behandling_t, -- kh
         k_utlandstilknytning, -- sak
+        ansvarlig_enhet,
+        endret_av,
         opprettet_av, -- kh
         attesterer, -- vedtak
         dato_opprettet, -- kh
@@ -55,6 +57,8 @@ union_behandling as (
         k_krav_arsak_t, -- ka
         k_behandling_t, -- kh
         k_utlandstilknytning, -- sak
+        ansvarlig_enhet,
+        endret_av,
         opprettet_av, -- kh
         null as attesterer,
         dato_opprettet, -- kh
@@ -75,6 +79,8 @@ union_behandling as (
         k_krav_arsak_t, -- ka
         k_behandling_t, -- kh
         k_utlandstilknytning, -- sak
+        ansvarlig_enhet,
+        endret_av,
         opprettet_av, -- kh
         null as attesterer,
         dato_opprettet, -- kh
@@ -96,6 +102,8 @@ select
     k_krav_arsak_t, -- ka
     k_behandling_t, -- kh
     k_utlandstilknytning, -- sak
+    ansvarlig_enhet, -- kh
+    endret_av, -- kh
     opprettet_av, -- kh
     attesterer, -- vedtak
     dato_opprettet, -- kh
