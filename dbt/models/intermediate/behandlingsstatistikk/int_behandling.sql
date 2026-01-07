@@ -20,6 +20,7 @@ ref_stg_t_krav_arsak as (
 ref_stg_t_kravhode as (
     select *
     from {{ ref('stg_t_kravhode') }}
+    where dato_opprettet > to_date('01.01.2025', 'DD.MM.YYYY')
 ),
 
 ref_stg_t_pen_org_enhet as (
