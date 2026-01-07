@@ -1,9 +1,4 @@
 -- int_behandling
-{{
-  config(
-    materialized = 'table',
-    )
-}}
 
 with
 
