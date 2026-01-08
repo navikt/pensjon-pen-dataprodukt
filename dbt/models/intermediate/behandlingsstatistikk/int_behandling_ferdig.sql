@@ -76,7 +76,6 @@ sette_resultat as (
         kravhode_id,
         k_krav_gjelder,
         k_krav_s,
-        k_sak_s,
         k_krav_arsak_t,
         k_behandling_t,
         k_utlandstilknytning,

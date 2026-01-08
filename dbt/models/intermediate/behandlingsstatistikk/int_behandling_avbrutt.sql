@@ -57,7 +57,6 @@ final as (
         kravhode_id, -- kh
         k_krav_gjelder, -- kh
         k_krav_s, -- kh
-        k_sak_s, -- sak
         k_krav_arsak_t, -- ka
         k_behandling_t, -- kh
         k_utlandstilknytning, -- sak
