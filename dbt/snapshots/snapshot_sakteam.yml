@@ -1,0 +1,25 @@
+version: 2
+
+snapshots:
+  - name: snapshot_sakteam
+    relation: ref('behandlingsstatistikk_grunnlag')
+    config:
+      strategy: check
+      check_cols: 
+        - ansvarlig_enhet
+        - attesterer
+        - behandling_resultat
+        - dato_mottatt_krav
+        - dato_onsket_virk
+        - dato_opprettet
+        - endret_av
+        - ferdigbehandlet_tid
+        - k_behandling_t
+        - k_krav_arsak_t
+        - k_krav_gjelder
+        - k_krav_s
+        - k_utlandstilknytning
+      updated_at: dato_endret
+      unique_key: kravhode_id
+      hard_deletes: invalidate
+      tags: 'sak'
