@@ -370,7 +370,7 @@ wheels = [
 
 [[package]]
 name = "dbt-core"
-version = "1.10.17"
+version = "1.10.18"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "agate" },
@@ -396,9 +396,9 @@ dependencies = [
     { name = "sqlparse" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/f0/2c/a614f4c41af9b63cafb88e182c3a30aa36faf7eb4cad9b99b927709a7f0d/dbt_core-1.10.17.tar.gz", hash = "sha256:b3b7a9d9ff839405840659034e6f92d07fb27c4714476dc8cfdc5359a7b864c2", size = 900268, upload-time = "2025-12-20T01:32:13.059Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e0/40/6c1803573c8890bf5124f3dd7729006dabd430950d7937a0f518839669ac/dbt_core-1.10.18.tar.gz", hash = "sha256:a6f02a9f3044e1f416caf1d34b29ef2cd53056f85085b92f77e69603fae65d17", size = 900444, upload-time = "2026-01-06T23:07:25.288Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/47/f1/d68b24831e8855d0b4ecc54f8341cf8d3e0a60046af08a65817954f3f4ab/dbt_core-1.10.17-py3-none-any.whl", hash = "sha256:a4a807dc37ecd88899616689c68a6446b46231c11d7e3776f4f1a06e7becce76", size = 986991, upload-time = "2025-12-20T01:32:11.079Z" },
+    { url = "https://files.pythonhosted.org/packages/5e/58/fd0c93d8d123fb279ed1fd2d47eaae4fe67c6286a1bb6b6fc26bae70236d/dbt_core-1.10.18-py3-none-any.whl", hash = "sha256:670c31d240b6b5e5e0615e50377c2a7680854906a4295676740c246841352367", size = 987098, upload-time = "2026-01-06T23:07:23.629Z" },
 ]
 
 [[package]]
@@ -1071,8 +1071,8 @@ dev = [
 requires-dist = [
     { name = "cryptography", specifier = ">=46.0.3" },
     { name = "db-dtypes", specifier = ">=1.4.4" },
-    { name = "dbt-core", specifier = ">=1.10.15" },
-    { name = "dbt-oracle", specifier = ">=1.9.4" },
+    { name = "dbt-core", specifier = ">=1.10.17" },
+    { name = "dbt-oracle", specifier = ">=1.10.0" },
     { name = "oracledb", specifier = ">=3.3.0" },
     { name = "requests", specifier = ">=2.32.5" },
 ]
