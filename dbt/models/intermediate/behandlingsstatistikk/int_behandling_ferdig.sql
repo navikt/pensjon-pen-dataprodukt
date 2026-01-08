@@ -31,7 +31,6 @@ behandlinger_vedtak as (
     select
         beh.*,
         v.vedtak_id,
-        v.k_sak_t, -- sakYtelse
         v.k_vedtak_t,
         v.dato_vedtak,
         v.dato_virk_fom, -- utbetaltTid
@@ -91,7 +90,6 @@ sette_resultat as (
         dato_mottatt_krav,
         kravhode_id_for,
         vedtak_id,
-        k_sak_t,
         k_vedtak_t,
         dato_vedtak,
         dato_virk_fom,

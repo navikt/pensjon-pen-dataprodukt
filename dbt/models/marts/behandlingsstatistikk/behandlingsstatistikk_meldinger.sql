@@ -1,73 +1,95 @@
 -- behandlingsstatistikk_meldinger
 -- view som mapper over kolonnenavn fra pen til det team sak ønsker
 
+{{
+    config(
+        materialized='view',
+    )
+}}
+
+
 with
 
-ref_int_behandling as (
+ref_stg_t_person as (
+    select
+        person_id,
+        fnr_fk
+    from {{ ref('stg_t_person') }}
+),
+
+ref_stg_t_sak as (
+    select
+        sak_id,
+        k_sak_t,
+        person_id
+    from {{ ref('stg_t_sak') }}
+),
+
+ref_behandlingsstatistikk_grunnlag as (
     select
         sak_id, -- kh
         kravhode_id, -- kh
-        vedtak_id, -- v
+        behandling_resultat,
         k_krav_gjelder, -- kh
         k_krav_s, -- kh
-        k_sak_t, -- v
-        k_vilkar_resul_t, -- v behandlingResultat
-        -- k_klageank_res_t, -- v behandlingResultat
-        k_vedtak_s, -- v behandlingResultat
         k_krav_arsak_t, -- ka
-        k_vedtak_t, -- v
         k_behandling_t, -- kh
         k_utlandstilknytning, -- sak
-        k_sak_s, -- sak
+        ansvarlig_enhet, -- kh
+        endret_av, -- kh
         opprettet_av, -- kh
+        attesterer, -- vedtak
         dato_opprettet, -- kh
-        dato_vedtak, -- v
-        dato_virk_fom, -- v
         dato_onsket_virk, -- kh
         dato_mottatt_krav, -- kh
+        dato_virk_fom, -- v
+        dato_endret, -- kh
+        ferdigbehandlet_tid,
         kravhode_id_for -- kh
-    from {{ ref('int_behandling_ferdig') }}
+    from {{ ref('behandlingsstatistikk_grunnlag') }}
 ),
 
-final as (
+join_fnr as (
+    select
+        beh.*,
+        s.k_sak_t,
+        person.fnr_fk
+    from ref_behandlingsstatistikk_grunnlag beh
+    left join ref_stg_t_sak s on beh.sak_id = s.sak_id
+    left join ref_stg_t_person person on s.person_id = person.person_id
+),
+
+nye_kolonnenavn as (
     select
         kravhode_id as behandling_id,
-        kravhode_id_for as relatertbehandling_id,
-        'PESYS' as relatert_fagsystem,
         sak_id,
-        '-1' as saksnummer,
-        '-1' as aktor_id,
-        dato_mottatt_krav as mottatt_tid,
-        dato_opprettet as registrert_tid,
-        null as ferdigbehandlet_tid,
-        dato_virk_fom as utbetalt_tid,
-        null as funksjonell_tid,
-        dato_onsket_virk as forventetoppstart_tid,
-        null as teknisk_tid,
+        fnr_fk as aktor_id,
         k_sak_t as sak_ytelse,
         k_utlandstilknytning as sak_utland,
         k_krav_gjelder as behandling_type,
         k_krav_s as behandling_status,
-        k_vilkar_resul_t as behandling_resultat_vilkar_resul_t,
-        '-1' as behandling_resultat_klageank_res_t,
-        k_vedtak_s as behandling_resultat_vedtak_s,
-        k_sak_s as behandling_resultat_sak_s,
-        '-1' as resultat_begrunnelse,
+        behandling_resultat,
         k_behandling_t as behandling_metode,
         k_krav_arsak_t as behandling_arsak,
         opprettet_av,
-        '-1' as saksbehandler,
-        '-1' as ansvarlig_beslutter,
-        '-1' as ansvarlig_enhet,
+        endret_av as saksbehandler,
+        attesterer as ansvarlig_beslutter,
+        ansvarlig_enhet,
+        dato_mottatt_krav as mottatt_tid,
+        dato_opprettet as registrert_tid,
+        ferdigbehandlet_tid,
+        dato_virk_fom as utbetalt_tid,
+        dato_endret as endret_tid,
+        dato_onsket_virk as forventetoppstart_tid,
+        sysdate as teknisk_tid,
+        'PESYS' as fagsystem_navn,
+        kravhode_id_for as relatertbehandling_id,
+        'PESYS' as relatert_fagsystem,
         '-1' as tilbakekrev_belop,
         '-1' as funksjonell_periode_fom,
         '-1' as funksjonell_periode_tom,
-        'PESYS' as fagsystem_navn,
-        '-1' as fagsystem_versjon,
-        'bonuskolonner til høyre' as bonus,
-        vedtak_id, -- bonuskolonne
-        k_vedtak_t
-    from ref_int_behandling
+        '-1' as fagsystem_versjon
+    from join_fnr
 )
 
-select * from final
+select * from nye_kolonnenavn

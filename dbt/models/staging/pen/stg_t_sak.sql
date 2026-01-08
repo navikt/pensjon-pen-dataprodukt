@@ -2,6 +2,7 @@
 
 select
     sak_id,
+    person_id,
     k_sak_t,
     dato_opprettet,
     opprettet_av,

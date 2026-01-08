@@ -31,7 +31,6 @@ union_behandling as (
         behandling_resultat,
         k_krav_gjelder, -- kh
         k_krav_s, -- kh
-        k_sak_s, -- sak
         k_krav_arsak_t, -- ka
         k_behandling_t, -- kh
         k_utlandstilknytning, -- sak
@@ -42,6 +41,7 @@ union_behandling as (
         dato_opprettet, -- kh
         dato_onsket_virk, -- kh
         dato_mottatt_krav, -- kh
+        dato_virk_fom, -- v
         dato_endret, -- kh
         dato_vedtak as ferdigbehandlet_tid,
         kravhode_id_for -- kh
@@ -53,7 +53,6 @@ union_behandling as (
         behandling_resultat,
         k_krav_gjelder, -- kh
         k_krav_s, -- kh
-        k_sak_s, -- sak
         k_krav_arsak_t, -- ka
         k_behandling_t, -- kh
         k_utlandstilknytning, -- sak
@@ -64,6 +63,7 @@ union_behandling as (
         dato_opprettet, -- kh
         dato_onsket_virk, -- kh
         dato_mottatt_krav, -- kh
+        null as dato_virk_fom, -- v
         dato_endret, -- kh
         dato_endret as ferdigbehandlet_tid, --kh
         kravhode_id_for -- kh
@@ -75,7 +75,6 @@ union_behandling as (
         null as behandling_resultat,
         k_krav_gjelder, -- kh
         k_krav_s, -- kh
-        k_sak_s, -- sak
         k_krav_arsak_t, -- ka
         k_behandling_t, -- kh
         k_utlandstilknytning, -- sak
@@ -86,6 +85,7 @@ union_behandling as (
         dato_opprettet, -- kh
         dato_onsket_virk, -- kh
         dato_mottatt_krav, -- kh
+        null as dato_virk_fom, -- v
         dato_endret, -- kh
         null as ferdigbehandlet_tid,
         kravhode_id_for -- kh
@@ -98,7 +98,6 @@ select
     behandling_resultat,
     k_krav_gjelder, -- kh
     k_krav_s, -- kh
-    k_sak_s, -- sak
     k_krav_arsak_t, -- ka
     k_behandling_t, -- kh
     k_utlandstilknytning, -- sak
@@ -109,7 +108,8 @@ select
     dato_opprettet, -- kh
     dato_onsket_virk, -- kh
     dato_mottatt_krav, -- kh
+    dato_virk_fom, -- v
     dato_endret, -- kh
-    ferdigbehandlet_tid,
+    ferdigbehandlet_tid, -- v
     kravhode_id_for -- kh
 from union_behandling
