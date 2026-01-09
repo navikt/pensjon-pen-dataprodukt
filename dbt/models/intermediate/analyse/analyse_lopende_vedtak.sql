@@ -79,28 +79,3 @@ join_persongrunnlag as (
 )
 
 select * from join_persongrunnlag
-
--- join_uforegrunnlag as (
---     select
---         v.*,
---         grunnlag.dato_uft,
---         grunnlag.ufg,
---         grunnlag.ifu,
---         grunnlag.ieu,
---         grunnlag.ung_ufor,
---         grunnlag.k_utdanning_t,
---         grunnlag.k_yrke_t
---     from join_persongrunnlag v
---     left join {{ ref('stg_t_ufore_grnl') }} grunnlag
---         on
---             v.person_grunnlag_id = grunnlag.person_grunnlag_id -- blir det duplikater?
---             and grunnlag.bruk = 1
--- )
--- 
--- select count(*) as ant_v from lopende_vedtak
--- union all
--- select count(*) as ant_kh from join_kravhode
--- union all
--- select count(*) as ant_pg from join_persongrunnlag
--- union all
--- select count(*) as ant_p from join_person
