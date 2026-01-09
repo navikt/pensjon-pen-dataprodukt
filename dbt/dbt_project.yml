@@ -42,6 +42,8 @@ models:
         +tags: ['sak']
       pen_beregning:
         +tags: ['ytelse']
+      analyse:
+        +tags: ['analyse']
     marts:
       +docs:
         node_color: '#a176b3'
