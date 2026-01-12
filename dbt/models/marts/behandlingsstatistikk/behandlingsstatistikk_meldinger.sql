@@ -62,9 +62,18 @@ join_fnr as (
 
 nye_kolonnenavn as (
     select
-        kravhode_id as behandling_id,
-        sak_id,
+        cast(kravhode_id as varchar2(80)) as behandling_id,
+        cast(kravhode_id_for as varchar2(80)) as relatertbehandling_id,
+        'PESYS' as relatert_fagsystem,
+        cast(sak_id as varchar2(80)) as sak_id,
         fnr_fk as aktor_id,
+        dato_mottatt_krav as mottatt_tid,
+        dato_opprettet as registrert_tid,
+        ferdigbehandlet_tid,
+        dato_virk_fom as utbetalt_tid,
+        dato_endret as endret_tid,
+        dato_onsket_virk as forventetoppstart_tid,
+        kjoretidspunkt as teknisk_tid,
         k_sak_t as sak_ytelse,
         k_utlandstilknytning as sak_utland,
         k_krav_gjelder as behandling_type,
@@ -76,19 +85,10 @@ nye_kolonnenavn as (
         endret_av as saksbehandler,
         attesterer as ansvarlig_beslutter,
         ansvarlig_enhet,
-        dato_mottatt_krav as mottatt_tid,
-        dato_opprettet as registrert_tid,
-        ferdigbehandlet_tid,
-        dato_virk_fom as utbetalt_tid,
-        dato_endret as endret_tid,
-        dato_onsket_virk as forventetoppstart_tid,
-        kjoretidspunkt as teknisk_tid,
+        -1.1 as tilbakekrev_belop,
+        to_date('01.01.1900', 'DD.MM.YYYY') as funksjonell_periode_fom,
+        to_date('01.01.1900', 'DD.MM.YYYY') as funksjonell_periode_tom,
         'PESYS' as fagsystem_navn,
-        kravhode_id_for as relatertbehandling_id,
-        'PESYS' as relatert_fagsystem,
-        '-1' as tilbakekrev_belop,
-        '-1' as funksjonell_periode_fom,
-        '-1' as funksjonell_periode_tom,
         '-1' as fagsystem_versjon
     from join_fnr
 )
