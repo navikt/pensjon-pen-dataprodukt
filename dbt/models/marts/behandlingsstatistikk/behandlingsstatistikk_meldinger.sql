@@ -45,8 +45,9 @@ ref_behandlingsstatistikk_grunnlag as (
         dato_virk_fom, -- v
         dato_endret, -- kh
         ferdigbehandlet_tid,
-        kravhode_id_for -- kh
-    from {{ ref('behandlingsstatistikk_grunnlag') }}
+        kravhode_id_for, -- kh
+        kjoretidspunkt
+    from {{ ref('snapshot_saksbehandlingsstatistikk') }}
 ),
 
 join_fnr as (
@@ -81,7 +82,7 @@ nye_kolonnenavn as (
         dato_virk_fom as utbetalt_tid,
         dato_endret as endret_tid,
         dato_onsket_virk as forventetoppstart_tid,
-        sysdate as teknisk_tid,
+        kjoretidspunkt as teknisk_tid,
         'PESYS' as fagsystem_navn,
         kravhode_id_for as relatertbehandling_id,
         'PESYS' as relatert_fagsystem,
