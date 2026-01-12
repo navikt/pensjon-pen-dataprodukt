@@ -111,5 +111,6 @@ select
     dato_virk_fom, -- v
     dato_endret, -- kh
     ferdigbehandlet_tid, -- v
-    kravhode_id_for -- kh
+    kravhode_id_for, -- kh
+    sysdate as kjoretidspunkt -- brukes til last fra Oracle til BQ
 from union_behandling
