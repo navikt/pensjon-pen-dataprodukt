@@ -53,3 +53,11 @@ models:
         +tags: ['ytelse']
       behandlingsstatistikk:
         +tags: ['sak']
+
+snapshots:
+  pen_dataprodukt:
+    +persist_docs:
+      relation: true
+      columns: true
+    +docs:
+      node_color: '#e6b400'
