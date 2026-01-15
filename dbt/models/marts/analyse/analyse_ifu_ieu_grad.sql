@@ -48,7 +48,7 @@ final as (
         grad,
         round((ifu - ieu) / ifu * 100, 4) as beregnet_grad,
         case when oifu > 0 then round((oifu - oieu) / oifu * 100, 4) end as ny_beregnet_grad,
-        case when oifu > 0 then round(((oifu - oieu) / oifu) * 100 / 5) * 5 end as ny_avrundet_grad,
+        round(((455560 - oieu) / 455560) * 100 / 5) * 5 as ny_avrundet_grad,
         ifu,
         ieu,
         oifu,
