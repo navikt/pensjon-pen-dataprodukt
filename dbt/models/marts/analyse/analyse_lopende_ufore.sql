@@ -8,31 +8,18 @@
 }}
 
 select
-    av.oifu,
-    av.oieu,
     v.sak_id,
     v.vedtak_id,
     v.kravhode_id,
-    yk.pen_under_utbet_id,
     v.dato_opprettet,
-    smy.k_minsteytelseniva
+    br.beregning_res_id,
+    br.pen_under_utbet_id,
+    br.uforetrygd_beregning_id
 from pen.t_vedtak v
 inner join pen.t_beregning_res br
     on
         v.vedtak_id = br.vedtak_id
         and br.dato_virk_tom is null
-inner join pen.t_ytelse_komp yk
-    on
-        br.pen_under_utbet_id = yk.pen_under_utbet_id
-        and yk.k_ytelse_komp_t = 'UT_ORDINER'
-        and yk.bruk = '1'
-inner join pen.t_avkort_info av
-    on
-        yk.avkort_info_id = av.avkort_info_id
-left join pen.t_minsteytelse my
-    on yk.minsteytelse_id = my.minsteytelse_id
-left join pen.t_sats_minsteytelse smy
-    on my.sats_minsteytelse_id = smy.sats_minsteytelse_id
 where
     v.k_sak_t = 'UFOREP'
     and v.dato_lopende_fom is not null

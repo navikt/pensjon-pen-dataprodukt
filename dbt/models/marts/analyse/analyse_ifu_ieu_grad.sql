@@ -10,7 +10,7 @@
 with
 
 vedtak_med_avkort_info as (
-    select * from {{ ref('analyse_lopende_ufore') }}
+    select * from {{ ref('analyse_lovendringer_2026') }}
 ),
 
 hent_ifu_ieu_grad as (
@@ -45,6 +45,12 @@ hent_ifu_ieu_grad as (
 
 final as (
     select
+        case when oifu >= 429527 and oifu < 455560 then 1 else 0 end as oifu_endret_flagg,
+        -- case when oifu >= 429527 and oifu < 455560 then round(100 * ugradert_brutto_per_ar / oifu, 2) else 0 end as ny_kompgrad,
+
+        case when kompensasjonsgrad > 70 then 1 else 0 end as kompgrad_over_70_flagg,
+        case when k_minsteytelseniva = 'ORDINER_EKTEF_KOMV' and egenopptjn_ut_best = '1' then 1 else 0 end as minsteytelse_ektefelle_flagg,
+
         grad,
         round((ifu - ieu) / ifu * 100, 4) as beregnet_grad,
         case when oifu > 0 then round((oifu - oieu) / oifu * 100, 4) end as ny_beregnet_grad,
