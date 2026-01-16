@@ -12,7 +12,10 @@ select
     av.oieu,
     v.sak_id,
     v.vedtak_id,
-    v.dato_opprettet
+    v.kravhode_id,
+    yk.pen_under_utbet_id,
+    v.dato_opprettet,
+    smy.k_minsteytelseniva
 from pen.t_vedtak v
 inner join pen.t_beregning_res br
     on
@@ -26,6 +29,10 @@ inner join pen.t_ytelse_komp yk
 inner join pen.t_avkort_info av
     on
         yk.avkort_info_id = av.avkort_info_id
+left join pen.t_minsteytelse my
+    on yk.minsteytelse_id = my.minsteytelse_id
+left join pen.t_sats_minsteytelse smy
+    on my.sats_minsteytelse_id = smy.sats_minsteytelse_id
 where
     v.k_sak_t = 'UFOREP'
     and v.dato_lopende_fom is not null

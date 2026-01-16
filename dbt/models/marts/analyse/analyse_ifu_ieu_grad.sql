@@ -56,6 +56,7 @@ final as (
         vv_ieu, -- satt til 'IEU' dersom ieu finnes på vv, ellers null
         k_minimum_ifu_t, -- MINIMUM_IFU_ENSLIG, MINIMUM_IFU_GIFT, MINIMUM_IFU_UNGUFOR
         er_minimums_ifu, -- kombinasjon av denne plutt MINIMUM_IFU_GIFT er målgruppen
+        k_minsteytelseniva,
         vedtak_id,
         sak_id,
         dato_opprettet
