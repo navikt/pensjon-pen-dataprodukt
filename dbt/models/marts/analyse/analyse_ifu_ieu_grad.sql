@@ -49,7 +49,7 @@ final as (
         -- case when oifu >= 429527 and oifu < 455560 then round(100 * ugradert_brutto_per_ar / oifu, 2) else 0 end as ny_kompgrad,
 
         case when kompensasjonsgrad > 70 then 1 else 0 end as kompgrad_over_70_flagg,
-        case when k_minsteytelseniva = 'ORDINER_EKTEF_KOMV' and egenopptjn_ut_best = '1' then 1 else 0 end as minsteytelse_ektefelle_flagg,
+        case when k_minsteytelseniva = 'ORDINER_EKTEF_KONV' and egenopptjn_ut_best = '0' then 1 else 0 end as minsteytelse_ektefelle_flagg,
 
         grad,
         round((ifu - ieu) / ifu * 100, 4) as beregnet_grad,
