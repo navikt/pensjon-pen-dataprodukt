@@ -19,6 +19,7 @@ select
     ufo.dato_opprettet,
     smy.k_minsteytelseniva,
     b2011.egenopptjn_ut_best,
+    ufo.forste_virk_fom,
     case when yk_tfb.brutto > 0 or yk_tsb.brutto > 0 then 1 else 0 end as barnetillegg_flagg
 from {{ ref('analyse_lopende_ufore') }} ufo
 inner join pen.t_ytelse_komp yk
