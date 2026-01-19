@@ -18,13 +18,24 @@ select
     yk.pen_under_utbet_id,
     ufo.dato_opprettet,
     smy.k_minsteytelseniva,
-    b2011.egenopptjn_ut_best
+    b2011.egenopptjn_ut_best,
+    case when yk_tfb.brutto > 0 or yk_tsb.brutto > 0 then 1 else 0 end as barnetillegg_flagg
 from {{ ref('analyse_lopende_ufore') }} ufo
 inner join pen.t_ytelse_komp yk
     on
         ufo.pen_under_utbet_id = yk.pen_under_utbet_id
         and yk.k_ytelse_komp_t = 'UT_ORDINER'
         and yk.bruk = '1'
+left join pen.t_ytelse_komp yk_tfb
+    on
+        ufo.pen_under_utbet_id = yk_tfb.pen_under_utbet_id
+        and yk_tfb.k_ytelse_komp_t = 'UT_TFB'
+        and yk_tfb.bruk = '1'
+left join pen.t_ytelse_komp yk_tsb
+    on
+        ufo.pen_under_utbet_id = yk_tsb.pen_under_utbet_id
+        and yk_tsb.k_ytelse_komp_t = 'UT_TSB'
+        and yk_tsb.bruk = '1'
 inner join pen.t_avkort_info av
     on
         yk.avkort_info_id = av.avkort_info_id
