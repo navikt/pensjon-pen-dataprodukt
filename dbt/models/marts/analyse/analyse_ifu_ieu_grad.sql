@@ -50,7 +50,9 @@ final as (
 
         case when kompensasjonsgrad > 70 then 1 else 0 end as kompgrad_over_70_flagg,
         case when k_minsteytelseniva = 'ORDINER_EKTEF_KONV' and egenopptjn_ut_best = '0' then 1 else 0 end as minsteytelse_ektefelle_flagg,
-
+        barnetillegg_flagg,
+        case when forste_virk_fom < to_date('01.01.2024', 'DD.MM.YYYY') then 1 else 0 end as for_2024_flagg,
+        case when forste_virk_fom between to_date('01.01.2024', 'DD.MM.YYYY') and to_date('31.12.2024', 'DD.MM.YYYY') then 1 else 0 end as start_2024_flagg,
         grad,
         round((ifu - ieu) / ifu * 100, 4) as beregnet_grad,
         case when oifu > 0 then round((oifu - oieu) / oifu * 100, 4) end as ny_beregnet_grad,
@@ -65,7 +67,8 @@ final as (
         k_minsteytelseniva,
         vedtak_id,
         sak_id,
-        dato_opprettet
+        dato_opprettet,
+        forste_virk_fom
     from hent_ifu_ieu_grad
 )
 
