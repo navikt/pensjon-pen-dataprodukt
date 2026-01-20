@@ -3,9 +3,19 @@
 
 {{
     config(
-        materialized='view',
+        materialized='incremental',
     )
 }}
+
+{%- set sekvensnummer_offset -%}
+    {% if is_incremental() %}
+    select nvl(max(z.sekvensnummer), 0) from {{ this }} z
+    {% else %}
+      select 0 from sys.dual
+    {% endif %}
+{%- endset -%}
+-- Henter største pk i targettabell eller 0 (tom liste)
+-- kopi fra dvh-oppfolgin
 
 
 with
@@ -27,6 +37,7 @@ ref_stg_t_sak as (
 
 ref_behandlingsstatistikk_grunnlag as (
     select
+        rownum + ({{ sekvensnummer_offset }}) as sekvensnummer,
         sak_id, -- kh
         kravhode_id, -- kh
         behandling_resultat,
@@ -48,6 +59,9 @@ ref_behandlingsstatistikk_grunnlag as (
         kravhode_id_for, -- kh
         kjoretidspunkt
     from {{ ref('snapshot_saksbehandlingsstatistikk') }}
+    {% if is_incremental() %}
+        where kjoretidspunkt > (select coalesce(max(z.teknisk_tid), to_date('01.01.1900', 'DD.MM.YYYY')) from {{ this }} z)
+    {% endif %}
 ),
 
 join_fnr as (
@@ -62,6 +76,7 @@ join_fnr as (
 
 nye_kolonnenavn as (
     select
+        sekvensnummer,
         cast(kravhode_id as varchar2(80)) as behandling_id,
         cast(kravhode_id_for as varchar2(80)) as relatertbehandling_id,
         'PESYS' as relatert_fagsystem,
