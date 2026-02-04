@@ -7,7 +7,7 @@ ref_behandling as (
         k_krav_s = 'FERDIG'
 ),
 
-ref_behandling_vedtak as (
+ref_int_forste_vedtak_uforep as (
     select * from {{ ref('int_forste_vedtak_uforep') }}
 ),
 
@@ -44,7 +44,7 @@ behandlinger_vedtak as (
         end as attesterer
     from ref_behandling beh
     -- left join pen.t_vedtak v
-    left join ref_behandling_vedtak v
+    left join ref_int_forste_vedtak_uforep v
         on
             beh.kravhode_id = v.kravhode_id
 ),
