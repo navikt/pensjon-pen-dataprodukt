@@ -37,7 +37,11 @@ behandlinger_vedtak as (
         v.k_vedtak_s, -- mulig deler av behandlingResultat (feks AVBR, men kan også være fra k_krav_s)
         v.k_vilkar_resul_t, -- resultat for hovedkravlinjen
         v.k_klageank_res_t,
-        v.attesterer
+        case
+            when substr(v.attesterer, 1, 1) in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
+                then 'BRUKER-FNR' -- gjelder kun k_vedtak_t=OPPHOR og k_sak_t=UFOREP
+            else v.attesterer
+        end as attesterer
     from ref_behandling beh
     -- left join pen.t_vedtak v
     left join ref_behandling_vedtak v
