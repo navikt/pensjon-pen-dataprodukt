@@ -26,6 +26,26 @@ ref_t_k_kravlinje_t as (
     from {{ ref('stg_t_k_kravlinje_t') }}
 ),
 
+vilkarsvedtak_hovedkravlinje as (
+    select hk.*
+    from (
+        select
+            vv.vedtak_id,
+            vv.dato_virk_fom,
+            vv.k_vilkar_resul_t,
+
+            -- kl.k_land_3_tegn_id hånterer edge case for krav med 2 vilkårvedtak med samme virk men forskjellige land, der ingen av landene er Norge
+            rank() over (partition by vv.vedtak_id order by (case when kl.k_land_3_tegn_id = '161' then 1 else 2 end), kl.k_land_3_tegn_id desc) as rn
+        from ref_t_vilkar_vedtak vv
+        inner join ref_t_k_kravlinje_t tkl
+            on
+                vv.k_kravlinje_t = tkl.k_kravlinje_t
+        left join ref_t_kravlinje kl on vv.kravlinje_id = kl.kravlinje_id
+        where tkl.hoved_krav_linje = '1'
+    ) hk
+    where hk.rn = 1
+),
+
 behandlinger_vedtak as (
 -- en behandling kan ha flere vedtak
     select
@@ -50,28 +70,14 @@ behandlinger_vedtak as (
 ),
 
 join_vilkar_vedtak as (
-    select bv.*
-    from
-        (
-            select
-                bv.*,
-                vv.k_vilkar_resul_t as vv__k_vilkar_resul_t,
-
-                -- kl.k_land_3_tegn_id hånterer edge case for krav med 2 vilkårvedtak med samme virk men forskjellige land, der ingen av landene er Norge
-                rank() over (partition by vv.vedtak_id order by (case when kl.k_land_3_tegn_id = '161' then 1 else 2 end), kl.k_land_3_tegn_id desc) as rn
-            from behandlinger_vedtak bv
-            left join ref_t_vilkar_vedtak vv
-                on
-                    bv.vedtak_id = vv.vedtak_id
-                    and bv.dato_virk_fom = vv.dato_virk_fom
-            inner join ref_t_k_kravlinje_t tkl
-                on
-                    vv.k_kravlinje_t = tkl.k_kravlinje_t
-            left join ref_t_kravlinje kl on vv.kravlinje_id = kl.kravlinje_id
-            where tkl.hoved_krav_linje = '1'
-        ) bv
-    where bv.rn = 1
-
+    select
+        bv.*,
+        vv.k_vilkar_resul_t as vv__k_vilkar_resul_t
+    from behandlinger_vedtak bv
+    left join vilkarsvedtak_hovedkravlinje vv
+        on
+            bv.vedtak_id = vv.vedtak_id
+            and bv.dato_virk_fom = vv.dato_virk_fom
 ),
 
 sette_resultat as (
