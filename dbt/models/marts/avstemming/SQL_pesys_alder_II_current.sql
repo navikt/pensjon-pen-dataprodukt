@@ -3,7 +3,8 @@
 -- Eirik Grønli
 -- 28. aug 2025
 --
--- Endret: 
+-- Endret: 08.des.2025 (EG)
+--         En korreksjon i minstepensjonistflagget.
 -------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
@@ -364,7 +365,7 @@ aktive as
                                     and (b.dato_virk_tom is null or b.dato_virk_tom >= trunc(current_date))    
 )
 
---,endelig as (
+
 ------------------------------------------------------------------------------
 -- Selve uttrekket av data skjer her.
 -- Rader fra CTE-ene ovenfor, men henter også inn noen flere opplysninger.
@@ -397,14 +398,24 @@ SELECT --distinct
              then 1
           else 0
        end as AldersytelseFlagg,
+--       to_number(
+--           case
+--              when aktive.regelverk = 'N_REG_G_N_OPPTJ' then bi_2016.mottar_min_pensjonsniva
+--              when aktive.regelverk <> 'G_REG' then bi.mottar_min_pensjonsniva
+--              when aktive.regelverk = 'G_REG' then aktive.minstepensjonist
+--              else null
+--           end 
+--       ) as minstepensjon,
+       --=====
        to_number(
            case
-              when aktive.regelverk = 'N_REG_G_N_OPPTJ' then bi_2016.mottar_min_pensjonsniva
+              when aktive.regelverk = 'N_REG_G_N_OPPTJ' then bi_2025.mottar_min_pensjonsniva
               when aktive.regelverk <> 'G_REG' then bi.mottar_min_pensjonsniva
               when aktive.regelverk = 'G_REG' then aktive.minstepensjonist
               else null
            end 
        ) as minstepensjon,
+       --================
        aktive.brutto,
        aktive.netto,
        aktive.vt_netto,
@@ -569,4 +580,4 @@ SELECT --distinct
                                             and yk2.bruk = '1'
                                             and yk2.opphort = '0'     
        left outer join pen.t_min_pen_niva mpn3 on mpn3.min_pen_niva_id = yk2.min_pen_niva_id
-       ---
+      ---

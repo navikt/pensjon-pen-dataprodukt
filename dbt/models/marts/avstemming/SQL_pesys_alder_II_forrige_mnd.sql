@@ -3,7 +3,8 @@
 -- Eirik Grønli
 -- 28. aug 2025
 --
--- Endret: 
+-- Endret: 08.des.2025 (EG)
+--         En korreksjon i minstepensjonistflagget.
 -------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
@@ -397,14 +398,24 @@ SELECT --distinct
              then 1
           else 0
        end as AldersytelseFlagg,
+--       to_number(
+--           case
+--              when aktive.regelverk = 'N_REG_G_N_OPPTJ' then bi_2016.mottar_min_pensjonsniva
+--              when aktive.regelverk <> 'G_REG' then bi.mottar_min_pensjonsniva
+--              when aktive.regelverk = 'G_REG' then aktive.minstepensjonist
+--              else null
+--           end 
+--       ) as minstepensjon,
+       --=====
        to_number(
            case
-              when aktive.regelverk = 'N_REG_G_N_OPPTJ' then bi_2016.mottar_min_pensjonsniva
+              when aktive.regelverk = 'N_REG_G_N_OPPTJ' then bi_2025.mottar_min_pensjonsniva
               when aktive.regelverk <> 'G_REG' then bi.mottar_min_pensjonsniva
               when aktive.regelverk = 'G_REG' then aktive.minstepensjonist
               else null
            end 
        ) as minstepensjon,
+       --================
        aktive.brutto,
        aktive.netto,
        aktive.vt_netto,

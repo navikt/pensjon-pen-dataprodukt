@@ -3,21 +3,23 @@
 -- Eirik Grønli
 -- 29. januar 2024
 --
--- Endret: 02 des 2024
+-- Endret: 02 des 2024 (EG)
 --         Gjenlevendeytelse kapittel 19
--- Endret: 30 apr 2025
+-- Endret: 30 apr 2025 (EG)
 --         Innvilget gjenlevenderett.
 --         Kommunal ytelse.
--- Endret: 30 sep 2025
+-- Endret: 30 sep 2025 (EG)
 --         Fjernet join til K-tabellene T_K_AFP_T og t_k_regelverk_t.
 --         Erstattet dem med case-uttrykk.
 --         Tok vekk join til t_uttaksgrad i CTE yk_bres.
 --         Tok vekk personnr og join mot t_person.
 --         Tok bort join til pen_under_utbet i aktive (union all fra yk_bres).
--- Endret: 10 okt 2025
+-- Endret: 10 okt 2025 (EG)
 --         La inn sjekk av virkningsdatoer for beregning_info for evt. avdød,
 --         men er kommentert vekk inntil videre.
 --         Skreller bort noen unødvendige felter, og litt småpuss av koden.
+-- Endret: 08 des 2025 (EG)
+--         En rettelse i minstepensjonistflagget.
 -------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
@@ -290,7 +292,6 @@ aktive as
         vt.k_vedtak_s,
         nvl(kh.k_regelverk_t, 'G_REG') as regelverk, 
         kh.K_AFP_T,
---        100 as uttaksgrad, 
         case
           when nvl(b.netto,0) = 0 then 0
           when nvl(b.brutto,0) = 0 then 100
@@ -418,7 +419,16 @@ SELECT to_number(to_char(LAST_DAY(ADD_MONTHS(current_date,-1)),'YYYYMM')) as per
              then 1
           else 0
        end as AldersytelseFlagg,
-       to_number(coalesce(aktive.minstepensjonist, bi.mottar_min_pensjonsniva)) as minstepensjon,
+--       to_number(coalesce(aktive.minstepensjonist, bi.mottar_min_pensjonsniva)) as minstepensjon,
+       --=====
+       to_number(
+           case
+              when aktive.regelverk = 'N_REG_G_N_OPPTJ' then bi_2025.mottar_min_pensjonsniva
+              when aktive.regelverk <> 'G_REG' then bi.mottar_min_pensjonsniva
+              when aktive.regelverk = 'G_REG' then aktive.minstepensjonist
+              else null
+           end 
+       ) as minstepensjon,
        aktive.MINSTE_PEN_NIVA,
        case 
           when ost.flagg = 1 and nvl(aktive.netto,0) > 0
