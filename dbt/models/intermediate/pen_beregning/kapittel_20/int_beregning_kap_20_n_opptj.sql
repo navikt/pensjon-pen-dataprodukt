@@ -47,14 +47,6 @@ ref_beregning_info as (
     from {{ ref('stg_t_beregning_info') }}
 ),
 
-ref_beholdning as (
-    select
-        beregning_info_id,
-        k_beholdning_t,
-        totalbelop
-    from {{ ref('stg_t_beholdning') }}
-),
-
 join_beregning_res as (
     select
         ref_int_lopende_vedtak_alder.*,

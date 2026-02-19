@@ -50,10 +50,20 @@ ref_beregning_info as (
 
 ref_beholdning as (
     select
-        beregning_info_id,
+        beholdning_id,
+        beholdninger_id,
         k_beholdning_t,
-        totalbelop
+        totalbelop,
+        dato_fom,
+        dato_tom
     from {{ ref('stg_t_beholdning') }}
+),
+
+ref_t_beregning_2011 as (
+    select
+        beregning_res_kap_20,
+        beholdninger_id
+    from {{ ref('stg_t_beregning_2011') }}
 ),
 
 join_beregning_res as (
@@ -114,17 +124,32 @@ join_beregning_info_overgang_2016 as (
 ),
 
 -- Legg til beholdninginfo, kun for N_REG_N_OPPTJ
--- OBS - bruker beregning_info_id_2025 (nytt regelverk)
+-- OBS - via beregninger_2011. beholdinger_id er mellom objekt for å håndtere m2m mellom beregning_res og beholdning
+beholdning as (
+    select
+        b.vedtak_id,
+        sum(case when bh.k_beholdning_t = 'PEN_B' then bh.totalbelop end) as beh_pen_b_totalbelop,
+        sum(case when bh.k_beholdning_t = 'GAR_PEN_B' then bh.totalbelop end) as beh_gar_pen_b_totalbelop,
+        sum(case when bh.k_beholdning_t = 'GAR_T_B' then bh.totalbelop end) as beh_gar_t_b_totalbelop
+    from join_beregning_info_overgang_2016 b
+    inner join ref_beregning_res br_2025 on b.beregning_res_id = br_2025.ber_res_ap_2025_2016_id
+    inner join ref_t_beregning_2011 ber_2011 on br_2025.beregning_res_id = ber_2011.beregning_res_kap_20
+    inner join ref_beholdning bh
+        on
+            ber_2011.beholdninger_id = bh.beholdninger_id
+            and bh.dato_fom <= {{ periode_sluttdato(var("periode")) }}
+            and (bh.dato_tom is null or bh.dato_tom >= trunc({{ periode_sluttdato(var("periode")) }}))
+    group by b.vedtak_id
+),
+
 join_beholdning as (
     select
         join_beregning_info_overgang_2016.*,
-        beh_pen_b.totalbelop as beh_pen_b_totalbelop,
-        beh_gar_pen_b.totalbelop as beh_gar_pen_b_totalbelop,
-        beh_gar_t_b.totalbelop as beh_gar_t_b_totalbelop
+        beholdning.beh_pen_b_totalbelop,
+        beholdning.beh_gar_pen_b_totalbelop,
+        beholdning.beh_gar_t_b_totalbelop
     from join_beregning_info_overgang_2016
-    left join ref_beholdning beh_pen_b on join_beregning_info_overgang_2016.beregning_info_id_2025 = beh_pen_b.beregning_info_id and beh_pen_b.k_beholdning_t = 'PEN_B'
-    left join ref_beholdning beh_gar_pen_b on join_beregning_info_overgang_2016.beregning_info_id_2025 = beh_gar_pen_b.beregning_info_id and beh_gar_pen_b.k_beholdning_t = 'GAR_PEN_B'
-    left join ref_beholdning beh_gar_t_b on join_beregning_info_overgang_2016.beregning_info_id_2025 = beh_gar_t_b.beregning_info_id and beh_gar_t_b.k_beholdning_t = 'GAR_T_B'
+    left join beholdning on join_beregning_info_overgang_2016.vedtak_id = beholdning.vedtak_id
 )
 
 select
