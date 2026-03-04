@@ -27,7 +27,7 @@ dataprodukt_2 as (
         v.k_sak_t,
         {{ dekode('v.k_sak_t') }} as sakstype,
         b.uttaksgrad,
-        b.alderspensjon_ytelse_flagg as aldersytelseflagg,
+        b.aldersytelseflagg,
         b.minstepensjon,
         b.brutto,
         b.netto,

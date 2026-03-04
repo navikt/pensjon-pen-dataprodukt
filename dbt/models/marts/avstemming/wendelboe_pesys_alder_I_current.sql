@@ -36,7 +36,7 @@ dataprodukt_1 as (
         {{ dekode('v.k_sak_t') }} as sakstype,
         b.uttaksgrad,
         b.netto,
-        b.alderspensjon_ytelse_flagg as aldersytelseflagg,
+        b.aldersytelseflagg,
         b.minstepensjon,
         bb.k_minstepen_niva as minste_pen_niva,
         v.overgangsstonad_flagg as overgangsstonad,

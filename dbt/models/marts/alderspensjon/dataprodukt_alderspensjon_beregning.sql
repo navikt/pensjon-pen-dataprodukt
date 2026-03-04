@@ -28,7 +28,7 @@ select
     gjenlevrett_anv,
     innv_gj_rett,
     minstepensjon,
-    alderspensjon_ytelse_flagg,
+    aldersytelseflagg,
 
     {{ var("periode") }} as periode,
     sysdate as kjoretidspunkt

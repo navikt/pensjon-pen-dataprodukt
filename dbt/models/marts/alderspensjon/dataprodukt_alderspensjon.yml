@@ -214,8 +214,8 @@ models:
         description: "1 | 0"
         data_type: varchar
 
-      - name: alderspensjon_ytelse_flagg
-        description: "1 | 0"
+      - name: aldersytelseflagg
+        description: "1 | 0. Er 1 hvis netto > 0"
         data_type: varchar2
 
       - name: periode
