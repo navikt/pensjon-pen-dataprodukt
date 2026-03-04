@@ -14,7 +14,7 @@ select
 
     sum_fradrag, -- obs! denne er alltid 0, også i prod
     k_minstepen_niva,
-    minstepen_niva_sats,
+    mpn_arsak_sats,
     prorata_teller,
     prorata_nevner,
     psats_gp,

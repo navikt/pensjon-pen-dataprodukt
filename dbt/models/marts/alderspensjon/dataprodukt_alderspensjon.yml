@@ -254,8 +254,8 @@ models:
       - name: k_minstepen_niva
         description: "HOY_ENSLIG,SAERSKILT,LAV,ORDINAER,HOY"
         data_type: varchar2
-      - name: minstepen_niva_sats
-        description: ""
+      - name: mpn_arsak_sats
+        description: "Sats for minstepensjon, som her kun er satt for de som har minstepensjon og G_REG + N_REG_G_OPPTJ."
         data_type: number
       - name: prorata_teller
         description: "hentes gjenn om relasjon ytelse_kome -> t_anvendt_trygdetid -> t_brok"

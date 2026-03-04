@@ -9,6 +9,8 @@ ref_int_beregning as (
         sak_id,
         beregning_id,
         pen_under_utbet_id,
+        k_regelverk_t,
+        minstepensjon,
         brutto,
         netto
     from {{ ref('int_beregning') }}
@@ -131,13 +133,13 @@ join_beregning as (
             or ref_int_beregning.beregning_id = transponert_ytelse_komp.beregning_id
 ),
 
-legger_til_minstepen_niva_sats as (
+legger_til_mpn_arsak_sats as (
     select
-        join_beregning.*,
-        ref_min_pen_niva.sats as minstepen_niva_sats
-    from join_beregning
+        b.*,
+        case when b.minstepensjon = 1 and b.k_regelverk_t in ('G_REG', 'N_REG_G_OPPTJ') then ref_min_pen_niva.sats end as mpn_arsak_sats
+    from join_beregning b
     left join ref_min_pen_niva
-        on join_beregning.min_pen_niva_id = ref_min_pen_niva.min_pen_niva_id
+        on b.min_pen_niva_id = ref_min_pen_niva.min_pen_niva_id
 ),
 
 -- Prorata kan også hentes fra:
@@ -147,7 +149,7 @@ legger_til_prorata as (
         v.*,
         brok.teller as prorata_teller,
         brok.nevner as prorata_nevner
-    from legger_til_minstepen_niva_sats v
+    from legger_til_mpn_arsak_sats v
     left join ref_stg_t_anvendt_trygdetid tat on v.yk_anvendt_trygdetid = tat.anvendt_trygdetid_id
     left join ref_stg_t_brok brok on tat.pro_rata = brok.brok_id
 )
@@ -162,7 +164,7 @@ select
 
     sum_fradrag, -- obs! denne er alltid 0, også i prod
     k_minstepen_niva,
-    minstepen_niva_sats,
+    mpn_arsak_sats,
     prorata_teller,
     prorata_nevner,
     psats_gp,

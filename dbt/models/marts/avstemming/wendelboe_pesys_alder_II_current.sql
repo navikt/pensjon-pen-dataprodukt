@@ -40,7 +40,7 @@ dataprodukt_2 as (
         {{ dekode('b.k_bereg_metode_t') }} as beregning_kode,
         b.k_bor_med_t,
         {{ k_bor_med_t__k_grnl_rolle_t('b.k_bor_med_t') }} as k_grnl_rolle_t,
-        case when b.minstepensjon = 1 and v.k_regelverk_t in ('G_REG', 'N_REG_G_OPPTJ') then bb.minstepen_niva_sats end as mpn_arsak_sats,
+        bb.mpn_arsak_sats,
         b.minstepen_niva_arsak as mpn_arsak_kode,
         -- mpn_aarsak_flagg Vi dropper denne for nå
         case when v.k_regelverk_t = 'G_REG' then 0 else 1 end as nytt_regelverk_flagg,
