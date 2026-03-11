@@ -9,6 +9,19 @@ finne_eps_til_lovendring as (
         v.oifu_endret_flagg,
         pg.person_id,
         v.minsteytelse_ektefelle_flagg,
+        case when (
+            v.er_minimums_ifu = '1'
+            and v.oifu in (429527, 429528, 429529)
+            and v.grad != 100
+            and v.k_minsteytelseniva in ('ORDINER_EKTEFELLE', 'ORDINER_EKTEF_KONV')
+            --and k_minimum_ifu_t = 'MINIMUM_IFU_GIFT'
+            and v.ny_avrundet_grad - v.grad != 0
+        ) or (
+            v.oifu > 429529
+            and v.oifu < 455560
+            and v.grad != 100
+            and v.ny_avrundet_grad - v.grad != 0
+        ) then '5%' else '-' end as gradsendring,
         v.kompgrad_over_70_flagg,
         pd.k_grnl_rolle_t,
         pg.kravhode_id as eps_kravhode_id
