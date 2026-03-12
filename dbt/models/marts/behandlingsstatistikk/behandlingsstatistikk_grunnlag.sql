@@ -1,5 +1,6 @@
 -- behandlingsstatistikk_grunnlag
--- Grunnlag for behandlingsstatistikk, samt maskering av geolokaliserende felter for kode6/7
+-- Grunnlag for behandlingsstatistikk, som blir snapshottet av dbt
+-- Etter snapshot velger vi ut hva som skal bli meldinger til team Sak
 -- Nye feltnavn gis i behandlingsstatistikk_meldinger
 
 {{
@@ -12,11 +13,12 @@ with
 
 behandling_ferdig as (
     select * from {{ ref('int_behandling_ferdig') }}
-    -- herfra må vi også hente noen datoer, feks dato_vedtatt
+    where k_krav_s = 'FERDIG'
 ),
 
 behandling_avbrutt as (
     select * from {{ ref('int_behandling_avbrutt') }}
+    where k_krav_s = 'AVBRUTT'
 ),
 
 behandling_andre as (
@@ -29,6 +31,7 @@ union_behandling as (
         sak_id, -- kh
         kravhode_id, -- kh
         behandling_resultat,
+        -- todo: legg til k_vedtak_s for å kunne skille ut FERDIG + IVERKS/AVBR etter snapshot
         k_krav_gjelder, -- kh
         k_krav_s, -- kh
         k_krav_arsak_t, -- ka
@@ -51,6 +54,7 @@ union_behandling as (
         sak_id, -- kh
         kravhode_id, -- kh
         behandling_resultat,
+        -- todo: legg til k_vedtak_s for å kunne skille ut FERDIG + IVERKS/AVBR etter snapshot
         k_krav_gjelder, -- kh
         k_krav_s, -- kh
         k_krav_arsak_t, -- ka
@@ -73,6 +77,7 @@ union_behandling as (
         sak_id, -- kh
         kravhode_id, -- kh
         null as behandling_resultat,
+        -- todo: legg til k_vedtak_s for å kunne skille ut FERDIG + IVERKS/AVBR etter snapshot
         k_krav_gjelder, -- kh
         k_krav_s, -- kh
         k_krav_arsak_t, -- ka
@@ -96,6 +101,7 @@ select
     sak_id, -- kh
     kravhode_id, -- kh
     behandling_resultat,
+    -- todo: legg til k_vedtak_s for å kunne skille ut FERDIG + IVERKS/AVBR etter snapshot
     k_krav_gjelder, -- kh
     k_krav_s, -- kh
     k_krav_arsak_t, -- ka

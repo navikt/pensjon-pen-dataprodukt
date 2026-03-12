@@ -1,10 +1,13 @@
+-- int_behandling_ferdig
+-- tar alt med kravstatus FERDIG og prøver å finne et behandlingsresultat
+-- OBS! Ikke alle ferdige behandlinger er endelig ferdig, fordi vedtaket må være IVERKS for å gå til utbetaling
+-- logikk for at vi kun sender IVERKS (og vedtak AVBR) til team sak kommer etter snapshot
+
 with
 
 ref_behandling as (
-    select *
-    from {{ ref('int_behandling') }}
-    where
-        k_krav_s = 'FERDIG'
+    select * from {{ ref('int_behandling') }}
+    where k_krav_s = 'FERDIG'
 ),
 
 ref_int_forste_vedtak_uforep as (
@@ -12,18 +15,15 @@ ref_int_forste_vedtak_uforep as (
 ),
 
 ref_t_vilkar_vedtak as (
-    select *
-    from {{ ref('stg_t_vilkar_vedtak') }}
+    select * from {{ ref('stg_t_vilkar_vedtak') }}
 ),
 
 ref_t_kravlinje as (
-    select *
-    from {{ ref('stg_t_kravlinje') }}
+    select * from {{ ref('stg_t_kravlinje') }}
 ),
 
 ref_t_k_kravlinje_t as (
-    select *
-    from {{ ref('stg_t_k_kravlinje_t') }}
+    select * from {{ ref('stg_t_k_kravlinje_t') }}
 ),
 
 vilkarsvedtak_hovedkravlinje as (
@@ -109,16 +109,16 @@ sette_resultat as (
         k_vedtak_t,
         dato_vedtak,
         dato_virk_fom,
-        case when vedtak_id is not null then 'vedtak' end as vedtak,
         case
+            when k_vedtak_s = 'AVBR' then k_vedtak_s
             when k_krav_gjelder in ('KLAGE', 'ANKE') then k_klageank_res_t
-            when k_krav_gjelder = 'REGULERING' then 'IVERKS' -- TODO hva gjør vi med disse?
             when k_vilkar_resul_t is not null then k_vilkar_resul_t
-            when vv__k_vilkar_resul_t is not null then vv__k_vilkar_resul_t
-            when k_krav_gjelder in ('TILBAKEKR', 'OMGJ_TILBAKE', 'UTSEND_AVTALELAND') then k_vedtak_s -- blir alltid IVERKS
+            when vv__k_vilkar_resul_t is not null then vv__k_vilkar_resul_t -- noen få rader mangler v.k_vilkar_resul_t
+            when k_krav_gjelder = 'REGULERING' then 'IVERKS' -- vi ignorerer vedtak-type regulering, så bare setter disse til iverksatt
+            when k_krav_gjelder in ('TILBAKEKR', 'OMGJ_TILBAKE', 'UTSEND_AVTALELAND') then k_vedtak_s -- disse mangler resultat på v og vv, så vedtak-status er beste vi har
+            else 'UKJENT' -- det er noen få ferdige som er ukjent, feks 3 klager jan+feb 2026
         end as behandling_resultat,
-        k_vedtak_s,
-        k_vilkar_resul_t
+        k_vedtak_s -- kun IVERKS og AVBR som skal bli en melding til team sak, men vi mellomlagrer alle
     from fjern_duplikater
 )
 
