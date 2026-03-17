@@ -30,7 +30,7 @@ union_behandling as (
     select
         sak_id, -- kh
         kravhode_id, -- kh
-        behandling_resultat,
+        'placeholder' as behandling_resultat,
         -- todo: legg til k_vedtak_s for å kunne skille ut FERDIG + IVERKS/AVBR etter snapshot
         k_krav_gjelder, -- kh
         k_krav_s, -- kh
@@ -53,7 +53,7 @@ union_behandling as (
     select
         sak_id, -- kh
         kravhode_id, -- kh
-        behandling_resultat,
+        'placeholder' as behandling_resultat,
         -- todo: legg til k_vedtak_s for å kunne skille ut FERDIG + IVERKS/AVBR etter snapshot
         k_krav_gjelder, -- kh
         k_krav_s, -- kh
