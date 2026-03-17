@@ -109,6 +109,10 @@ sette_resultat as (
         k_vedtak_t,
         dato_vedtak,
         dato_virk_fom,
+        k_vedtak_s, -- kun IVERKS og AVBR som skal bli en melding til team sak, men vi mellomlagrer alle
+        k_vilkar_resul_t,
+        vv__k_vilkar_resul_t,
+        k_klageank_res_t,
         case
             when k_vedtak_s = 'AVBR' then k_vedtak_s
             when k_krav_gjelder in ('KLAGE', 'ANKE') then k_klageank_res_t
@@ -117,8 +121,7 @@ sette_resultat as (
             when k_krav_gjelder = 'REGULERING' then 'IVERKS' -- vi ignorerer vedtak-type regulering, så bare setter disse til iverksatt
             when k_krav_gjelder in ('TILBAKEKR', 'OMGJ_TILBAKE', 'UTSEND_AVTALELAND') then k_vedtak_s -- disse mangler resultat på v og vv, så vedtak-status er beste vi har
             else 'UKJENT' -- det er noen få ferdige som er ukjent, feks 3 klager jan+feb 2026
-        end as behandling_resultat,
-        k_vedtak_s -- kun IVERKS og AVBR som skal bli en melding til team sak, men vi mellomlagrer alle
+        end as behandling_resultat
     from fjern_duplikater
 )
 

@@ -32,8 +32,8 @@ status_aggregert as (
             when max(case when kls.k_kravlinje_s = 'TRUKKET' then 1 else 0 end) = 1 then 'TRUKKET'
             when max(case when kls.k_kravlinje_s = 'HENLAGT' then 1 else 0 end) = 1 then 'HENLAGT'
             when max(case when kls.k_kravlinje_s = 'FEILREGISTRERT' then 1 else 0 end) = 1 then 'FEILREGISTRERT'
-            else 'FEILREGISTRERT'
-        end as behandling_resultat
+            else max(kls.k_kravlinje_s)
+        end as avbrutt_behandling_resultat
     from ref_kravlinje kl
     left join ref_kravlinje_s kls
         on kl.kravlinje_s_id = kls.kravlinje_s_id
@@ -44,7 +44,7 @@ status_aggregert as (
 behandlinger_avbrutt_med_status as (
     select
         beh.*,
-        status_aggregert.behandling_resultat
+        status_aggregert.avbrutt_behandling_resultat
     from ref_behandling beh
     left join status_aggregert
         on beh.kravhode_id = status_aggregert.kravhode_id
@@ -52,7 +52,7 @@ behandlinger_avbrutt_med_status as (
 
 final as (
     select
-        behandling_resultat, -- kls aggregert på kravhode med prioritert rekkefølge
+        avbrutt_behandling_resultat, -- kls aggregert på kravhode med prioritert rekkefølge
         sak_id, -- kh
         kravhode_id, -- kh
         k_krav_gjelder, -- kh
