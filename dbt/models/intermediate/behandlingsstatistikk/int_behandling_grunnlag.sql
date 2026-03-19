@@ -130,5 +130,5 @@ select
     vv__k_vilkar_resul_t, -- til behandling_resultat
     k_klageank_res_t, -- til behandling_resultat
     avbrutt_behandling_resultat,
-    systimestamp as kjoretidspunkt -- brukes til last fra Oracle til BQ
+    cast(systimestamp at time zone 'UTC' as timestamp(9)) as kjoretidspunkt -- brukes til last fra Oracle til BQ
 from union_behandling

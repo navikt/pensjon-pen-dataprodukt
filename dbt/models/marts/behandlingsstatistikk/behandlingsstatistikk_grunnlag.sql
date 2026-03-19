@@ -118,5 +118,5 @@ select
     dato_endret, -- kh
     ferdigbehandlet_tid, -- v
     kravhode_id_for, -- kh
-    systimestamp as kjoretidspunkt -- brukes til last fra Oracle til BQ
+    cast(systimestamp at time zone 'UTC' as timestamp(9)) as kjoretidspunkt -- brukes til last fra Oracle til BQ
 from union_behandling

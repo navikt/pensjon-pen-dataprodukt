@@ -88,7 +88,7 @@ nye_kolonnenavn as (
         dato_virk_fom as utbetalt_tid,
         cast(dato_endret at time zone 'UTC' as timestamp(9)) as endret_tid,
         dato_onsket_virk as forventetoppstart_tid,
-        cast(kjoretidspunkt at time zone 'UTC' as timestamp(9)) as teknisk_tid,
+        kjoretidspunkt as teknisk_tid,
         k_sak_t as sak_ytelse,
         k_utlandstilknytning as sak_utland,
         k_krav_gjelder as behandling_type,
