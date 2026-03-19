@@ -89,12 +89,13 @@ sett_behandling_resultat_og_status as (
                     end -- Disse tilfellene må undersøkes 
 
             when beh.k_vedtak_s = 'AVBR' and beh.k_krav_s = 'FERDIG' then 'VEDTAK_AVBRUTT'
+            when beh.k_vedtak_s in ('STOPPET', 'STOPPES') and beh.k_krav_s = 'FERDIG' then 'VEDTAK_STOPPET'
             when beh.k_krav_s = 'AVBRUTT' then beh.avbrutt_behandling_resultat
             when beh.k_krav_s = 'FERDIG' and beh.k_vedtak_s not in ('IVERKS', 'AVBR') then null
         end as behandling_resultat,
         case
             when beh.k_vedtak_s = 'IVERKS' and beh.k_krav_s = 'FERDIG' then 'FERDIG'
-            when beh.k_vedtak_s = 'AVBR' and beh.k_krav_s = 'FERDIG' then 'AVBRUTT'
+            when beh.k_vedtak_s in ('AVBR', 'STOPPET', 'STOPPES') and beh.k_krav_s = 'FERDIG' then 'AVBRUTT'
             when beh.k_krav_s = 'AVBRUTT' then 'AVBRUTT'
             when beh.k_krav_s = 'FERDIG' and beh.k_vedtak_s not in ('IVERKS', 'AVBR') then 'VENTER_VEDTAK'
             else beh.k_krav_s
