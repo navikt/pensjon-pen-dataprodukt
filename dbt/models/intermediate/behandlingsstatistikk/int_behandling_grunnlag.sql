@@ -66,7 +66,7 @@ union_behandling as (
         dato_mottatt_krav, -- kh
         null as dato_virk_fom, -- v
         dato_endret, -- kh
-        dato_endret as ferdigbehandlet_tid, --kh
+        trunc(dato_endret) as ferdigbehandlet_tid, --kh samme datatype some i behandling_ferdig
         kravhode_id_for, -- kh
         null as k_vedtak_t,
         null as k_vedtak_s,
