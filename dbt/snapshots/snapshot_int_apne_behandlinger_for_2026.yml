@@ -1,0 +1,13 @@
+version: 2
+
+snapshots:
+  - name: snapshot_int_apne_behandlinger_for_2026
+    relation: ref('int_apne_behandlinger_for_2026')
+    config:
+      strategy: check
+      check_cols: 
+        - k_krav_s
+        - k_vedtak_s
+      unique_key: kravhode_id
+      hard_deletes: invalidate
+      tags: 'sak'
