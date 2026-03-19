@@ -12,10 +12,22 @@ ref_stg_t_krav_arsak as (
     from {{ ref('stg_t_krav_arsak') }}
 ),
 
-ref_stg_t_kravhode as (
+ref_snapshot_int_apne_behandlinger_for_2026 as (
     select *
-    from {{ ref('stg_t_kravhode') }}
-    where dato_opprettet > to_date('01.01.2025', 'DD.MM.YYYY')
+    from {{ ref('snapshot_int_apne_behandlinger_for_2026') }}
+    where trunc(dbt_valid_to) = to_date('19.03.2026', 'DD.MM.YYYY')
+),
+
+ref_stg_t_kravhode as (
+    select kh.*
+    from {{ ref('stg_t_kravhode') }} kh
+    where exists (
+        select 1
+        from ref_snapshot_int_apne_behandlinger_for_2026 apne
+        where apne.kravhode_id = kh.kravhode_id
+    )
+    or kh.dato_opprettet > {{ var('behandlingsstatistikk_start_dato') }}
+
 ),
 
 ref_stg_t_pen_org_enhet as (
