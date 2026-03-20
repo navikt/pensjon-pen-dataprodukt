@@ -1,13 +1,6 @@
--- behandlingsstatistikk_grunnlag
--- Grunnlag for behandlingsstatistikk, som blir snapshottet av dbt
--- Etter snapshot velger vi ut hva som skal bli meldinger til team Sak
--- Nye feltnavn gis i behandlingsstatistikk_meldinger
-{{
-  config(
-    materialized = 'table',
-    )
-}}
-
+-- int_behandling_grunnlag
+-- Versjon 2 av et grunnlag for behandlingsstatistikk
+-- denne går inn i et snapshot som sjekker endringer
 
 with
 
