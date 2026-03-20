@@ -1,8 +1,7 @@
 with
 
 ref_stg_t_vedtak as (
-    select *
-    from {{ ref('stg_t_vedtak') }}
+    select * from {{ ref('stg_t_vedtak') }}
     where
         k_sak_t = 'UFOREP'
         and k_vedtak_t != 'REGULERING'
@@ -17,7 +16,6 @@ aggreger_krav as (
             row_number() over (partition by v.kravhode_id order by v.vedtak_id asc) as rn
         from ref_stg_t_vedtak v)
     where rn = 1
-    --group by kravhode_id
 )
 
 select * from aggreger_krav

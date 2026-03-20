@@ -1,5 +1,7 @@
--- behandlingsstatistikk_meldinger
+-- behandlingsstatistikk_meldinger_v2
 -- view som mapper over kolonnenavn fra pen til det team sak ønsker
+-- setter også behandling_resultat og behandling_status
+-- her endrer vi noen som er FERDIG til AVBRUTT basert på vedtaksstatus
 
 {{
     config(
@@ -41,7 +43,6 @@ ref_behandlingsstatistikk_grunnlag as (
         rownum + ({{ sekvensnummer_offset }}) as sekvensnummer,
         sak_id, -- kh
         kravhode_id, -- kh
-        --behandling_resultat,
         k_krav_gjelder, -- kh
         k_krav_s, -- kh
         k_krav_arsak_t, -- ka
@@ -80,14 +81,11 @@ sett_behandling_resultat_og_status as (
                     case
                         when beh.k_krav_gjelder in ('KLAGE', 'ANKE') then beh.k_klageank_res_t
                         when beh.k_vedtak_t in ('AVSL', 'OPPHOR') then beh.k_vedtak_t
-
                         when beh.k_vilkar_resul_t is not null then beh.k_vilkar_resul_t
                         when beh.vv__k_vilkar_resul_t is not null then beh.vv__k_vilkar_resul_t -- noen få rader mangler v.k_vilkar_resul_t
-
                         when beh.k_krav_gjelder in ('REGULERING', 'TILBAKEKR', 'OMGJ_TILBAKE', 'UTSEND_AVTALELAND') then 'INNV' -- disse mangler resultat på v og vv, så vedtak-status er beste vi har
                         else 'UKJENT_IVERKS'
-                    end -- Disse tilfellene må undersøkes 
-
+                    end
             when beh.k_vedtak_s = 'AVBR' and beh.k_krav_s = 'FERDIG' then 'VEDTAK_AVBRUTT'
             when beh.k_vedtak_s in ('STOPPET', 'STOPPES') and beh.k_krav_s = 'FERDIG' then 'VEDTAK_STOPPET'
             when beh.k_krav_s = 'AVBRUTT' then beh.avbrutt_behandling_resultat
@@ -100,7 +98,6 @@ sett_behandling_resultat_og_status as (
             when beh.k_krav_s = 'FERDIG' and beh.k_vedtak_s not in ('IVERKS', 'AVBR') then 'VENTER_VEDTAK'
             else beh.k_krav_s
         end as behandling_status
-
     from ref_behandlingsstatistikk_grunnlag beh
 ),
 

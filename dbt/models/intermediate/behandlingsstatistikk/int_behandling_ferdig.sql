@@ -57,7 +57,6 @@ behandlinger_vedtak as (
             else v.attesterer
         end as attesterer
     from ref_behandling beh
-    -- left join pen.t_vedtak v
     left join ref_int_forste_vedtak_uforep v
         on
             beh.kravhode_id = v.kravhode_id

@@ -3,32 +3,15 @@
 with
 
 ref_stg_t_sak as (
-    select *
-    from {{ ref('stg_t_sak') }}
+    select * from {{ ref('stg_t_sak') }}
 ),
 
 ref_stg_t_krav_arsak as (
-    select *
-    from {{ ref('stg_t_krav_arsak') }}
+    select * from {{ ref('stg_t_krav_arsak') }}
 ),
 
--- ref_snapshot_int_apne_behandlinger_for_2026 as (
---     select *
---     from pen_dataprodukt.snapshot_int_apne_behandlinger_for_2026 -- hindrer at vi kjører denne snapshoten med +tag:sak
---     where
---         cast(dbt_valid_from as date) = to_date('19.03.2026 14:24:55', 'DD.MM.YYYY HH24:MI:SS') -- prod
---         or cast(dbt_valid_from as date) = to_date('19.03.2026 14:21:01', 'DD.MM.YYYY HH24:MI:SS') -- q2
--- ),
-
 ref_stg_t_kravhode as (
-    select kh.*
-    from {{ ref('stg_t_kravhode') }} kh
-    -- where exists (
-    --     select 1
-    --     from ref_snapshot_int_apne_behandlinger_for_2026 apne
-    --     where apne.kravhode_id = kh.kravhode_id
-    -- )
-    -- or kh.dato_opprettet > {{ var('behandlingsstatistikk_start_dato') }}
+    select * from {{ ref('stg_t_kravhode') }}
 ),
 
 ref_stg_t_pen_org_enhet as (
