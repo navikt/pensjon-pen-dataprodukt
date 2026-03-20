@@ -53,7 +53,7 @@ apne_behandlinger as (
     from join_vedtak_og_sak
     where
         k_krav_s not in ('FERDIG', 'AVBRUTT')
-        or (k_vedtak_s != 'IVERKS' and k_krav_s = 'FERDIG')
+        or (k_vedtak_s not in ('IVERKS', 'AVBR') and k_krav_s = 'FERDIG')
 )
 
 select * from apne_behandlinger
