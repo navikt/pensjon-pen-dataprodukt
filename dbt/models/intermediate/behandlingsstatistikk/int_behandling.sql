@@ -15,7 +15,9 @@ ref_stg_t_krav_arsak as (
 ref_snapshot_int_apne_behandlinger_for_2026 as (
     select *
     from {{ ref('snapshot_int_apne_behandlinger_for_2026') }}
-    where trunc(dbt_valid_to) = to_date('19.03.2026', 'DD.MM.YYYY')
+    where
+        trunc(dbt_valid_from) = to_date('19.03.2026', 'DD.MM.YYYY')
+        and k_vedtak_s != 'AVBR'
 ),
 
 ref_stg_t_kravhode as (
@@ -26,7 +28,7 @@ ref_stg_t_kravhode as (
         from ref_snapshot_int_apne_behandlinger_for_2026 apne
         where apne.kravhode_id = kh.kravhode_id
     )
-    or kh.dato_opprettet > {{ var('behandlingsstatistikk_start_dato') }}
+    or kh.dato_opprettet > kh.{{ var('behandlingsstatistikk_start_dato') }}
 
 ),
 
