@@ -28,7 +28,7 @@ ref_stg_t_kravhode as (
         from ref_snapshot_int_apne_behandlinger_for_2026 apne
         where apne.kravhode_id = kh.kravhode_id
     )
-    or kh.dato_opprettet > kh.{{ var('behandlingsstatistikk_start_dato') }}
+    or kh.dato_opprettet > {{ var('behandlingsstatistikk_start_dato') }}
 
 ),
 
