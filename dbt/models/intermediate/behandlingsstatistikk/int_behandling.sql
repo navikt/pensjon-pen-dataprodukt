@@ -14,9 +14,11 @@ ref_stg_t_krav_arsak as (
 
 ref_snapshot_int_apne_behandlinger_for_2026 as (
     select *
-    from {{ ref('snapshot_int_apne_behandlinger_for_2026') }}
+    -- from {{ ref('snapshot_int_apne_behandlinger_for_2026') }}
+    from pen_dataprodukt.snapshot_int_apne_behandlinger_for_2026 -- hindrer at vi kjører denne snapshoten med +tag:sak
     where
-        trunc(dbt_valid_from) = to_date('19.03.2026', 'DD.MM.YYYY')
+        cast(dbt_valid_from as date) = to_date('19.03.2026 14:24:55', 'DD.MM.YYYY HH24:MI:SS') -- prod
+        or cast(dbt_valid_from as date) = to_date('19.03.2026 14:21:01', 'DD.MM.YYYY HH24:MI:SS') -- q2
 ),
 
 ref_stg_t_kravhode as (
