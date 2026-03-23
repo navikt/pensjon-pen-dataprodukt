@@ -24,7 +24,7 @@ vars:
   periode: "to_char(trunc(add_months(current_date, -1)), 'YYYYMM')"
   behandlingsstatistikk_start_dato: "to_date('01.01.2026', 'DD.MM.YYYY')"
 
-# modellene er tagget med sak eller ytelse for om de skal til dv-team-pensjon eller team sak
+# modellene er tagget med sak eller stonad for om de skal til dv-team-pensjon eller team sak
 models:
   pen_dataprodukt:
     +contract:
@@ -41,15 +41,15 @@ models:
         node_color: '#49a8b3'
       behandlingsstatistikk:
         +tags: ['sak']
-      pen_beregning:
-        +tags: ['ytelse']
+      stonadsstatistikk:
+        +tags: ['stonad']
     marts:
       +docs:
         node_color: '#a176b3'
-      alderspensjon:
-        +tags: ['ytelse']
+      stonadsstatistikk:
+        +tags: ['stonad']
       avstemming:
-        +tags: ['ytelse']
+        +tags: ['stonad']
       behandlingsstatistikk:
         +tags: ['sak']
 
