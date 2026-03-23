@@ -3,7 +3,7 @@ name = "pen-dataprodukt"
 version = "0.1.0"
 description = "Lage dataprodukt med dbt i PEN, oracledatabasen for pensjon og uføre"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 dependencies = [
     # se https://github.com/navikt/dvh-images/blob/main/airflow/dbt/pyproject.toml
     "dbt-oracle>=1.10.0",
