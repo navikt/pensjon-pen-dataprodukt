@@ -2,6 +2,12 @@
 -- Versjon 2 av et grunnlag for behandlingsstatistikk
 -- denne går inn i et snapshot som sjekker endringer
 
+{{
+  config(
+    materialized = 'table',
+    )
+}}
+
 with
 
 behandling_ferdig as (
