@@ -20,5 +20,5 @@ snapshots:
         - ferdigbehandlet_tid
       updated_at: dato_endret
       unique_key: kravhode_id
-      hard_deletes: invalidate
+      hard_deletes: ignore
       tags: 'sak'
