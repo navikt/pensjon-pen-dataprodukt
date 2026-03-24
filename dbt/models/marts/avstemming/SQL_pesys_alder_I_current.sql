@@ -20,6 +20,12 @@
 --         Skreller bort noen unødvendige felter, og litt småpuss av koden.
 -- Endret: 08 des 2025 (EG)
 --         En rettelse i minstepensjonistflagget.
+-- Endret: 16 feb 2026 (EG)
+--         KJORETIDSPUNKT fra timestamp til date.
+-- Endret: 18 feb 2026 (EG)
+--         La til kolonnen SUM_TILLEGG_FP_2016_NETTO.
+-- Endret: 19 mar 2026 (EG)
+--         Identifiserer arvet yrkesskaderett med verdi 2 i yrkesskadeflaggene.
 -------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
@@ -144,6 +150,14 @@ yk_bres as
         sum(case when yk.k_ytelse_komp_t='AP_GJT_KAP19' then yk.ap_kap19_med_gjr end) AS ap_kap19_med_gjr_bel,
         sum(case when yk.k_ytelse_komp_t='AP_GJT_KAP19' then yk.ap_kap19_uten_gjr end) AS ap_kap19_uten_gjr_bel,
         --
+        sum(case 
+               when yk.k_ytelse_komp_t in ('ET', 'TFB', 'TSB', 'VT', 'GT_EOS', 'GT_NORDISK', 
+                                           'DIFF_BER', '8_5_1_T', 'FAM_T', 'FAST_UTGIFT_T', 
+                                           'AP_GJT', 'AP_GJT_KAP19') 
+                        then yk.netto 
+                 else 0 
+            end) AS SUM_TILLEGG_FP_2016_NETTO,
+        --
         sum(case when k_ytelse_komp_t='MIN_NIVA_TILL_INDV' then yk.netto end) AS MPN_INDIV_NETTO,
         max(k_minstepen_niva) as MINSTE_PEN_NIVA
    from vedtak v
@@ -198,6 +212,14 @@ yk_ber as
         sum(case when yk.k_ytelse_komp_t='AP_GJT_KAP19' then yk.netto end) AS GJT_K19_NETTO,
         sum(case when yk.k_ytelse_komp_t='AP_GJT_KAP19' then yk.ap_kap19_med_gjr end) AS ap_kap19_med_gjr_bel,
         sum(case when yk.k_ytelse_komp_t='AP_GJT_KAP19' then yk.ap_kap19_uten_gjr end) AS ap_kap19_uten_gjr_bel,
+        --
+        sum(case 
+               when yk.k_ytelse_komp_t in ('ET', 'TFB', 'TSB', 'VT', 'GT_EOS', 'GT_NORDISK', 
+                                           'DIFF_BER', '8_5_1_T', 'FAM_T', 'FAST_UTGIFT_T', 
+                                           'AP_GJT', 'AP_GJT_KAP19') 
+                        then yk.netto 
+                 else 0 
+            end) AS SUM_TILLEGG_FP_2016_NETTO,
         --
         sum(case when k_ytelse_komp_t='MIN_NIVA_TILL_INDV' then yk.netto end) AS MPN_INDIV_NETTO,
         max(k_minstepen_niva) as MINSTE_PEN_NIVA
@@ -259,6 +281,7 @@ aktive as
         v.ap_kap19_uten_gjr_bel,
         v.IP_NETTO,
         v.GAP_NETTO,
+        v.SUM_TILLEGG_FP_2016_NETTO,
         null as beregning_id,
         v.MINSTE_PEN_NIVA,
         null as minstepensjonist,
@@ -326,6 +349,7 @@ aktive as
         v.ap_kap19_uten_gjr_bel,
         v.IP_NETTO,
         v.GAP_NETTO,
+        v.SUM_TILLEGG_FP_2016_NETTO,
         b.beregning_id,
         v.MINSTE_PEN_NIVA,
         case 
@@ -431,12 +455,15 @@ SELECT to_number(to_char(current_date,'YYYYMMDDHH24MI')) as periode,
               else null
            end 
        ) as minstepensjon,
+       --=====
        aktive.MINSTE_PEN_NIVA,
+       --
        case 
           when ost.flagg = 1 and nvl(aktive.netto,0) > 0
               then 1
           else 0
        end as Overgangsstonad,
+      
        aktive.GP_NETTO,
        aktive.TP_NETTO,
        aktive.PT_NETTO,
@@ -459,7 +486,7 @@ SELECT to_number(to_char(current_date,'YYYYMMDDHH24MI')) as periode,
        coalesce(aktive.yrksk_rett_flagg, 
                 case
                    when nvl(bi.yrksk_reg,'0') = '1' then 1
-                   when nvl(bi.rett_pa_gjlevenderett,'0') = '1' and nvl(bi_avdod.yrksk_reg,'0') = '1' then 1
+                   when nvl(bi.rett_pa_gjlevenderett,'0') = '1' and nvl(bi_avdod.yrksk_reg,'0') = '1' then 2
                    else 0
                 end) as yrkesskade_rett_flagg,
        
@@ -467,7 +494,7 @@ SELECT to_number(to_char(current_date,'YYYYMMDDHH24MI')) as periode,
        coalesce(aktive.yrksk_anv_flagg, 
                 case
                    when nvl(bi.yrksk_anv,'0') = '1' then 1
-                   when nvl(bi.gjenlevrett_anv,'0') = '1' and nvl(bi_avdod.yrksk_anv,'0') = '1' then 1
+                   when nvl(bi.gjenlevrett_anv,'0') = '1' and nvl(bi_avdod.yrksk_anv,'0') = '1' then 2
                    else 0
                 end) as yrkesskade_anv_flagg,
        
@@ -531,7 +558,8 @@ SELECT to_number(to_char(current_date,'YYYYMMDDHH24MI')) as periode,
                  else 0
        end as kommunal_ytelse,           
        --
-       to_timestamp(to_char(current_timestamp, 'DD.MM.YYYY HH24.MI.SS,FF9')) as kjoretidspunkt
+       current_date as kjoretidspunkt,
+       nullif(aktive.SUM_TILLEGG_FP_2016_NETTO,0) as SUM_TILLEGG_FP_2016_NETTO
   FROM aktive 
       
        --- Beregningsinfo ---------------------------
