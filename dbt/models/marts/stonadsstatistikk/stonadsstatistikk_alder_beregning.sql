@@ -5,9 +5,13 @@
 }}
 
 select
+    {{ var("periode") }} as periode,
     sak_id,
     vedtak_id,
+    kravhode_id,
     k_regelverk_t,
+    beregning_id,
+    pen_under_utbet_id,
     brutto,
     netto,
     uttaksgrad,
@@ -22,15 +26,13 @@ select
     beh_gar_pen_b_totalbelop,
     beh_gar_t_b_totalbelop,
     minstepen_niva_arsak,
-    institusjon_opphold,
+    inst_opph_anv,
     yrkesskade_anv_flagg,
     yrkesskade_rett_flagg,
     gjenlevrett_anv,
     innv_gj_rett,
     minstepensjon,
     aldersytelseflagg,
-
-    {{ var("periode") }} as periode,
     sysdate as kjoretidspunkt
 from {{ ref('int_beregning') }}
 where

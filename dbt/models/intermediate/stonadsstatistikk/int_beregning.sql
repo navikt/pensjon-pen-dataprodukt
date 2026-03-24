@@ -24,6 +24,7 @@ kap19 as (
     select
         sak_id,
         vedtak_id,
+        kravhode_id,
         k_regelverk_t,
         brutto,
         netto,
@@ -46,6 +47,7 @@ kap20 as (
     select
         sak_id,
         vedtak_id,
+        kravhode_id,
         k_regelverk_t,
         brutto,
         netto,
@@ -83,8 +85,9 @@ kap20 as (
 
 union_beregning as (
     select
-        vedtak_id,
         sak_id,
+        vedtak_id,
+        kravhode_id,
         k_regelverk_t,
         brutto,
         netto,
@@ -96,7 +99,7 @@ union_beregning as (
             when netto <= 0 or brutto <= 0 or netto > brutto then 0
             else 100
         end as uttaksgrad, -- i kap 19 eksisterer ikke konseptet uttaksgrad
-        red_pga_inst_opph as institusjon_opphold,
+        red_pga_inst_opph as inst_opph_anv,
 
         case
             when
@@ -127,8 +130,9 @@ union_beregning as (
     from kap19
     union all
     select
-        vedtak_id,
         sak_id,
+        vedtak_id,
+        kravhode_id,
         k_regelverk_t,
         brutto,
         netto,
@@ -137,7 +141,7 @@ union_beregning as (
         null as beregning_id,
 
         uttaksgrad,
-        inst_opph_anv as institusjon_opphold,
+        inst_opph_anv,
         case
             when yrksk_reg = '1' then '1'
             when rett_pa_gjlevenderett = '1' and yrksk_reg_avdod = '1' then '2'
@@ -195,6 +199,7 @@ sett_inv_gj_rett as (
 select
     sak_id,
     vedtak_id,
+    kravhode_id,
     k_regelverk_t,
 
     brutto,
@@ -212,7 +217,7 @@ select
     beh_gar_pen_b_totalbelop,
     beh_gar_t_b_totalbelop,
     minstepen_niva_arsak,
-    cast(institusjon_opphold as varchar2(1)) as institusjon_opphold,
+    cast(inst_opph_anv as varchar2(1)) as inst_opph_anv,
     cast(yrkesskade_anv_flagg as varchar2(1)) as yrkesskade_anv_flagg,
     cast(yrkesskade_rett_flagg as varchar2(1)) as yrkesskade_rett_flagg,
     cast(gjenlevrett_anv as varchar2(1)) as gjenlevrett_anv,

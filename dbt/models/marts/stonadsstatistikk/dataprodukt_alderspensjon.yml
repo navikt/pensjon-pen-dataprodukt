@@ -62,10 +62,6 @@ models:
         description: "Vedtakets løpende dato til og med"
         data_type: date
 
-      - name: overgangsstonad_flagg
-        description: "sann om k_vilk_vurd_t inneholder order overgangsstonad"
-        data_type: varchar2
-
       - name: bostedsland
         description: "Bostedsland for personen. Hentet fra t_person"
         data_type: varchar2
@@ -190,7 +186,7 @@ models:
         description: ""
         data_type: varchar2
 
-      - name: institusjon_opphold
+      - name: inst_opph_anv
         description: ""
         data_type: varchar2
 
@@ -247,9 +243,6 @@ models:
         data_type: number
       - name: netto
         description: "Netto beløp for beregning fra t_pen_under_utbet (KAP 20) eller t_beregning (KAP 19)"
-        data_type: number
-      - name: sum_fradrag
-        description: "sum av fradrag fra ytelses_komp"
         data_type: number
       - name: k_minstepen_niva
         description: "HOY_ENSLIG,SAERSKILT,LAV,ORDINAER,HOY"

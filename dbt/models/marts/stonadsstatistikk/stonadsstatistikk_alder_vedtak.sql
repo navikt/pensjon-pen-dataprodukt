@@ -6,31 +6,56 @@
     )
 }}
 
-select
-    vedtak_id,
-    sak_id,
-    kravhode_id,
-    person_id,
-    k_sak_t,
-    k_vedtak_s,
-    k_vedtak_t,
-    dato_lopende_fom,
-    dato_lopende_tom,
-    k_regelverk_t,
-    overgangsstonad_flagg,
-    bostedsland,
-    inntekt_fpi_belop, -- TODO endre til inntekt_fpi_belop. Må også endres i DB.
-    inntekt_fpi_belop_eps, -- TODO endre til inntekt_fpi_belop_eps. Må også endres i DB.
-    eps_aarlig_inntekt,
-    afp_privat_flagg,
-    k_afp_t,
-    k_sivilstand_t,
+with
 
-    {{ var("periode") }} as periode,
-    sysdate as kjoretidspunkt
-from {{ ref('int_vedtaksinfo') }}
-where
-    1 = 1
-{% if is_incremental() %}
-    and {{ var("periode") }} not in (select distinct periode from {{ this }}) -- noqa
-{% endif %}
+ref_int_vedtaksinfo as (
+    select * from {{ ref('int_vedtaksinfo') }}
+),
+
+ref_stg_t_person as (
+    select
+        person_id,
+        fnr_fk
+    from {{ ref('stg_t_person') }}
+),
+
+join_fnr as (
+    select
+        v.*,
+        p.fnr_fk as fnr
+    from ref_int_vedtaksinfo v
+    left join ref_stg_t_person p on v.person_id = p.person_id
+),
+
+final as (
+    select
+        {{ var("periode") }} as periode,
+        sak_id,
+        vedtak_id,
+        kravhode_id,
+        k_regelverk_t,
+        person_id,
+        fnr,
+        k_sak_t,
+        k_vedtak_s,
+        k_vedtak_t,
+        dato_lopende_fom,
+        dato_lopende_tom,
+        -- overgangsstonad_flagg, -- todo: fjerne utregning tidligere i løpet, men beholdt midlertidig for å kunne legge tilbake
+        bostedsland,
+        inntekt_fpi_belop, -- rename
+        inntekt_fpi_belop_eps, -- rename
+        eps_aarlig_inntekt,
+        afp_privat_flagg,
+        k_afp_t,
+        k_sivilstand_t,
+        sysdate as kjoretidspunkt
+    from join_fnr
+    where
+        1 = 1
+    {% if is_incremental() %}
+        and {{ var("periode") }} not in (select distinct periode from {{ this }}) -- noqa
+    {% endif %}
+)
+
+select * from final

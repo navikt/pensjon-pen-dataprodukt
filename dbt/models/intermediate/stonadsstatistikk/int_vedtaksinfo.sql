@@ -212,16 +212,16 @@ sett_afp_privat_flagg as (
 )
 
 select
-    vedtak_id,
     sak_id,
+    vedtak_id,
     kravhode_id,
+    k_regelverk_t,
     person_id,
     k_sak_t,
     k_vedtak_s,
     k_vedtak_t,
     dato_lopende_fom,
     dato_lopende_tom,
-    k_regelverk_t,
     overgangsstonad_flagg,
     bostedsland,
     inntekt_fpi_belop,
@@ -230,5 +230,4 @@ select
     afp_privat_flagg,
     k_afp_t,
     k_sivilstand_t
-
 from sett_afp_privat_flagg

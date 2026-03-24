@@ -5,8 +5,9 @@ with
 
 ref_int_beregning as (
     select
-        vedtak_id,
         sak_id,
+        vedtak_id,
+        kravhode_id,
         beregning_id,
         pen_under_utbet_id,
         k_regelverk_t,
@@ -155,20 +156,20 @@ legger_til_prorata as (
 )
 
 select
-    vedtak_id,
     sak_id,
+    vedtak_id,
+    kravhode_id,
+    k_regelverk_t,
     beregning_id,
     pen_under_utbet_id,
     brutto,
     netto,
-
     sum_fradrag, -- obs! denne er alltid 0, også i prod
     k_minstepen_niva,
     mpn_arsak_sats,
     prorata_teller,
     prorata_nevner,
     psats_gp,
-
     gp_netto,
     tp_netto,
     pt_netto,
