@@ -1,4 +1,4 @@
--- dataprodukt_alderspensjon_vedtak
+-- stonadsstatistikk_alder_vedtak
 
 {{
   config(

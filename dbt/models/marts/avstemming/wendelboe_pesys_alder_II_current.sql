@@ -1,15 +1,15 @@
 with
 
 ref_int_beregning as (
-    select * from {{ ref('dataprodukt_alderspensjon_beregning') }}
+    select * from {{ ref('stonadsstatistikk_alder_beregning') }}
 ),
 
 ref_int_beregning_belop as (
-    select * from {{ ref('dataprodukt_alderspensjon_belop') }}
+    select * from {{ ref('stonadsstatistikk_alder_belop') }}
 ),
 
 ref_int_vedtaksinfo as (
-    select * from {{ ref('dataprodukt_alderspensjon_vedtak') }}
+    select * from {{ ref('stonadsstatistikk_alder_vedtak') }}
 ),
 
 dataprodukt_2 as (

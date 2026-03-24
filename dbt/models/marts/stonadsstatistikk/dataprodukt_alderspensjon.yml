@@ -1,5 +1,5 @@
 models:
-  - name: dataprodukt_alderspensjon_vedtak
+  - name: stonadsstatistikk_alder_vedtak
     description: |
       Vedtaksinformasjon for månedlige løpende alderspensjonsvedtak.
       Henter blant annet informasjon om personen, inntekt og andre løpende vedtak, feks AFP.
@@ -108,7 +108,7 @@ models:
         description: ""
         data_type: date
 
-  - name: dataprodukt_alderspensjon_beregning
+  - name: stonadsstatistikk_alder_beregning
     description: |
       Beregningsinformasjon knyttet til dataprodukt alderspensjon.
     columns:
@@ -226,7 +226,7 @@ models:
         description: "Tidspunkt for kjøring av transformasjonen"
         data_type: date
 
-  - name: dataprodukt_alderspensjon_belop
+  - name: stonadsstatistikk_alder_belop
     description: |
       Beløpsdetaljer
     columns:
