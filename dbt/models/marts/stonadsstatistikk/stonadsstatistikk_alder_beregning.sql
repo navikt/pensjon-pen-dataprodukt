@@ -22,9 +22,9 @@ select
     tp_restpensjon,
     pt_restpensjon,
     gp_restpensjon,
-    beh_pen_b_totalbelop,
-    beh_gar_pen_b_totalbelop,
-    beh_gar_t_b_totalbelop,
+    beh_pen_b_totalbelop as beholdning_pensjon_belop, -- endre namvet upstream
+    beh_gar_pen_b_totalbelop as beholdning_garan_pen_belop, -- endre namvet upstream
+    beh_gar_t_b_totalbelop as beholdning_garan_tlg_belop, -- endre namvet upstream
     minstepen_niva_arsak,
     inst_opph_anv,
     yrkesskade_anv_flagg,
@@ -32,7 +32,6 @@ select
     gjenlevrett_anv,
     innv_gj_rett,
     minstepensjon,
-    aldersytelseflagg,
     sysdate as kjoretidspunkt
 from {{ ref('int_beregning') }}
 where

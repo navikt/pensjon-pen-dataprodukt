@@ -224,7 +224,7 @@ select
     cast(innv_gj_rett as varchar2(1)) as innv_gj_rett,
 
     cast(minstepensjon as varchar2(1)) as minstepensjon,
-    cast(case when netto > 0 then 1 else 0 end as varchar2(1)) as aldersytelseflagg,
+    -- cast(case when netto > 0 then 1 else 0 end as varchar2(1)) as aldersytelseflagg,
 
     -- id-er som ikke nødvendigvis skal til sluttproduktet
     pen_under_utbet_id,

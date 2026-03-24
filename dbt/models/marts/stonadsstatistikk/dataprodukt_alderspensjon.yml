@@ -66,12 +66,12 @@ models:
         description: "Bostedsland for personen. Hentet fra t_person"
         data_type: varchar2
 
-      - name: inntekt_fpi_belop
-        description: "inntekt_fpi_belop fra t_inntekt gjennom int_inntektsinfo"
+      - name: inntekt
+        description: "inntekt fra fpi_belop fra t_inntekt gjennom int_inntektsinfo"
         data_type: number
 
-      - name: inntekt_fpi_belop_eps
-        description: "inntekt_fpi_belop fra t_inntekt gjennom int_eps_inntektsinfo"
+      - name: inntekt_eps
+        description: "inntekt fpi_belop for EPS fra t_inntekt gjennom int_eps_inntektsinfo"
         data_type: number
 
       - name: eps_aarlig_inntekt
@@ -170,15 +170,15 @@ models:
         description: ""
         data_type: number
 
-      - name: beh_pen_b_totalbelop
+      - name: beholdning_pensjon_belop
         description: ""
         data_type: number
 
-      - name: beh_gar_pen_b_totalbelop
+      - name: beholdning_garan_pen_belop
         description: ""
         data_type: number
 
-      - name: beh_gar_t_b_totalbelop
+      - name: beholdning_garan_tlg_belop
         description: ""
         data_type: number
 
@@ -209,10 +209,6 @@ models:
       - name: minstepensjon
         description: "1 | 0"
         data_type: varchar
-
-      - name: aldersytelseflagg
-        description: "1 | 0. Er 1 hvis netto > 0"
-        data_type: varchar2
 
       - name: periode
         description: "ÅÅÅÅMM"

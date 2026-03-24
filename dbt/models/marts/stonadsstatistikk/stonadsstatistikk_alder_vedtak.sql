@@ -43,8 +43,8 @@ final as (
         dato_lopende_tom,
         -- overgangsstonad_flagg, -- todo: fjerne utregning tidligere i løpet, men beholdt midlertidig for å kunne legge tilbake
         bostedsland,
-        inntekt_fpi_belop, -- rename
-        inntekt_fpi_belop_eps, -- rename
+        inntekt_fpi_belop as inntekt, -- endre navnet upstream
+        inntekt_fpi_belop_eps as inntekt_eps, -- endre navnet upstream
         eps_aarlig_inntekt,
         afp_privat_flagg,
         k_afp_t,
