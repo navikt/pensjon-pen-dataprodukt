@@ -14,8 +14,6 @@ select
     pen_under_utbet_id,
     brutto,
     netto,
-    -- sum_fradrag, -- obs! denne er alltid 0, også i prod
-    -- fradrag er vel eg bare brutto - netto
     k_minstepen_niva,
     mpn_arsak_sats,
     prorata_teller,

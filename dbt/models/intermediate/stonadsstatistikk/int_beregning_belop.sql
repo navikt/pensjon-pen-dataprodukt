@@ -62,7 +62,6 @@ transponert_ytelse_komp as (
     select
         beregning_id,
         pen_under_utbet_id,
-        sum(fradrag) as sum_fradrag, -- todo: denne er alltid 0!!!
         max(case when k_ytelse_komp_t = 'PT' then k_minstepen_niva end) as k_minstepen_niva,
         max(case when k_ytelse_komp_t = 'MIN_NIVA_TILL_INDV' then min_pen_niva_id end) as min_pen_niva_id,
         max(case when k_ytelse_komp_t = 'GP' then anvendt_trygdetid end) as yk_anvendt_trygdetid, -- id for å joine t_anvendt_trygdetid -> t_brok -> pro_rata
@@ -101,7 +100,6 @@ transponert_ytelse_komp as (
 join_beregning as (
     select
         ref_int_beregning.*,
-        transponert_ytelse_komp.sum_fradrag,
         transponert_ytelse_komp.k_minstepen_niva,
         transponert_ytelse_komp.min_pen_niva_id,
         transponert_ytelse_komp.yk_anvendt_trygdetid,
@@ -164,7 +162,6 @@ select
     pen_under_utbet_id,
     brutto,
     netto,
-    sum_fradrag, -- obs! denne er alltid 0, også i prod
     k_minstepen_niva,
     mpn_arsak_sats,
     prorata_teller,
