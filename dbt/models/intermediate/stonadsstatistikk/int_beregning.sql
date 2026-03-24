@@ -139,12 +139,14 @@ union_beregning as (
         uttaksgrad,
         inst_opph_anv as institusjon_opphold,
         case
-            when yrksk_reg = '1' or (rett_pa_gjlevenderett = '1' and yrksk_reg_avdod = '1') then '1'
+            when yrksk_reg = '1' then '1'
+            when rett_pa_gjlevenderett = '1' and yrksk_reg_avdod = '1' then '2'
             else '0'
         end as yrkesskade_rett_flagg,
 
         case
-            when yrksk_anv = '1' or (rett_pa_gjlevenderett = '1' and yrksk_anv_avdod = '1') then '1'
+            when yrksk_anv = '1' then '1'
+            when gjenlevrett_anv = '1' and yrksk_anv_avdod = '1' then '2'
             else '0'
         end as yrkesskade_anv_flagg,
 
