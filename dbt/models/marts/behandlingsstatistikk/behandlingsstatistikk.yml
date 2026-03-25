@@ -1,0 +1,103 @@
+version: 2 
+
+models:
+  - name: behandlingsstatistikk_ufore_meldinger
+    description: |
+      Dataprodukt til Team sak for saksbehandlingsstatistikk Uføretrygd.
+    columns:
+      - name: sekvensnummer
+        data_type: number
+        description: Løpenummer tildelt ved lagring av rad i denne tabellen.
+      - name: behandling_id
+        data_type: varchar2(80 byte)
+        description: Unik identifikator for behandlingen. kravhode.kravhode_id.
+      - name: relatertbehandling_id
+        data_type: varchar2(80 byte)
+        description: Peker på en foregående behandlinger som denne behandlingen bygges på. Kan være null.
+      - name: relatert_fagsystem
+        data_type: char(5 byte)
+        description: Settes alltid til PESYS.
+      - name: sak_id
+        data_type: varchar2(80 byte)
+        description: Saken behandlingen er knyttet til. En person kan maks ha én sak per sak_ytelse.
+      - name: aktor_id
+        data_type: varchar2(11 char)
+        description: Fødselsnummer knyttet til saken.
+      - name: mottatt_tid
+        data_type: date
+        description: |
+          Tidspunktet da behandlingen oppstår.
+          Settes manuelt av saksbehandler, typisk en dag eller to før registrert_tid.
+          kravhode.dato_mottatt_krav.
+      - name: registrert_tid
+        data_type: timestamp(9)
+        description: Tidspunkt da behandlingen første gang ble registrert i fagsystemet. kravhode.dato_opprettet.
+      - name: ferdigbehandlet_tid
+        data_type: date
+        description: vedtak.dato_vedtak for ferdige behandlinger, lik trunc(endret_tid) for avbrutte behandlinger.
+      - name: utbetalt_tid
+        data_type: date
+        description: vedtak.dato_virk_fom - selve utbetalingen kommer ila måneden.
+      - name: endret_tid
+        data_type: timestamp(9)
+        description: kravhode.dato_endret.
+      - name: forventetoppstart_tid
+        data_type: date
+        description: vedtak.dato_onsket_virk.
+      - name: teknisk_tid
+        data_type: timestamp(9)
+        description: Tidspunktet raden oppstår historikktabellen som dette dataproduktet bygger på.
+      - name: sak_ytelse
+        data_type: varchar2(20 char)
+        description: Settes alltid til UFOREP.
+      - name: sak_utland
+        data_type: varchar2(20 char)
+        description: UTLAND | NASJONAL | UTLANDSTILSNITT. sak.k_utlandstilknytning.
+      - name: behandling_type
+        data_type: varchar2(20 char)
+        description: Type behandling, for eksempel "Førstegangsbehandling", "Revurdering", "Klage" eller "Anke". kravhode.k_krav_gjelder.
+      - name: behandling_status
+        data_type: varchar2(20 char)
+        description: |
+          Status for behandlingen. Endrer seg i løpet av livsløpet til en behandling. 
+          Behandlingen er ferdigbehandler når behandling_status er 'FERDIG' eller 'AVBRUTT'.
+          Behandlingen kan først få status 'FERDIG' når vedtaket er iverksatt.
+      - name: behandling_resultat
+        data_type: varchar2(20 char)
+        description: Resultat av behandlingen. Verdien i feltet er avhengig av behandling_type, behandling_status og vedtakstype.
+      - name: behandling_metode
+        data_type: varchar2(20 char)
+        description: MAN | DELAUTO | AUTO - dette feltet er under arbeid per T1 2026. kravehode.k_behandling_t.
+      - name: behandling_arsak
+        data_type: varchar2(20 char)
+        description: t_krav_arsak.k_krav_arsak_t.
+      - name: opprettet_av
+        data_type: varchar2(80 byte)
+        description: Hvem som opprettet behandlingen, saksbehandlers ident, system eller bruker.
+      - name: saksbehandler
+        data_type: varchar2(80 byte)
+        description: |
+          Hvem som har gjort den siste endringen på behandlingen når meldingen oppstår, saksbehandlers ident, system eller bruker.
+          Typisk lik ansvarlig beslutter for behandling_status=FERDIG.
+      - name: ansvarlig_beslutter
+        data_type: varchar2(80 byte)
+        description: Saksbehandler eller del av systemet som er ansvarlig for å iverksette vedtaket. vedtak.attesterer.
+      - name: ansvarlig_enhet
+        data_type: varchar2(20 char)
+        description: Ansvarlig enhet. vedtak.ansvarlig_enhet.
+      - name: tilbakekrev_belop
+        data_type: number
+        description: Ikke ferdig. Settes alltid til -1.1.
+      - name: funksjonell_periode_fom
+        data_type: date
+        description: Ikke ferdig. Settes alltid til 01.01.1900.
+      - name: funksjonell_periode_tom
+        data_type: date
+        description: Ikke ferdig. Settes alltid til 01.01.1900.
+      - name: fagsystem_navn
+        data_type: char(5 byte)
+        description: Settes alltid til PESYS.
+      - name: fagsystem_versjon
+        data_type: char(1 byte)
+        description: Angir hvilken versjonen av koden dataene er generert med bakgrunn på.
+    
