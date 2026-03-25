@@ -120,10 +120,10 @@ nye_kolonnenavn as (
         cast(sak_id as varchar2(80)) as sak_id,
         fnr_fk as aktor_id,
         dato_mottatt_krav as mottatt_tid,
-        cast(dato_opprettet at time zone 'UTC' as timestamp(9)) as registrert_tid,
+        cast(from_tz(cast(dato_opprettet as timestamp), 'Europe/Oslo') at time zone 'UTC' as timestamp(9)) as registrert_tid,
         ferdigbehandlet_tid, -- dato
         dato_virk_fom as utbetalt_tid,
-        cast(dato_endret at time zone 'UTC' as timestamp(9)) as endret_tid,
+        cast(from_tz(cast(dato_endret as timestamp), 'Europe/Oslo') at time zone 'UTC' as timestamp(9)) as endret_tid,
         dato_onsket_virk as forventetoppstart_tid,
         kjoretidspunkt as teknisk_tid,
         k_sak_t as sak_ytelse,
