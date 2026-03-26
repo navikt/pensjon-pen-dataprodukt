@@ -51,6 +51,7 @@ behandlinger_vedtak as (
         v.k_vedtak_s, -- mulig deler av behandlingResultat (feks AVBR, men kan også være fra k_krav_s)
         v.k_vilkar_resul_t, -- resultat for hovedkravlinjen
         v.k_klageank_res_t,
+        v.dato_endret as vedtak_dato_endret,
         case
             when substr(v.attesterer, 1, 1) in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
                 then 'BRUKER-FNR' -- gjelder kun k_vedtak_t=OPPHOR og k_sak_t=UFOREP
@@ -100,7 +101,7 @@ sette_resultat as (
         opprettet_av,
         attesterer,
         dato_opprettet,
-        dato_endret,
+        greatest(dato_endret, vedtak_dato_endret) as dato_endret,
         dato_onsket_virk,
         dato_mottatt_krav,
         kravhode_id_for,
