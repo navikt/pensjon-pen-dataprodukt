@@ -146,6 +146,40 @@ nye_kolonnenavn as (
         'PESYS' as fagsystem_navn,
         '1' as fagsystem_versjon
     from join_fnr
+),
+
+final as (
+    select
+        sekvensnummer,
+        behandling_id,
+        relatertbehandling_id,
+        relatert_fagsystem,
+        sak_id,
+        aktor_id,
+        mottatt_tid,
+        registrert_tid,
+        ferdigbehandlet_tid,
+        utbetalt_tid,
+        endret_tid,
+        forventetoppstart_tid,
+        teknisk_tid,
+        sak_ytelse,
+        sak_utland,
+        behandling_type,
+        behandling_status,
+        behandling_resultat,
+        behandling_metode,
+        behandling_arsak,
+        opprettet_av,
+        saksbehandler,
+        ansvarlig_beslutter,
+        ansvarlig_enhet,
+        tilbakekrev_belop,
+        funksjonell_periode_fom,
+        funksjonell_periode_tom,
+        fagsystem_navn,
+        fagsystem_versjon
+    from nye_kolonnenavn
 )
 
-select * from nye_kolonnenavn
+select * from final
