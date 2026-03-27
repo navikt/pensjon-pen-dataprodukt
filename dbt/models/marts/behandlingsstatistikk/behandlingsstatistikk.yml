@@ -37,7 +37,7 @@ models:
         description: vedtak.dato_vedtak for ferdige behandlinger, lik trunc(endret_tid) for avbrutte behandlinger.
       - name: utbetalt_tid
         data_type: date
-        description: vedtak.dato_virk_fom - selve utbetalingen kommer ila måneden.
+        description: vedtak.dato_virk_fom - selve utbetalingen kommer ila måneden. Settes til null for vedtak som ikke kan løpe (f.eks dødsfallsbehandling).
       - name: endret_tid
         data_type: timestamp(9)
         description: kravhode.dato_endret.
@@ -60,8 +60,13 @@ models:
         data_type: varchar2(20 char)
         description: |
           Status for behandlingen. Endrer seg i løpet av livsløpet til en behandling. 
-          Behandlingen er ferdigbehandler når behandling_status er 'FERDIG' eller 'AVBRUTT'.
-          Behandlingen kan først få status 'FERDIG' når vedtaket er iverksatt.
+          Behandlingen er ferdigbehandlet når behandling_status er 'FERDIG' eller 'AVBRUTT'.
+          'AVBRUTT' er som oftest et resultat av tekniske begrensinger i PESYS -> Saksbehandler feilregistrerer kravet og starter på nytt.
+          Alternative måter å sette FERDIG:
+          1. Behandlingen er ferdig utfylt (valgt i gammel løsning)
+          2. Behandlingen er attestert og sendt til Samordning.
+          3. Vedtaket er iverksatt. (valgt)
+          Vi har gått for alternativ 3, der behandlingen får status 'FERDIG' først når vedtaket er iverksatt.
       - name: behandling_resultat
         data_type: varchar2(20 char)
         description: Resultat av behandlingen. Verdien i feltet er avhengig av behandling_type, behandling_status og vedtakstype.
