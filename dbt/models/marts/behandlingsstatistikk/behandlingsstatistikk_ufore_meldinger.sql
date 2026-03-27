@@ -122,7 +122,10 @@ nye_kolonnenavn as (
         dato_mottatt_krav as mottatt_tid,
         cast(from_tz(cast(dato_opprettet as timestamp), 'Europe/Oslo') at time zone 'UTC' as timestamp(9)) as registrert_tid,
         ferdigbehandlet_tid, -- dato
-        dato_virk_fom as utbetalt_tid,
+        case -- utbetaltTid
+            when {{ potensielt_lopende('k_krav_gjelder') }} = '1' then dato_virk_fom
+            else null -- alle krav som ikke går til utbetaling, feks opphør, skal ikke ha utbetaltTid
+        end as utbetalt_tid,
         cast(from_tz(cast(dato_endret as timestamp), 'Europe/Oslo') at time zone 'UTC' as timestamp(9)) as endret_tid,
         dato_onsket_virk as forventetoppstart_tid,
         kjoretidspunkt as teknisk_tid,
