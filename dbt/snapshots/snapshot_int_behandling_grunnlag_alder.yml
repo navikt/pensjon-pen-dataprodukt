@@ -1,0 +1,24 @@
+version: 2
+
+snapshots:
+  - name: snapshot_int_alder_behandling_grunnlag
+    relation: ref('int_alder_behandling_grunnlag')
+    config:
+      strategy: check
+      check_cols: 
+        - ansvarlig_enhet
+        - k_behandling_t
+        - k_krav_arsak_t
+        - k_krav_gjelder
+        - k_krav_s
+        - k_utlandstilknytning
+        - k_vedtak_s
+        - dato_opprettet
+        - dato_mottatt_krav
+        - dato_onsket_virk
+        - endret_av
+        - ferdigbehandlet_tid
+      updated_at: dato_endret
+      unique_key: kravhode_id
+      hard_deletes: ignore
+      tags: 'sak'
