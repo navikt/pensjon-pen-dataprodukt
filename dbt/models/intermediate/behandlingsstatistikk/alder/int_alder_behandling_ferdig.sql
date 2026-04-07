@@ -54,6 +54,7 @@ behandlinger_vedtak as (
         v.k_vedtak_s, -- mulig deler av behandlingResultat (feks AVBR, men kan også være fra k_krav_s)
         v.k_vilkar_resul_t, -- resultat for hovedkravlinjen
         v.k_klageank_res_t,
+        v.dato_opprettet as vedtak_dato_opprettet,
         v.dato_endret as vedtak_dato_endret,
         case
             when substr(v.attesterer, 1, 1) in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
@@ -66,12 +67,23 @@ behandlinger_vedtak as (
             beh.kravhode_id = v.kravhode_id
 ),
 
+forste_vedtak_per_behandling as (
+    select *
+    from (
+        select
+            b.*,
+            row_number() over (partition by b.kravhode_id order by b.vedtak_dato_opprettet) as rn2
+        from behandlinger_vedtak b
+    )
+    where rn2 = 1
+),
+
 join_vilkar_vedtak as (
     select
         bv.*,
         vv.k_land_3_tegn_id,
         vv.k_vilkar_resul_t as vv__k_vilkar_resul_t
-    from behandlinger_vedtak bv
+    from forste_vedtak_per_behandling bv
     left join vilkarsvedtak_hovedkravlinje vv
         on
             bv.vedtak_id = vv.vedtak_id

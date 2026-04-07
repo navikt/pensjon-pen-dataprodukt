@@ -14,6 +14,7 @@ select
     versjon,
     dato_vedtak,
     dato_endret,
+    dato_opprettet,
     dato_virk_fom,
     dato_virk_tom,
     dato_lopende_fom,
