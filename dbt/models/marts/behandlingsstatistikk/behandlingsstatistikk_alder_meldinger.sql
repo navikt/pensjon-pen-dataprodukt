@@ -66,7 +66,7 @@ ref_behandlingsstatistikk_grunnlag as (
         k_klageank_res_t,
         avbrutt_behandling_resultat,
         kjoretidspunkt
-    from {{ ref('snapshot_int_behandling_grunnlag') }}
+    from {{ ref('snapshot_int_alder_behandling_grunnlag') }}
     {% if is_incremental() %}
         where kjoretidspunkt > (select coalesce(max(z.teknisk_tid), to_date('01.01.1900', 'DD.MM.YYYY')) from {{ this }} z)
     {% endif %}
