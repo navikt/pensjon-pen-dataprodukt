@@ -11,17 +11,17 @@
 with
 
 behandling_ferdig as (
-    select * from {{ ref('int_behandling_ferdig') }}
+    select * from {{ ref('int_alder_behandling_ferdig') }}
     where k_krav_s = 'FERDIG'
 ),
 
 behandling_avbrutt as (
-    select * from {{ ref('int_behandling_avbrutt') }}
+    select * from {{ ref('int_alder_behandling_avbrutt') }}
     where k_krav_s = 'AVBRUTT'
 ),
 
 behandling_andre as (
-    select * from {{ ref('int_behandling') }}
+    select * from {{ ref('int_alder_behandling') }}
     where k_krav_s not in ('FERDIG', 'AVBRUTT')
 ),
 

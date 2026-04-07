@@ -6,7 +6,7 @@
 with
 
 ref_behandling as (
-    select * from {{ ref('int_behandling') }}
+    select * from {{ ref('int_alder_behandling') }}
     where k_krav_s = 'FERDIG'
 ),
 
