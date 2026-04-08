@@ -12,8 +12,7 @@ ref_behandling as (
 
 ref_vedtak_alder as (
     select * from {{ ref('stg_t_vedtak') }}
-    where
-        k_sak_t = 'ALDER'
+    where k_sak_t = 'ALDER'
 ),
 
 ref_t_vilkar_vedtak as (
@@ -29,6 +28,8 @@ ref_t_k_kravlinje_t as (
 ),
 
 vilkarsvedtak_hovedkravlinje as (
+    -- finner hovedkravlinjer for de få tilfellene hvor v.k_vedtak_t er null
+    -- hovedkravlinjene har i noen tilfeller duplikater per vedtak_id
     select
         vv.vedtak_id,
         vv.dato_virk_fom,
@@ -66,37 +67,34 @@ behandlinger_vedtak as (
             beh.kravhode_id = v.kravhode_id
 ),
 
-forste_vedtak_per_behandling as (
-    select *
-    from (
-        select
-            b.*,
-            row_number() over (partition by b.kravhode_id order by b.vedtak_dato_opprettet) as rn2
-        from behandlinger_vedtak b
-    )
-    where rn2 = 1
-),
-
 join_vilkar_vedtak as (
+    -- i noen tilfeller er v.k_vilkar_resul_t null, og da prøver vi vilkarsvedtak (kun hovedkravlinje)
+    -- dette gir noen duplikater, som fjernes etterpå basert på land
     select
         bv.*,
         vv.k_land_3_tegn_id,
         vv.k_vilkar_resul_t as vv__k_vilkar_resul_t
-    from forste_vedtak_per_behandling bv
+    from behandlinger_vedtak bv
     left join vilkarsvedtak_hovedkravlinje vv
         on
             bv.vedtak_id = vv.vedtak_id
             and bv.dato_virk_fom = vv.dato_virk_fom
+            and bv.k_vilkar_resul_t is null -- kun interessant med vv der denne er null
 ),
 
 fjern_duplikater as (
+    -- hånderer både duplikater fra vedtak og fra vilkarsvedtak
     select vv.*
     from (
         select
-            b.*,
-            -- kl.k_land_3_tegn_id hånterer edge case for krav med 2 vilkårvedtak med samme virk men forskjellige land, der ingen av landene er Norge
-            row_number() over (partition by b.vedtak_id order by (case when b.k_land_3_tegn_id = '161' then 1 else 2 end), b.k_land_3_tegn_id desc) as rn
-        from join_vilkar_vedtak b
+            bv.*,
+            row_number() over (
+                partition by bv.kravhode_id order by
+                    bv.vedtak_dato_opprettet asc, -- velger det eldste vedtaket
+                    (case when bv.k_land_3_tegn_id = '161' then 1 else 2 end) asc, -- velger norge på vilkårsvedtak, hvis norge er ett av landene
+                    bv.k_land_3_tegn_id desc -- hvis norge ikke finnes, velges det vilkårsvedtaket med høyest landkode
+            ) as rn
+        from join_vilkar_vedtak bv
     ) vv
     where vv.rn = 1
 ),
