@@ -14,7 +14,6 @@ ref_vedtak_alder as (
     select * from {{ ref('stg_t_vedtak') }}
     where
         k_sak_t = 'ALDER'
-        and k_vedtak_t != 'REGULERING'
 ),
 
 ref_t_vilkar_vedtak as (
