@@ -11,7 +11,7 @@ ref_stg_t_krav_arsak as (
 ),
 
 ref_stg_t_kravhode as (
-    select * from {{ ref('stg_t_kravhode') }}
+    select * from {{ ref('int_tidsbegrenset_kravhode') }}
 ),
 
 ref_stg_t_pen_org_enhet as (
