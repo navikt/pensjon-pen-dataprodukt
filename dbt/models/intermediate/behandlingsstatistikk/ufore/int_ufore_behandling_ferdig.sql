@@ -1,4 +1,4 @@
--- int_behandling_ferdig
+-- int_ufore_behandling_ferdig
 -- tar alt med kravstatus FERDIG og prøver å finne et behandlingsresultat
 -- OBS! Ikke alle ferdige behandlinger er endelig ferdig, fordi vedtaket må være IVERKS for å gå til utbetaling
 -- logikk for at vi kun sender IVERKS (og vedtak AVBR) til team sak kommer etter snapshot
@@ -6,7 +6,7 @@
 with
 
 ref_behandling as (
-    select * from {{ ref('int_behandling') }}
+    select * from {{ ref('int_ufore_behandling') }}
     where k_krav_s = 'FERDIG'
 ),
 

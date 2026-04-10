@@ -1,8 +1,8 @@
 version: 2
 
 snapshots:
-  - name: snapshot_int_behandling_grunnlag
-    relation: ref('int_behandling_grunnlag')
+  - name: snapshot_int_ufore_behandling_grunnlag
+    relation: ref('int_ufore_behandling_grunnlag')
     config:
       strategy: check
       check_cols: 

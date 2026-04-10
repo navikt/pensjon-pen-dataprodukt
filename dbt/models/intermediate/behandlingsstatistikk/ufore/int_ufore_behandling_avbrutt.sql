@@ -1,11 +1,11 @@
--- int_behandling_avbrutt
+-- int_ufore_behandling_avbrutt
 -- mål med modellen er å koble inn k_kravlinje_s for å si noe om begrunnelse for avbrutt behandling
 -- resultatet er enten FEILREGISTRERT, HENLAGT eller TRUKKET
 
 with
 
 ref_behandling as (
-    select * from {{ ref('int_behandling') }}
+    select * from {{ ref('int_ufore_behandling') }}
     where k_krav_s = 'AVBRUTT'
 ),
 

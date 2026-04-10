@@ -1,4 +1,4 @@
--- behandlingsstatistikk_meldinger_v2
+-- behandlingsstatistikk_ufore_meldinger
 -- view som mapper over kolonnenavn fra pen til det team sak ønsker
 -- setter også behandling_resultat og behandling_status
 -- her endrer vi noen som er FERDIG til AVBRUTT basert på vedtaksstatus
@@ -66,7 +66,7 @@ ref_behandlingsstatistikk_grunnlag as (
         k_klageank_res_t,
         avbrutt_behandling_resultat,
         kjoretidspunkt
-    from {{ ref('snapshot_int_behandling_grunnlag') }}
+    from {{ ref('snapshot_int_ufore_behandling_grunnlag') }}
     {% if is_incremental() %}
         where kjoretidspunkt > (select coalesce(max(z.teknisk_tid), to_date('01.01.1900', 'DD.MM.YYYY')) from {{ this }} z)
     {% endif %}
