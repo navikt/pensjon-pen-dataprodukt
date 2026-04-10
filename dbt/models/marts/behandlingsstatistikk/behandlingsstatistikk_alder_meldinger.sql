@@ -1,4 +1,4 @@
--- behandlingsstatistikk_meldinger_v2
+-- behandlingsstatistikk_alder_meldinger
 -- view som mapper over kolonnenavn fra pen til det team sak ønsker
 -- setter også behandling_resultat og behandling_status
 -- her endrer vi noen som er FERDIG til AVBRUTT basert på vedtaksstatus

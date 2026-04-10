@@ -1,4 +1,4 @@
--- int_behandling_avbrutt
+-- int_alder_behandling_avbrutt
 -- mål med modellen er å koble inn k_kravlinje_s for å si noe om begrunnelse for avbrutt behandling
 -- resultatet er enten FEILREGISTRERT, HENLAGT eller TRUKKET
 

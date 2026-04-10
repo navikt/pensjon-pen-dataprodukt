@@ -1,4 +1,4 @@
--- int_behandling_ferdig
+-- int_alder_behandling_ferdig
 -- tar alt med kravstatus FERDIG og prøver å finne et behandlingsresultat
 -- OBS! Ikke alle ferdige behandlinger er endelig ferdig, fordi vedtaket må være IVERKS for å gå til utbetaling
 -- logikk for at vi kun sender IVERKS (og vedtak AVBR) til team sak kommer etter snapshot
@@ -36,35 +36,30 @@ vilkarsvedtak_hovedkravlinje as (
         vv.k_vilkar_resul_t,
         kl.k_land_3_tegn_id
     from ref_t_vilkar_vedtak vv
-    inner join ref_t_k_kravlinje_t tkl
-        on
-            vv.k_kravlinje_t = tkl.k_kravlinje_t
+    inner join ref_t_k_kravlinje_t tkl on vv.k_kravlinje_t = tkl.k_kravlinje_t
     left join ref_t_kravlinje kl on vv.kravlinje_id = kl.kravlinje_id
     where tkl.hoved_krav_linje = '1'
 ),
 
 behandlinger_vedtak as (
--- en behandling kan ha flere vedtak
+-- en behandling kan ha flere vedtak, og duplikater håndteres i fjern_duplikater
     select
         beh.*,
         v.vedtak_id,
         v.k_vedtak_t,
         v.dato_vedtak,
-        v.dato_virk_fom, -- utbetaltTid
-        v.k_vedtak_s, -- mulig deler av behandlingResultat (feks AVBR, men kan også være fra k_krav_s)
+        v.dato_virk_fom,
+        v.k_vedtak_s,
         v.k_vilkar_resul_t, -- resultat for hovedkravlinjen
         v.k_klageank_res_t,
         v.dato_opprettet as vedtak_dato_opprettet,
         v.dato_endret as vedtak_dato_endret,
         case
-            when substr(v.attesterer, 1, 1) in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
-                then 'BRUKER-FNR' -- gjelder kun k_vedtak_t=OPPHOR og k_sak_t=UFOREP
+            when substr(v.attesterer, 1, 1) in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9') then 'BRUKER-FNR'
             else v.attesterer
         end as attesterer
     from ref_behandling beh
-    left join ref_vedtak_alder v
-        on
-            beh.kravhode_id = v.kravhode_id
+    left join ref_vedtak_alder v on beh.kravhode_id = v.kravhode_id
 ),
 
 join_vilkar_vedtak as (
@@ -90,7 +85,7 @@ fjern_duplikater as (
             bv.*,
             row_number() over (
                 partition by bv.kravhode_id order by
-                    bv.vedtak_dato_opprettet asc, -- velger det eldste vedtaket
+                    bv.vedtak_id asc, -- velger det eldste vedtaket
                     (case when bv.k_land_3_tegn_id = '161' then 1 else 2 end) asc, -- velger norge på vilkårsvedtak, hvis norge er ett av landene
                     bv.k_land_3_tegn_id desc -- hvis norge ikke finnes, velges det vilkårsvedtaket med høyest landkode
             ) as rn

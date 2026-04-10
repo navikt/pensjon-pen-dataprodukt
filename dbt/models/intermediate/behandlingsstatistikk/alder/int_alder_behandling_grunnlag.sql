@@ -1,4 +1,4 @@
--- int_behandling_grunnlag
+-- int_alder_behandling_grunnlag
 -- Versjon 2 av et grunnlag for behandlingsstatistikk
 -- denne går inn i et snapshot som sjekker endringer
 
