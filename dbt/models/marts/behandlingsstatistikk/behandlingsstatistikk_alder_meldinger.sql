@@ -121,7 +121,10 @@ nye_kolonnenavn as (
         fnr_fk as aktor_id,
         dato_mottatt_krav as mottatt_tid,
         cast(from_tz(cast(dato_opprettet as timestamp), 'Europe/Oslo') at time zone 'UTC' as timestamp(9)) as registrert_tid,
-        ferdigbehandlet_tid, -- dato
+        case
+            when behandling_resultat = 'VEDTAK_AVBRUTT' then trunc(dato_endret) -- disse flyttes fra FERDIG til AVBRUTT og må få ferdigbehandlet_tid satt
+            when behandling_status in ('FERDIG', 'AVBRUTT') then ferdigbehandlet_tid  -- fjerner ferdigbehandlet_tid fra VENTER_VEDTAK
+        end as ferdigbehandlet_tid, -- dato
         case -- utbetaltTid
             when {{ potensielt_lopende('k_krav_gjelder') }} = '1' then dato_virk_fom
             else null -- alle krav som ikke går til utbetaling, feks opphør, skal ikke ha utbetaltTid
