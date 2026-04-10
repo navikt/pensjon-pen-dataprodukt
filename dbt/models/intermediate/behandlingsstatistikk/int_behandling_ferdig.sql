@@ -10,8 +10,9 @@ ref_behandling as (
     where k_krav_s = 'FERDIG'
 ),
 
-ref_int_forste_vedtak_uforep as (
-    select * from {{ ref('int_forste_vedtak_uforep') }}
+ref_vedtak_ufore as (
+    select * from {{ ref('stg_t_vedtak') }}
+    where k_sak_t = 'UFOREP'
 ),
 
 ref_t_vilkar_vedtak as (
@@ -33,22 +34,21 @@ vilkarsvedtak_hovedkravlinje as (
         vv.k_vilkar_resul_t,
         kl.k_land_3_tegn_id
     from ref_t_vilkar_vedtak vv
-    inner join ref_t_k_kravlinje_t tkl
-        on
-            vv.k_kravlinje_t = tkl.k_kravlinje_t
+    inner join ref_t_k_kravlinje_t tkl on vv.k_kravlinje_t = tkl.k_kravlinje_t
     left join ref_t_kravlinje kl on vv.kravlinje_id = kl.kravlinje_id
     where tkl.hoved_krav_linje = '1'
 ),
 
 behandlinger_vedtak as (
 -- en behandling kan ha flere vedtak
+-- de kravhodene som har flere vedtak får duplikat her, men så fjernes den nedenfor i fjern_duplikater
     select
         beh.*,
         v.vedtak_id,
         v.k_vedtak_t,
         v.dato_vedtak,
         v.dato_virk_fom, -- utbetaltTid
-        v.k_vedtak_s, -- mulig deler av behandlingResultat (feks AVBR, men kan også være fra k_krav_s)
+        v.k_vedtak_s,
         v.k_vilkar_resul_t, -- resultat for hovedkravlinjen
         v.k_klageank_res_t,
         v.dato_endret as vedtak_dato_endret,
@@ -58,12 +58,13 @@ behandlinger_vedtak as (
             else v.attesterer
         end as attesterer
     from ref_behandling beh
-    left join ref_int_forste_vedtak_uforep v
-        on
-            beh.kravhode_id = v.kravhode_id
+    left join ref_vedtak_ufore v on beh.kravhode_id = v.kravhode_id
 ),
 
 join_vilkar_vedtak as (
+    -- for de fleste vedtakene vil v.k_vilkar_resul_t allerede være på behandlingene og brukes som resultat,
+    -- men noen vedtak mangler dette, og da prøver vi å hente det fra vilkarsvedtak (kun hovedkravlinje)
+    -- noen få vilkarsvedtak har to hovedkravlinjer, som også gir dupliker
     select
         bv.*,
         vv.k_land_3_tegn_id,
@@ -73,16 +74,23 @@ join_vilkar_vedtak as (
         on
             bv.vedtak_id = vv.vedtak_id
             and bv.dato_virk_fom = vv.dato_virk_fom
+            and bv.k_vilkar_resul_t is null -- kun interessant med vv der denne er null
 ),
 
 fjern_duplikater as (
+    -- hånderer både duplikater fra vedtak og fra vilkarsvedtak
     select vv.*
     from (
         select
-            b.*,
-            -- kl.k_land_3_tegn_id hånterer edge case for krav med 2 vilkårvedtak med samme virk men forskjellige land, der ingen av landene er Norge
-            row_number() over (partition by b.vedtak_id order by (case when b.k_land_3_tegn_id = '161' then 1 else 2 end), b.k_land_3_tegn_id desc) as rn
-        from join_vilkar_vedtak b
+            bv.*,
+            row_number() over (
+                partition by bv.kravhode_id order by
+                    -- bv.vedtak_dato_opprettet asc, -- velger det eldste vedtaket
+                    bv.vedtak_id asc, -- lavest id er eldst. Dette håndterer at dato-opprettet kan være lik
+                    (case when bv.k_land_3_tegn_id = '161' then 1 else 2 end) asc, -- velger norge på vilkårsvedtak, hvis norge er ett av landene
+                    bv.k_land_3_tegn_id desc -- hvis norge ikke finnes, velges det vilkårsvedtaket med høyest landkode
+            ) as rn
+        from join_vilkar_vedtak bv
     ) vv
     where vv.rn = 1
 ),
