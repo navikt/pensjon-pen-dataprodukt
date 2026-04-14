@@ -26,6 +26,9 @@
 --         La til kolonnen SUM_TILLEGG_FP_2016_NETTO.
 -- Endret: 19 mar 2026 (EG)
 --         Identifiserer arvet yrkesskaderett med verdi 2 i yrkesskadeflaggene.
+-- Endret: 14 apr 2026 (EG)
+--         Endret på beregning av flagget "Redusert pga. institusjonsopphold".
+--         Etter møte med fagressurser i NAV. Tallene blir mye mindre nå!
 -------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
@@ -394,190 +397,205 @@ tvvx as
             and (tvv.dato_virk_tom >= trunc(current_date) or tvv.dato_virk_tom is null)
          ) x
    where x.rn = 1
-)
+),
 
 
 ------------------------------------------------------------------------------
 -- Selve uttrekket av data skjer her.
 -- Rader fra CTE-ene ovenfor, men henter også inn noen flere opplysninger.
 ------------------------------------------------------------------------------
-SELECT to_number(to_char(current_date,'YYYYMMDDHH24MI')) as periode,
-       --to_number(to_char(current_date,'YYYYMMDDHH24MI')) as periode,
-       aktive.vedtak_id,
-       aktive.sak_id,
-       aktive.kravhode_id,
-       aktive.k_vedtak_t as vedtak_type,
-       aktive.k_vedtak_s as vedtak_status,
---       person.fnr_fk as persnr,
-       null as persnr,
-       aktive.person_id,
-       aktive.dato_lopende_fom,
-       aktive.dato_lopende_tom,
-       
-       --AFP-ordning
-       case aktive.K_AFP_T
-           when 'LONHO' then 'LO/NHO - ordningen'
-           when 'FINANS' then 'Finansnæringen'
-           when 'NAVO' then 'Spekter'
-           when 'AFPKOM' then 'AFP - Kommunalsektor'
-           when 'AFPSTAT' then 'AFP - Stat'
-           when 'KONV_K' then 'Konvertert privat'
-           when 'KONV_O' then 'Konvertert offentlig'
-       end as AFP_ordning,
-       
---       aktive.regelverk as regelverk_kode,
-       case aktive.regelverk
-           when 'N_REG_G_OPPTJ' then 'AP kap 19 fom 2011'
-           when 'N_REG_G_N_OPPTJ' then 'AP kap. 19 og kap. 20'
-           when 'G_REG' then 'AP kap 19 tom 2010'
-           when 'N_REG_N_OPPTJ' then 'AP kap. 20'
-           else 'Ukjent'
-       end as regelverk,
-       --
-       aktive.k_sak_t as Sakstype,
-       case when aktive.uttaksgrad <= 100 then aktive.uttaksgrad
-            else null
-       end as uttaksgrad,
-       aktive.netto,
-       case
-          when aktive.k_sak_t = 'ALDER' 
-               and nvl(aktive.netto,0) > 0
-             then 1
-          else 0
-       end as AldersytelseFlagg,
---       to_number(coalesce(aktive.minstepensjonist, bi.mottar_min_pensjonsniva)) as minstepensjon,
-       --=====
-       to_number(
-           case
-              when aktive.regelverk = 'N_REG_G_N_OPPTJ' then bi_2025.mottar_min_pensjonsniva
-              when aktive.regelverk <> 'G_REG' then bi.mottar_min_pensjonsniva
-              when aktive.regelverk = 'G_REG' then aktive.minstepensjonist
-              else null
-           end 
-       ) as minstepensjon,
-       --=====
-       aktive.MINSTE_PEN_NIVA,
-       --
-       case 
-          when ost.flagg = 1 and nvl(aktive.netto,0) > 0
-              then 1
-          else 0
-       end as Overgangsstonad,
-      
-       aktive.GP_NETTO,
-       aktive.TP_NETTO,
-       aktive.PT_NETTO,
-       aktive.ST_NETTO,
-       aktive.ET_NETTO,
-       aktive.SAERKULL_NETTO,
-       aktive.BARN_FELLES_NETTO,
-       aktive.MPN_SSTOT_NETTO,
-       aktive.MPN_INDIV_NETTO,
-       aktive.SKJERMT_NETTO,
-       aktive.UFOR_SUM_UT_ORD_NETTO,
-       aktive.GJT_NETTO,
-       aktive.GJT_K19_NETTO,
-       aktive.ap_kap19_med_gjr_bel,
-       aktive.ap_kap19_uten_gjr_bel,
-       aktive.IP_NETTO,
-       aktive.GAP_NETTO,
-       
-       -- Yrkesskaderett --
-       coalesce(aktive.yrksk_rett_flagg, 
-                case
-                   when nvl(bi.yrksk_reg,'0') = '1' then 1
-                   when nvl(bi.rett_pa_gjlevenderett,'0') = '1' and nvl(bi_avdod.yrksk_reg,'0') = '1' then 2
-                   else 0
-                end) as yrkesskade_rett_flagg,
-       
-       -- Anvendt yrkesskaderett.
-       coalesce(aktive.yrksk_anv_flagg, 
-                case
-                   when nvl(bi.yrksk_anv,'0') = '1' then 1
-                   when nvl(bi.gjenlevrett_anv,'0') = '1' and nvl(bi_avdod.yrksk_anv,'0') = '1' then 2
-                   else 0
-                end) as yrkesskade_anv_flagg,
-       
-       -- Redusert pga. institusjonsopphold.
-       to_number(coalesce(aktive.red_pga_inst_opph_flagg, bi.INST_OPPH_ANV)) as red_pga_inst_opph_flagg,
-       
-       -- Anvendt trygdetid.
-       coalesce(aktive.TT_ANVENDT_KAP19_ANTALL, bi.TT_ANV) as TT_ANVENDT_KAP19_ANTALL,
-       coalesce(case 
-                    when aktive.regelverk = 'N_REG_G_N_OPPTJ' then bi_2025.TT_ANV 
-                end, 
-                aktive.TT_ANVENDT_KAP20_ANTALL
-               ) as TT_ANVENDT_KAP20_ANTALL,
-
-       -- Sjekker om det eksisterer annen sak/vedtak om AFP_PRIVAT for denne personen.
-       case
-          when exists (select null
-                         from pen.t_vedtak v2
-                        where v2.person_id = aktive.person_id
-                          and v2.dato_lopende_fom <= trunc(current_date)
-                          and (v2.dato_lopende_tom is null or v2.dato_lopende_tom >= trunc(current_date))
-                          and v2.k_sak_t = 'AFP_PRIVAT'
-                          and not exists (select null
-                                            from pen.t_UTTAKSGRAD u2 
-                                           where u2.sak_id = v2.sak_id 
-                                             and u2.dato_virk_fom <= trunc(current_date) 
-                                             and (u2.DATO_VIRK_TOM is null or u2.DATO_VIRK_TOM >= trunc(current_date)) 
-                                             and u2.uttaksgrad = 0)
-                       ) then 1
-          else 0
-       end as AFP_PRIVAT_FLAGG,
-       
-       -- Sjekker om det eksisterer innvilget gjenlevenderett.
-       case
-          when exists (select null
-                         FROM PEN.T_VILKAR_VEDTAK PVV 
-                        WHERE pvv.vedtak_id = aktive.vedtak_id
-                          and pvv.K_KRAVLINJE_T = 'GJR' 
-                          AND pvv.K_VILKAR_RESUL_T = 'INNV'
-                          AND PVV.dato_virk_fom < current_date
-                          AND (PVV.dato_virk_tom >= trunc(current_date) 
-                               OR PVV.dato_virk_tom IS NULL)
-                      ) then 1
-          else 0
-       end as innv_gj_rett,
-       
-       -- Sjekker om det er afp kommunal ytelse på afp_historikk.
-       case
-           when exists (select null
-                          FROM PEN.t_AFP_HISTORIK a
-                               join pen.t_person p on p.person_id = a.person_id
-                         WHERE aktive.person_id = p.person_id
-                           and a.k_afp_t = 'AFPKOM' 
-                           AND a.bruk = 1
-                           AND a.afp_pensjonsgrad > 0
-                           --AFP kommunal i alderen 62 år og en måned til 67 år og en måned.
-                           AND MONTHS_BETWEEN(current_date, p.dato_fodsel) BETWEEN (62*12+1) AND (67*12+1)
-                           AND a.virk_fom <= current_date
-                           and (a.virk_tom >= trunc(current_date) or a.virk_tom is null)
-                        ) then 1
-                 else 0
-       end as kommunal_ytelse,           
-       --
-       current_date as kjoretidspunkt,
-       nullif(aktive.SUM_TILLEGG_FP_2016_NETTO,0) as SUM_TILLEGG_FP_2016_NETTO
-  FROM aktive 
-      
-       --- Beregningsinfo ---------------------------
-       left outer join pen.t_beregning_info bi 
-               on bi.beregning_info_id = case 
-                                            when aktive.regelverk = 'N_REG_G_N_OPPTJ' then aktive.beregning_info_id_2016 
-                                            else aktive.beregning_info_id 
-                                         end 
-       left outer join pen.t_beregning_info bi_avdod 
-                on bi_avdod.beregning_info_id = case 
-                                                   when aktive.regelverk = 'N_REG_G_N_OPPTJ' then aktive.beregning_info_id_avdod_2016 
-                                                   else aktive.beregning_info_id_avdod 
-                                                end 
---               and bi_avdod.dato_virk_fom <= trunc(current_date)
---               and (bi_avdod.dato_virk_tom is null or bi_avdod.dato_virk_tom >= trunc(current_date))
-       left outer join pen.t_beregning_info bi_2025 on bi_2025.beregning_info_id = aktive.beregning_info_id_2025
-
-       ---- Overgangsstønad ---------------------------------
-       left outer join tvvx on tvvx.vedtak_id = aktive.vedtak_id 
-       left outer join overgangsstonad ost on ost.kode = tvvx.k_vilk_vurd_t
-       ------------------------------------------------------
+siste as (
+   SELECT to_number(to_char(current_date,'YYYYMMDDHH24MI')) as periode,
+          --to_number(to_char(current_date,'YYYYMMDDHH24MI')) as periode,
+          aktive.vedtak_id,
+          aktive.sak_id,
+          aktive.kravhode_id,
+          aktive.k_vedtak_t as vedtak_type,
+          aktive.k_vedtak_s as vedtak_status,
+   --       person.fnr_fk as persnr,
+          null as persnr,
+          aktive.person_id,
+          aktive.dato_lopende_fom,
+          aktive.dato_lopende_tom,
+          
+          --AFP-ordning
+          case aktive.K_AFP_T
+              when 'LONHO' then 'LO/NHO - ordningen'
+              when 'FINANS' then 'Finansnæringen'
+              when 'NAVO' then 'Spekter'
+              when 'AFPKOM' then 'AFP - Kommunalsektor'
+              when 'AFPSTAT' then 'AFP - Stat'
+              when 'KONV_K' then 'Konvertert privat'
+              when 'KONV_O' then 'Konvertert offentlig'
+          end as AFP_ordning,
+          
+   --       aktive.regelverk as regelverk_kode,
+          case aktive.regelverk
+              when 'N_REG_G_OPPTJ' then 'AP kap 19 fom 2011'
+              when 'N_REG_G_N_OPPTJ' then 'AP kap. 19 og kap. 20'
+              when 'G_REG' then 'AP kap 19 tom 2010'
+              when 'N_REG_N_OPPTJ' then 'AP kap. 20'
+              else 'Ukjent'
+          end as regelverk,
+          --
+          aktive.k_sak_t as Sakstype,
+          case when aktive.uttaksgrad <= 100 then aktive.uttaksgrad
+               else null
+          end as uttaksgrad,
+          aktive.netto,
+          case
+             when aktive.k_sak_t = 'ALDER' 
+                  and nvl(aktive.netto,0) > 0
+                then 1
+             else 0
+          end as AldersytelseFlagg,
+          
+          --
+          to_number(
+              case
+                 when aktive.regelverk = 'N_REG_G_N_OPPTJ' then bi_2025.mottar_min_pensjonsniva
+                 when aktive.regelverk <> 'G_REG' then bi.mottar_min_pensjonsniva
+                 when aktive.regelverk = 'G_REG' then aktive.minstepensjonist
+                 else null
+              end 
+          ) as minstepensjon,
+          --
+          
+          aktive.MINSTE_PEN_NIVA,
+          --
+          case 
+             when ost.flagg = 1 and nvl(aktive.netto,0) > 0
+                 then 1
+             else 0
+          end as Overgangsstonad,
+         
+          aktive.GP_NETTO,
+          aktive.TP_NETTO,
+          aktive.PT_NETTO,
+          aktive.ST_NETTO,
+          aktive.ET_NETTO,
+          aktive.SAERKULL_NETTO,
+          aktive.BARN_FELLES_NETTO,
+          aktive.MPN_SSTOT_NETTO,
+          aktive.MPN_INDIV_NETTO,
+          aktive.SKJERMT_NETTO,
+          aktive.UFOR_SUM_UT_ORD_NETTO,
+          aktive.GJT_NETTO,
+          aktive.GJT_K19_NETTO,
+          aktive.ap_kap19_med_gjr_bel,
+          aktive.ap_kap19_uten_gjr_bel,
+          aktive.IP_NETTO,
+          aktive.GAP_NETTO,
+          
+          -- Yrkesskaderett --
+          coalesce(aktive.yrksk_rett_flagg, 
+                   case
+                      when nvl(bi.yrksk_reg,'0') = '1' then 1
+                      when nvl(bi.rett_pa_gjlevenderett,'0') = '1' and nvl(bi_avdod.yrksk_reg,'0') = '1' then 2
+                      else 0
+                   end) as yrkesskade_rett_flagg,
+          
+          -- Anvendt yrkesskaderett.
+          coalesce(aktive.yrksk_anv_flagg, 
+                   case
+                      when nvl(bi.yrksk_anv,'0') = '1' then 1
+                      when nvl(bi.gjenlevrett_anv,'0') = '1' and nvl(bi_avdod.yrksk_anv,'0') = '1' then 2
+                      else 0
+                   end) as yrkesskade_anv_flagg,
+          
+          -- Redusert pga. institusjonsopphold.
+          to_number(coalesce(aktive.red_pga_inst_opph_flagg, 
+                             case 
+                                 when bi.K_JUST_PERIODE like 'REDUKSJON%' or bi_2025.K_JUST_PERIODE like 'REDUKSJON%'
+                                     then case 
+                                              when bi.INST_OPPH_ANV = '1' or  bi_2025.INST_OPPH_ANV = '1'
+                                                     then '1'
+                                              else '0'
+                                          end
+                                -- else '0'
+                             end
+                             )
+                   ) as red_pga_inst_opph_flagg,
+          
+          -- Anvendt trygdetid.
+          coalesce(aktive.TT_ANVENDT_KAP19_ANTALL, bi.TT_ANV) as TT_ANVENDT_KAP19_ANTALL,
+          coalesce(case 
+                       when aktive.regelverk = 'N_REG_G_N_OPPTJ' then bi_2025.TT_ANV 
+                   end, 
+                   aktive.TT_ANVENDT_KAP20_ANTALL
+                  ) as TT_ANVENDT_KAP20_ANTALL,
+   
+          -- Sjekker om det eksisterer annen sak/vedtak om AFP_PRIVAT for denne personen.
+          case
+             when exists (select null
+                            from pen.t_vedtak v2
+                           where v2.person_id = aktive.person_id
+                             and v2.dato_lopende_fom <= trunc(current_date)
+                             and (v2.dato_lopende_tom is null or v2.dato_lopende_tom >= trunc(current_date))
+                             and v2.k_sak_t = 'AFP_PRIVAT'
+                             and not exists (select null
+                                               from pen.t_UTTAKSGRAD u2 
+                                              where u2.sak_id = v2.sak_id 
+                                                and u2.dato_virk_fom <= trunc(current_date) 
+                                                and (u2.DATO_VIRK_TOM is null or u2.DATO_VIRK_TOM >= trunc(current_date)) 
+                                                and u2.uttaksgrad = 0)
+                          ) then 1
+             else 0
+          end as AFP_PRIVAT_FLAGG,
+          
+          -- Sjekker om det eksisterer innvilget gjenlevenderett.
+          case
+             when exists (select null
+                            FROM PEN.T_VILKAR_VEDTAK PVV 
+                           WHERE pvv.vedtak_id = aktive.vedtak_id
+                             and pvv.K_KRAVLINJE_T = 'GJR' 
+                             AND pvv.K_VILKAR_RESUL_T = 'INNV'
+                             AND PVV.dato_virk_fom < current_date
+                             AND (PVV.dato_virk_tom >= trunc(current_date) 
+                                  OR PVV.dato_virk_tom IS NULL)
+                         ) then 1
+             else 0
+          end as innv_gj_rett,
+          
+          -- Sjekker om det er afp kommunal ytelse på afp_historikk.
+          case
+              when exists (select null
+                             FROM PEN.t_AFP_HISTORIK a
+                                  join pen.t_person p on p.person_id = a.person_id
+                            WHERE aktive.person_id = p.person_id
+                              and a.k_afp_t = 'AFPKOM' 
+                              AND a.bruk = 1
+                              AND a.afp_pensjonsgrad > 0
+                              --AFP kommunal i alderen 62 år og en måned til 67 år og en måned.
+                              AND MONTHS_BETWEEN(current_date, p.dato_fodsel) BETWEEN (62*12+1) AND (67*12+1)
+                              AND a.virk_fom <= current_date
+                              and (a.virk_tom >= trunc(current_date) or a.virk_tom is null)
+                           ) then 1
+                    else 0
+          end as kommunal_ytelse,           
+          --
+          current_date as kjoretidspunkt,
+          nullif(aktive.SUM_TILLEGG_FP_2016_NETTO,0) as SUM_TILLEGG_FP_2016_NETTO
+     FROM aktive 
+         
+          --- Beregningsinfo ---------------------------
+          left outer join pen.t_beregning_info bi 
+                  on bi.beregning_info_id = case 
+                                               when aktive.regelverk = 'N_REG_G_N_OPPTJ' then aktive.beregning_info_id_2016 
+                                               else aktive.beregning_info_id 
+                                            end 
+          left outer join pen.t_beregning_info bi_avdod 
+                   on bi_avdod.beregning_info_id = case 
+                                                      when aktive.regelverk = 'N_REG_G_N_OPPTJ' then aktive.beregning_info_id_avdod_2016 
+                                                      else aktive.beregning_info_id_avdod 
+                                                   end 
+   --               and bi_avdod.dato_virk_fom <= trunc(current_date)
+   --               and (bi_avdod.dato_virk_tom is null or bi_avdod.dato_virk_tom >= trunc(current_date))
+          left outer join pen.t_beregning_info bi_2025 on bi_2025.beregning_info_id = aktive.beregning_info_id_2025
+   
+          ---- Overgangsstønad ---------------------------------
+          left outer join tvvx on tvvx.vedtak_id = aktive.vedtak_id 
+          left outer join overgangsstonad ost on ost.kode = tvvx.k_vilk_vurd_t
+          ------------------------------------------------------
+)
+select * from siste

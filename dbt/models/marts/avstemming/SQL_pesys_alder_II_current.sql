@@ -5,6 +5,8 @@
 --
 -- Endret: 08.des.2025 (EG)
 --         En korreksjon i minstepensjonistflagget.
+-- Endret: 16 feb 2026 (EG)
+--         KJORETIDSPUNKT fra timestamp til date.
 -------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
@@ -553,7 +555,7 @@ SELECT --distinct
        round(coalesce(bi.pt_restpensjon, bi_2016.pt_restpensjon),5) as pt_restpensjon,
        round(coalesce(bi.tp_restpensjon, bi_2016.tp_restpensjon),5) as tp_restpensjon,
        --
-       to_timestamp(to_char(current_timestamp, 'DD.MM.YYYY HH24.MI.SS,FF9')) as kjoretidspunkt
+       current_date as kjoretidspunkt
   FROM aktive 
        
        --- Personinfo  ---------------------------
