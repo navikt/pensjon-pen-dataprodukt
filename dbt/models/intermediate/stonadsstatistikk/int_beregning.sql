@@ -140,10 +140,8 @@ union_beregning as (
 
         pen_under_utbet_id,
         null as beregning_id,
-
-        uttaksgrad,
         case
-            when k_just_periode like 'REDUKSJON%' and inst_opph_anv = '1' then '1'
+            when k_just_periode in ('REDUKSJON_FO', 'REDUKSJON_FRIPERIODE', 'REDUKSJON_HS', 'REDUKSJON') and inst_opph_anv = '1' then '1'
             else '0'
         end
             as red_pga_inst_opph_flagg,
