@@ -140,6 +140,8 @@ union_beregning as (
 
         pen_under_utbet_id,
         null as beregning_id,
+
+        uttaksgrad,
         case
             when k_just_periode in ('REDUKSJON_FO', 'REDUKSJON_FRIPERIODE', 'REDUKSJON_HS', 'REDUKSJON') and inst_opph_anv = '1' then '1'
             else '0'
