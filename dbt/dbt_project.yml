@@ -21,7 +21,7 @@ snapshot-paths: ["snapshots"]
 vars:
   # Defaulter til den første dagen i måneden til kjøretidspunktet
   # periode er på formatet YYYYMM som integer
-  periode: "to_char(trunc(add_months(current_date, -1)), 'YYYYMM')"
+  periode: "to_char((systimestamp at time zone 'Europe/Oslo') - interval '1' month, 'YYYYMM')"
   behandlingsstatistikk_start_dato: "to_date('01.01.2026', 'DD.MM.YYYY')"
 
 # modellene er tagget med sak eller stonad for om de skal til dv-team-pensjon eller team sak
