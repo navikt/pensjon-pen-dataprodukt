@@ -7,6 +7,7 @@ select
     gjenlevrett_anv,
     rett_pa_gjlevenderett,
     inst_opph_anv,
+    k_just_periode,
     yrksk_grad,
     yrksk_anv,
     yrksk_reg,
