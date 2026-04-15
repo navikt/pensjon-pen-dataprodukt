@@ -41,6 +41,7 @@ ref_beregning_info as (
         gjenlevrett_anv,
         rett_pa_gjlevenderett,
         inst_opph_anv,
+        k_just_periode,
         k_bereg_metode_t,
         tp_restpensjon,
         pt_restpensjon,
@@ -93,7 +94,6 @@ join_beregning_info_overgang_2016 as (
         -- i beregning_info ny opptjening er ikke feltene satt (unntak tt_anv)
         bi_2025.beregning_info_id as beregning_info_id_2025, -- brukes i neste cte for å hente beholdning
         bi_2011.tt_anv as tt_anv_g_opptj,
-        bi_2011.inst_opph_anv, -- dekker også 2025_2016 opptjening (1 rad)
         bi_2011.gjenlevrett_anv,
         bi_2011.rett_pa_gjlevenderett,
         bi_2011.yrksk_anv,
@@ -104,6 +104,8 @@ join_beregning_info_overgang_2016 as (
         bi_2011.pt_restpensjon, -- restpensjon gjelder kun nytt regelverk med gammel opptjening
         bi_2011.gp_restpensjon, -- restpensjon gjelder kun nytt regelverk med gammel opptjening
 
+        bi_2025.inst_opph_anv, -- dvh med ny definisjon av feltet per april 2026
+        bi_2025.k_just_periode,
         bi_2025.mottar_min_pensjonsniva, -- dekker også 2016_2011-opptjeningen (21 rader)
         bi_2025.mottar_min_pensjniva_arsak, -- ser lik ut for 2011 og 2025
         bi_avdod.yrksk_reg as yrksk_reg_avdod,
@@ -167,6 +169,7 @@ select
     mottar_min_pensjonsniva,
     mottar_min_pensjniva_arsak,
     inst_opph_anv,
+    k_just_periode,
     gjenlevrett_anv,
     rett_pa_gjlevenderett,
     yrksk_anv,

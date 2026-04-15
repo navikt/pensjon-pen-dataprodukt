@@ -41,6 +41,7 @@ ref_beregning_info as (
         rett_pa_gjlevenderett,
         inst_opph_anv,
         k_bereg_metode_t,
+        k_just_periode,
         tp_restpensjon,
         pt_restpensjon,
         gp_restpensjon
@@ -74,6 +75,7 @@ join_beregning_info as (
         ref_beregning_info.mottar_min_pensjonsniva,
         ref_beregning_info.mottar_min_pensjniva_arsak,
         ref_beregning_info.inst_opph_anv,
+        ref_beregning_info.k_just_periode,
         ref_beregning_info.gjenlevrett_anv,
         ref_beregning_info.rett_pa_gjlevenderett,
         ref_beregning_info.yrksk_anv,
@@ -105,6 +107,7 @@ select
     mottar_min_pensjonsniva,
     mottar_min_pensjniva_arsak,
     inst_opph_anv,
+    k_just_periode,
     gjenlevrett_anv,
     rett_pa_gjlevenderett,
     yrksk_anv,

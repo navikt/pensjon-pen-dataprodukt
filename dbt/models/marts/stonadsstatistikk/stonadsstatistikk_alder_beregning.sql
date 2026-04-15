@@ -26,7 +26,7 @@ select
     beh_gar_pen_b_totalbelop as beholdning_garan_pen_belop, -- endre namvet upstream
     beh_gar_t_b_totalbelop as beholdning_garan_tlg_belop, -- endre namvet upstream
     minstepen_niva_arsak,
-    inst_opph_anv,
+    red_pga_inst_opph_flagg,
     yrkesskade_anv_flagg,
     yrkesskade_rett_flagg,
     gjenlevrett_anv,

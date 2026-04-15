@@ -73,6 +73,7 @@ kap20 as (
         tt_anv_g_opptj,
         tt_anv_n_opptj,
         inst_opph_anv,
+        k_just_periode,
         mottar_min_pensjonsniva,
         mottar_min_pensjniva_arsak,
         k_bereg_metode_t,
@@ -99,7 +100,7 @@ union_beregning as (
             when netto <= 0 or brutto <= 0 or netto > brutto then 0
             else 100
         end as uttaksgrad, -- i kap 19 eksisterer ikke konseptet uttaksgrad
-        red_pga_inst_opph as inst_opph_anv,
+        red_pga_inst_opph as red_pga_inst_opph_flagg,
 
         case
             when
@@ -141,7 +142,11 @@ union_beregning as (
         null as beregning_id,
 
         uttaksgrad,
-        inst_opph_anv,
+        case
+            when k_just_periode like 'REDUKSJON%' and inst_opph_anv = '1' then '1'
+            else '0'
+        end
+            as red_pga_inst_opph_flagg,
         case
             when yrksk_reg = '1' then '1'
             when rett_pa_gjlevenderett = '1' and yrksk_reg_avdod = '1' then '2'
@@ -217,7 +222,7 @@ select
     beh_gar_pen_b_totalbelop,
     beh_gar_t_b_totalbelop,
     minstepen_niva_arsak,
-    cast(inst_opph_anv as varchar2(1)) as inst_opph_anv,
+    cast(red_pga_inst_opph_flagg as varchar2(1)) as red_pga_inst_opph_flagg,
     cast(yrkesskade_anv_flagg as varchar2(1)) as yrkesskade_anv_flagg,
     cast(yrkesskade_rett_flagg as varchar2(1)) as yrkesskade_rett_flagg,
     cast(gjenlevrett_anv as varchar2(1)) as gjenlevrett_anv,

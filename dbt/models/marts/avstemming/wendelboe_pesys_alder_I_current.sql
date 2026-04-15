@@ -58,7 +58,7 @@ dataprodukt_1 as (
         bb.gap_netto,
         b.yrkesskade_rett_flagg,
         b.yrkesskade_anv_flagg,
-        b.inst_opph_anv,
+        b.red_pga_inst_opph_flagg,
         b.tt_anv_g_opptj as tt_anvendt_kap19_antall,
         b.tt_anv_n_opptj as tt_anvendt_kap20_antall,
         v.afp_privat_flagg,

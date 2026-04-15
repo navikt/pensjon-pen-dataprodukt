@@ -186,7 +186,7 @@ models:
         description: ""
         data_type: varchar2
 
-      - name: inst_opph_anv
+      - name: red_pga_inst_opph_flagg
         description: ""
         data_type: varchar2
 
