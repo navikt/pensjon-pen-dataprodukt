@@ -31,8 +31,9 @@ models:
         data_type: varchar2
         data_tests:
           - accepted_values:
-              values:
-                - ALDER
+              arguments:
+                values:
+                  - ALDER
           - not_null
       - name: k_vedtak_s
         description: Status for vedtaket. Typisk LOPENDE, men er i noen tilfeller feks STOPPET. Det er vedtak som fortsatt er løpende, men som saksbehandler manuelt har stopet feks på grunn av innmeldt dødsfall i forkant av offisiell dødsmelding

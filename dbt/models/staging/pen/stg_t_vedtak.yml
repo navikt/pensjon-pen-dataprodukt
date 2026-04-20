@@ -20,7 +20,8 @@ models:
         description: 'Kode for sakstype. Gyldige verdier er ALDER, UFOREP, KRIGSP, BARNEP, AFP_PRIVAT, AFP, GJENLEV, GAM_YRK, FAM_PL, GENRL, OMSORG'
         tests:
           - accepted_values:
-              values: ['ALDER', 'UFOREP', 'KRIGSP', 'BARNEP', 'AFP_PRIVAT', 'AFP', 'GJENLEV', 'GAM_YRK', 'FAM_PL', 'GENRL', 'OMSORG']
+              arguments:
+                values: ['ALDER', 'UFOREP', 'KRIGSP', 'BARNEP', 'AFP_PRIVAT', 'AFP', 'GJENLEV', 'GAM_YRK', 'FAM_PL', 'GENRL', 'OMSORG']
       - name: k_vedtak_t
         description: 'Kode for vedtakstype.'
       - name: k_vedtak_s
