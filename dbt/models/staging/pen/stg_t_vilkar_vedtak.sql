@@ -1,6 +1,7 @@
 -- stg_t_vilkar_vedtak
 
 select
+    vilkar_vedtak_id,
     vedtak_id,
     kravlinje_id,
     k_vilkar_resul_t,

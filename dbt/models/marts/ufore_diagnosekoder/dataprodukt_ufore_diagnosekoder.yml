@@ -1,0 +1,38 @@
+models:
+  - name: dataprodukt_ufore_diagnosekoder
+    description: |
+        Gir alle saker som har diagnosekode (hoved/bi) i Pesys.
+        Gir sak-id med vedtak-id hvor hoved- eller bidiagnosekode sist ble satt/endret.
+        Tar kun utgangspunkt i løpende saker når det leter etter endringer i diagnose, men dataproduktet inneholder også historiske vedtak.
+        Her er det altså vedtak som ikke lenger er løpende, men som en gang var det.
+        Funksjonaliteten for å sette diagnosekode direkte i Pesys ble lansert april 2026, og derfor er det ingen rader før dette tidspunktet.
+    columns:
+      - name: sak_id
+        description: Sak-id i Pesys. Unik i tabellen. Fra feltet t_sak.sak_id.
+        data_type: number
+        data_tests:
+          - not_null
+      - name: hoveddiagnose
+        description: Hoveddiagnosekode i Pesys. ICD-10-kode. Fra feltet t_vilkar.hoveddiagnose.
+        data_type: varchar2
+      - name: bidiagnoser
+        description: Bidiagnosekoder i Pesys, konkatinert liste med semikolon. ICD-10-koder. Kan være null. Fra feltet t_vilkar.bidiagnoser.
+        data_type: varchar2(150)
+      - name: sakstype
+        description: Type sak i Pesys, her alltid "UFOREP" her. Fra feltet t_sak.k_sak_t.
+        data_type: varchar2
+      - name: sak_status
+        description: Overordnet status for saken i Pesys. En av "OPPRETTET", "TIL_BEHANDLING", "LOPENDE", "AVSLUTTET". Fra feltet t_sak.k_sak_s. OBS! Dette feltet er ikke nødvendigvis alltid oppdatert ihht at vedtaket er løpende.
+        data_type: varchar2
+      - name: vedtak_id_sist_lopende
+        description: Vedtak-id for siste løpende vedtak i Pesys hvor hoved- eller bidiagnosekode ble satt eller endret.
+        data_type: number
+      - name: vedtakstype
+        description: Type vedtak i Pesys. Antakeligvis enten "FORGANG" eller "ENDRING". Fra feltet t_vedtak.k_vedtak_t.
+        data_type: varchar2
+      - name: vedtak_status
+        description: Alltid IVERKS, fordi vi kun ser på iverksatte og løpende vedtak. Fra feltet t_vedtak.k_vedtak_s.
+        data_type: varchar2
+      - name: diagnose_oppdatert_tidspunkt
+        description: Tidspunkt for når diagnosen sist ble oppdatert i Pesys. Fra feltet t_vedtak.dato_endret.
+        data_type: timestamp

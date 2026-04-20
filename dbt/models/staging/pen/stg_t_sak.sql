@@ -4,6 +4,7 @@ select
     sak_id,
     person_id,
     k_sak_t,
+    k_sak_s,
     dato_opprettet,
     opprettet_av,
     dato_endret,

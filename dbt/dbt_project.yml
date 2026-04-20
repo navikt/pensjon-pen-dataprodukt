@@ -43,6 +43,10 @@ models:
         +tags: ['sak']
       stonadsstatistikk:
         +tags: ['stonad']
+      ufore_diagnosekoder:
+        +tags: ['diagnosekoder', 'sensitiv-informasjon']
+        +docs:
+          node_color: '#ee3c1f' # rød for å indikere sensitiv informasjon
     marts:
       +docs:
         node_color: '#a176b3'
@@ -52,6 +56,10 @@ models:
         +tags: ['stonad']
       behandlingsstatistikk:
         +tags: ['sak']
+      ufore_diagnosekoder:
+        +tags: ['diagnosekoder', 'sensitiv-informasjon']
+        +docs:
+          node_color: '#ee3c1f' # rød for å indikere sensitiv informasjon
 
 snapshots:
   pen_dataprodukt:

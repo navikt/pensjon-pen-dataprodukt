@@ -1,0 +1,40 @@
+version: 2
+
+snapshots:
+  - name: snapshot_int_diagnosekode_lopende_ufore
+    relation: ref('int_diagnosekode_lopende_ufore')
+    description: |
+      Snapshot på diagnosekode til uførevedtak som **er** eller **har vært løpende** og har info om diagnose.
+      *Har kun verdi for vedtak som har en hoveddiagnose eller bidiagnose.*
+      Underlaget `pen_dataprodukt.int_diagnosekode_lopende_ufore` er kun på løpende IVERKS vedtak.
+      I utgangspunktet skal tilbake i tid som ikke lenger er løpende få satt diagnosekode.
+      Funksjonaliteten for å sette diagnosekode direkte i Pesys ble lansert april 2026, og derfor er det ingen rader før dette tidspunktet.
+
+      Når en sak går fra løpende til ikke løpende, vil raden bli værende i snapshotet og peke på det siste vedtaket som var løpende.
+
+      Det er to strategier for å oppdatere snapshotet:
+          1. Kun følge med på endring av hoveddiagnose og bidiagnose per sak_id
+          2. Følge med på endringer i vedtaket også
+      
+      1. vil gi vedtaket hvor diagnosekoden ble satt, mens 2. vil være knytta til de siste løpende vedtaket.
+
+      Når dette snapshottet begynner å ta tid å kjøre, kan vi legge på et filter hvor vi kun ser på vedtak som er IVERKS i nyere tid.
+    config:
+      strategy: check
+      check_cols: 
+        - hoveddiagnose
+        - bidiagnoser
+        - k_sak_s # denne vil endre seg fra OPPRETTET, TIL_BEHANDLING, LOPENDE, AVSLUTTET
+        # hvis strategi 2:
+        # - vedtak_id # med denne i check vil vi alltid ha det siste løpende vedtaket
+        # - dato_endret_vedtak # ditto som vedtak_id
+
+        # trenger ikke følge med på:
+        # - sak_id # unique_key, og endrer seg ikke
+        # - k_sak_t # alltid UFOREP
+        # - k_vedtak_t # ender seg ikke
+        # - k_vedtak_s # alltid IVERKS
+      unique_key: sak_id
+      hard_deletes: ignore
+      updated_at: dato_endret_vedtak
+      tags: ['diagnosekoder', 'sensitiv-informasjon']
