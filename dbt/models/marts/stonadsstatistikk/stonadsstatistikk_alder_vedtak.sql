@@ -29,7 +29,7 @@ join_fnr as (
 
 final as (
     select
-        {{ var("periode") }} as periode,
+        to_date({{ var("periode") }}, 'YYYYMM') as periode,
         sak_id,
         vedtak_id,
         kravhode_id,
@@ -54,7 +54,7 @@ final as (
     where
         1 = 1
     {% if is_incremental() %}
-        and {{ var("periode") }} not in (select distinct periode from {{ this }}) -- noqa
+        and to_date({{ var("periode") }}, 'YYYYMM') not in (select distinct periode from {{ this }}) -- noqa
     {% endif %}
 )
 

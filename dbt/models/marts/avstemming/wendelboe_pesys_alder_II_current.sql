@@ -14,7 +14,7 @@ ref_int_vedtaksinfo as (
 
 dataprodukt_2 as (
     select
-        v.periode,
+        to_char(v.periode, 'YYYYMM') as periode,
         v.vedtak_id,
         v.sak_id,
         v.kravhode_id,
