@@ -1,3 +1,9 @@
+{{
+  config(
+    materialized = 'table',
+    tags = ['analyse']
+    )
+}}
 
 with
 
