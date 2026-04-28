@@ -90,7 +90,7 @@ eps_vedtak_lopende as (
         
 ),
 
-eps_pavirket_lovendringe as (
+eps_pavirket_lovendringer as (
     select
         e.vedtak_id,
         e.oifu_endret_flagg,
@@ -109,30 +109,17 @@ eps_pavirket_lovendringe as (
 )
 
 select 
-        
-        oifu_endret_flagg,
-        minsteytelse_ektefelle_flagg,
-        kompgrad_over_70_flagg,
-        oifu_endret_flagg_eps,
-        minsteytelse_ektefelle_flagg_eps,
-        kompgrad_over_70_flagg_eps,
-        bt_fb,
-        har_eps,
-        count(*)
+    oifu_endret_flagg,
+    minsteytelse_ektefelle_flagg,
+    kompgrad_over_70_flagg,
+    oifu_endret_flagg_eps,
+    minsteytelse_ektefelle_flagg_eps,
+    kompgrad_over_70_flagg_eps,
+    bt_fb,
+    har_eps,
+    count(*) as antall
 
-from eps_pavirket_lovendringe
-where
-(
-    oifu_endret_flagg = 1
-    or minsteytelse_ektefelle_flagg = 1 
-    or kompgrad_over_70_flagg = 1
-)
-and
-(
-    oifu_endret_flagg_eps = 1
-    or minsteytelse_ektefelle_flagg_eps =1 
-    or kompgrad_over_70_flagg_eps = 1
-)
+from eps_pavirket_lovendringer
 group by
     oifu_endret_flagg,
     minsteytelse_ektefelle_flagg,
