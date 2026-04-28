@@ -22,13 +22,16 @@ hent_ifu_ieu_grad as (
         -- bv_ifu.angitt_inntekt,
         bv_ifu.k_minimum_ifu_t, -- MINIMUM_IFU_ENSLIG, MINIMUM_IFU_GIFT, MINIMUM_IFU_UNGUFOR
         bv_ifu.er_minimums_ifu,
-        v.*
+        v.*,
+        kl.k_land_3_tegn_id
     from vedtak_med_avkort_info v
     left join pen.t_vilkar_vedtak vv
         on
             v.vedtak_id = vv.vedtak_id
             and vv.dato_virk_tom is null
             and vv.k_kravlinje_t = 'UT'
+    left join pen.t_kravlinje kl
+        on vv.kravlinje_id = kl.kravlinje_id
     inner join pen.t_beregning_vilkar bv_ifu
         on
             vv.vilkar_vedtak_id = bv_ifu.vilkar_vedtak_id
@@ -41,6 +44,18 @@ hent_ifu_ieu_grad as (
         on
             vv.vilkar_vedtak_id = bv_ieu.vilkar_vedtak_id
             and bv_ieu.k_beregning_vilkar_t = 'INNTEKT_ETTER_UFOR'
+),
+
+prioriter_innland_kravlinjer as (
+    select
+        sub.*
+    from (
+        select
+            hent_ifu_ieu_grad.*,
+            row_number() over (partition by vedtak_id order by case when k_land_3_tegn_id = '161' then 1 else 2 end, k_land_3_tegn_id ) as rn
+        from hent_ifu_ieu_grad
+    ) sub
+    where rn = 1
 ),
 
 final as (
@@ -69,7 +84,7 @@ final as (
         sak_id,
         dato_opprettet,
         forste_virk_fom
-    from hent_ifu_ieu_grad
+    from prioriter_innland_kravlinjer
 )
 
 select * from final
