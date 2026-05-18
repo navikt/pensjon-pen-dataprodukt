@@ -7,7 +7,7 @@ models:
       **Unik nøkkel er kombinasjonen av vedtak_id og periode.**
     columns:
       - name: vedtak_id
-        description: ID for det løpende vedtaket. Månedlig unik i kombinasjon med periode.
+        description: ID for vedtaket som var løpende kl 23:59:59 siste dag i måneden. Månedlig unik i kombinasjon med periode.
         data_type: number
         data_tests:
           - not_null
@@ -113,7 +113,7 @@ models:
         description: ID for saken i Pesys
         data_type: number
       - name: vedtak_id
-        description: ID for det løpende vedtaket. Månedlig unik i kombinasjon med periode.
+        description: ID for vedtaket som var løpende kl 23:59:59 siste dag i måneden. Månedlig unik i kombinasjon med periode.
         data_type: number
         data_tests:
           - not_null
@@ -224,7 +224,7 @@ models:
       Beløpsdetaljer
     columns:
       - name: vedtak_id
-        description: ""
+        description: ID for vedtaket som var løpende kl 23:59:59 siste dag i måneden. Månedlig unik i kombinasjon med periode.
         data_type: number
       - name: sak_id
         description: ""
