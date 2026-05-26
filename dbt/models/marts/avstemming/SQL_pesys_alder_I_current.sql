@@ -29,6 +29,14 @@
 -- Endret: 14 apr 2026 (EG)
 --         Endret på beregning av flagget "Redusert pga. institusjonsopphold".
 --         Etter møte med fagressurser i NAV. Tallene blir mye mindre nå!
+-- Endret: 04 mai 2026 (EG)
+--         Inn med personnummer.
+-- Endret: 12 mai 2026 (EG)
+--         Forsøk på å finne første pensjoneringsdato, laveste iverksatt_dato.
+--         Dato_iverksatt på vedtak av typen FORGANG på samme sak.
+-- Endret: 22 mai 2026 (EG)
+--         CTE laveste_datoer endret tilo å ta dato_virk_fom fra vedtaket
+--         med laveste dato_lopende_fom innenfor samme sak.
 -------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
@@ -239,6 +247,28 @@ yk_ber as
   group by v.vedtak_id, v.sak_id, v.kravhode_id, yk.beregning_id
 ),
 
+
+-------------------------------------------------------------------------------------------
+-- CTE for å prøve å hente ut første pensjoneringsdato.
+-- Dette skal bli grunnlaget for fk_dim_tid_pensjoneringstidspunkt og tilhørtende alder.
+-- Dato_virk_fom på vedtaket med lavest dato_lopende_fom innenfor saken.
+-------------------------------------------------------------------------------------------
+laveste_datoer as (
+   select akk.sak_id, 
+          akk.virk as minste_virk
+   from (
+        select v.sak_id, 
+               v.dato_virk_fom as virk, 
+               v.dato_lopende_fom as minlop,
+               ROW_NUMBER() OVER (PARTITION BY v.sak_id ORDER BY v.dato_lopende_fom) as rn
+          from vedtak vv,
+               pen.t_vedtak v
+         where vv.sak_id = v.sak_id
+        ) akk
+    where rn = 1
+),
+
+
 -------------------------------------------------------------------------------------------
 -- CTE for å trekke ut de aktive vedtakene.
 -- Kjører to disjunkte løp, joiner de to foregående CTE-ene, og tar med noen flere felter.
@@ -370,7 +400,9 @@ aktive as
             when nvl(b.yug,0) > 0 then 1
             else 0
         end as yrksk_anv_flagg,
-        b.red_pga_inst_opph as red_pga_inst_opph_flagg,
+        case 
+            when b.K_JUST_PERIODE like 'REDUKSJON%' then b.red_pga_inst_opph 
+        end as red_pga_inst_opph_flagg,
         b.tt_anv as TT_ANVENDT_KAP19_ANTALL,
         null as TT_ANVENDT_KAP20_ANTALL
    from yk_ber v
@@ -412,8 +444,8 @@ siste as (
           aktive.kravhode_id,
           aktive.k_vedtak_t as vedtak_type,
           aktive.k_vedtak_s as vedtak_status,
-   --       person.fnr_fk as persnr,
-          null as persnr,
+          person.fnr_fk as persnr,
+   --       null as persnr,
           aktive.person_id,
           aktive.dato_lopende_fom,
           aktive.dato_lopende_tom,
@@ -575,8 +607,16 @@ siste as (
           end as kommunal_ytelse,           
           --
           current_date as kjoretidspunkt,
-          nullif(aktive.SUM_TILLEGG_FP_2016_NETTO,0) as SUM_TILLEGG_FP_2016_NETTO
+          --
+          nullif(aktive.SUM_TILLEGG_FP_2016_NETTO,0) as SUM_TILLEGG_FP_2016_NETTO,
+          ld.minste_virk as laveste_virkedato
      FROM aktive 
+       
+          --- Personinfo  ---------------------------
+          left outer join pen.t_person person on person.person_id = aktive.person_id
+          
+          --- Pensjoneringstidspunkt -------------------
+          left outer join laveste_datoer ld on ld.sak_id = aktive.sak_id
          
           --- Beregningsinfo ---------------------------
           left outer join pen.t_beregning_info bi 
@@ -598,4 +638,4 @@ siste as (
           left outer join overgangsstonad ost on ost.kode = tvvx.k_vilk_vurd_t
           ------------------------------------------------------
 )
-select * from siste
+select * from siste 

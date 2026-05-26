@@ -513,6 +513,11 @@ SELECT --distinct
        
        case when nvl(aktive.regelverk,'G_REG') != 'G_REG' then 1 else 0 end as nytt_regelverk_flagg,
        
+       case
+          when aktive.GP_SATS_BELOP <= 0 then null
+          when aktive.GP_SATS_BELOP < 1 then 1
+          else 0
+       end as GP_AVKORTET_FLAGG,
        aktive.GP_SATS_BELOP,
        aktive.prorata_teller,
        aktive.prorata_nevner,
