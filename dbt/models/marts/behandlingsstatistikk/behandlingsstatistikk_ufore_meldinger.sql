@@ -76,7 +76,7 @@ sett_behandling_resultat_og_status as (
     select
         beh.*,
         case
-            when beh.k_vedtak_s = 'IVERKS' and beh.k_krav_s = 'FERDIG'
+            when beh.k_vedtak_s in ('IVERKS', 'STOPPET', 'STOPPES', 'REAK') and beh.k_krav_s = 'FERDIG' -- Vedtak med disse statusene er løpende
                 then
                     case
                         when beh.k_krav_gjelder in ('KLAGE', 'ANKE') then beh.k_klageank_res_t
@@ -87,15 +87,14 @@ sett_behandling_resultat_og_status as (
                         else 'UKJENT_IVERKS'
                     end
             when beh.k_vedtak_s = 'AVBR' and beh.k_krav_s = 'FERDIG' then 'VEDTAK_AVBRUTT'
-            when beh.k_vedtak_s in ('STOPPET', 'STOPPES') and beh.k_krav_s = 'FERDIG' then 'VEDTAK_STOPPET'
             when beh.k_krav_s = 'AVBRUTT' then beh.avbrutt_behandling_resultat
-            when beh.k_krav_s = 'FERDIG' and beh.k_vedtak_s not in ('IVERKS', 'AVBR') then null
+            when beh.k_krav_s = 'FERDIG' and beh.k_vedtak_s not in ('IVERKS', 'STOPPET', 'STOPPES', 'REAK', 'AVBR') then null
         end as behandling_resultat,
         case
-            when beh.k_vedtak_s = 'IVERKS' and beh.k_krav_s = 'FERDIG' then 'FERDIG'
-            when beh.k_vedtak_s in ('AVBR', 'STOPPET', 'STOPPES') and beh.k_krav_s = 'FERDIG' then 'AVBRUTT'
+            when beh.k_vedtak_s in ('IVERKS', 'STOPPET', 'STOPPES', 'REAK') and beh.k_krav_s = 'FERDIG' then 'FERDIG'
+            when beh.k_vedtak_s = 'AVBR' and beh.k_krav_s = 'FERDIG' then 'AVBRUTT'
             when beh.k_krav_s = 'AVBRUTT' then 'AVBRUTT'
-            when beh.k_krav_s = 'FERDIG' and beh.k_vedtak_s not in ('IVERKS', 'AVBR') then 'VENTER_VEDTAK'
+            when beh.k_krav_s = 'FERDIG' and beh.k_vedtak_s not in ('IVERKS', 'STOPPET', 'STOPPES', 'REAK', 'AVBR') then 'VENTER_VEDTAK'
             else beh.k_krav_s
         end as behandling_status
     from ref_behandlingsstatistikk_grunnlag beh
