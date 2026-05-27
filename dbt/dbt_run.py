@@ -64,6 +64,10 @@ if __name__ == "__main__":
     if dbt_models := os.getenv("DBT_MODELS", None):
         command = command + ["--select", dbt_models]
 
+    # forventer at DBT_VARS er en json-string
+    if dbt_vars := os.getenv("DBT_VARS", None):
+        command = command + ["--vars", dbt_vars]
+
     dbt = dbtRunner()
     dbt_deps = dbt.invoke(DBT_BASE_COMMAND + ["deps"])
     output: dbtRunnerResult = dbt.invoke(DBT_BASE_COMMAND + command)
