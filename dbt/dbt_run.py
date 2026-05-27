@@ -68,6 +68,8 @@ if __name__ == "__main__":
     if dbt_vars := os.getenv("DBT_VARS", None):
         command = command + ["--vars", dbt_vars]
 
+    logging.info(f"Kjører dbt med kommando: {' '.join(command)}")
+
     dbt = dbtRunner()
     dbt_deps = dbt.invoke(DBT_BASE_COMMAND + ["deps"])
     output: dbtRunnerResult = dbt.invoke(DBT_BASE_COMMAND + command)
