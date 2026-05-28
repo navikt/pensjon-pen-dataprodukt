@@ -14,7 +14,9 @@ ref_int_lopende_vedtak_alder as (
         k_vedtak_t,
         k_afp_t,
         dato_lopende_fom,
-        dato_lopende_tom
+        dato_lopende_tom,
+        forste_dato_virk_fom,
+        forste_dato_lopende_fom
     from {{ ref('int_lopende_vedtak_alder') }}
 ),
 
@@ -121,6 +123,8 @@ setter_overgangsstonad_flagg as (
         k_afp_t,
         dato_lopende_fom,
         dato_lopende_tom,
+        forste_dato_virk_fom,
+        forste_dato_lopende_fom,
         max(case
             when
                 k_vilk_vurd_t in (
@@ -152,7 +156,9 @@ setter_overgangsstonad_flagg as (
         k_vedtak_t,
         k_afp_t,
         dato_lopende_fom,
-        dato_lopende_tom
+        dato_lopende_tom,
+        forste_dato_virk_fom,
+        forste_dato_lopende_fom
 ),
 
 join_person_detaljer as (
@@ -222,6 +228,8 @@ select
     k_vedtak_t,
     dato_lopende_fom,
     dato_lopende_tom,
+    forste_dato_virk_fom,
+    forste_dato_lopende_fom,
     overgangsstonad_flagg,
     bostedsland,
     inntekt_fpi_belop,

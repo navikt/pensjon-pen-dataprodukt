@@ -41,6 +41,8 @@ final as (
         k_vedtak_t,
         dato_lopende_fom,
         dato_lopende_tom,
+        forste_dato_virk_fom,
+        forste_dato_lopende_fom,
         -- overgangsstonad_flagg, -- todo: fjerne utregning tidligere i løpet, men beholdt midlertidig for å kunne legge tilbake
         bostedsland,
         inntekt_fpi_belop as inntekt, -- endre navnet upstream
