@@ -68,7 +68,7 @@ ref_behandlingsstatistikk_grunnlag as (
         kjoretidspunkt
     from {{ ref('snapshot_int_alder_behandling_grunnlag') }}
     {% if is_incremental() %}
-        where kjoretidspunkt > (select coalesce(max(z.teknisk_tid), to_date('01.01.1900', 'DD.MM.YYYY')) from {{ this }} z)
+        where kjoretidspunkt > (select coalesce(max(z.kjoretidspunkt), to_date('01.01.1900', 'DD.MM.YYYY')) from {{ this }} z)
     {% endif %}
 ),
 
@@ -130,7 +130,7 @@ nye_kolonnenavn as (
         end as utbetalt_tid,
         cast(from_tz(cast(dato_endret as timestamp), 'Europe/Oslo') at time zone 'UTC' as timestamp(9)) as endret_tid,
         dato_onsket_virk as forventetoppstart_tid,
-        kjoretidspunkt as teknisk_tid,
+        kjoretidspunkt,
         k_sak_t as sak_ytelse,
         k_utlandstilknytning as sak_utland,
         k_krav_gjelder as behandling_type,
@@ -146,7 +146,8 @@ nye_kolonnenavn as (
         to_date('01.01.1900', 'DD.MM.YYYY') as funksjonell_periode_fom,
         to_date('01.01.1900', 'DD.MM.YYYY') as funksjonell_periode_tom,
         'PESYS' as fagsystem_navn,
-        '1' as fagsystem_versjon
+        '1' as fagsystem_versjon,
+        cast(systimestamp at time zone 'UTC' as timestamp(9)) as teknisk_tid
     from join_fnr
 ),
 
@@ -164,7 +165,7 @@ final as (
         utbetalt_tid,
         endret_tid,
         forventetoppstart_tid,
-        teknisk_tid,
+        kjoretidspunkt,
         sak_ytelse,
         sak_utland,
         behandling_type,
@@ -180,7 +181,8 @@ final as (
         funksjonell_periode_fom,
         funksjonell_periode_tom,
         fagsystem_navn,
-        fagsystem_versjon
+        fagsystem_versjon,
+        teknisk_tid
     from nye_kolonnenavn
 )
 
