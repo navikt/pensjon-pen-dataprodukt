@@ -147,7 +147,7 @@ nye_kolonnenavn as (
         to_date('01.01.1900', 'DD.MM.YYYY') as funksjonell_periode_tom,
         'PESYS' as fagsystem_navn,
         '1' as fagsystem_versjon,
-        cast(systimestamp at time zone 'UTC' as timestamp(9)) as teknisk_tid
+        cast(systimestamp at time zone 'UTC' as timestamp(9)) as teknisk_tid -- brukes til last fra Oracle til BQ, vil skille seg fra kjoretidspunkt ved rekjøring
     from join_fnr
 ),
 
