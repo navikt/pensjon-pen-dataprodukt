@@ -47,20 +47,20 @@ hent_ifu_ieu_grad as (
 ),
 
 prioriter_innland_kravlinjer as (
-    select
-        sub.*
+    select sub.*
     from (
         select
             hent_ifu_ieu_grad.*,
-            row_number() over (partition by vedtak_id order by case when k_land_3_tegn_id = '161' then 1 else 2 end, k_land_3_tegn_id ) as rn
+            row_number() over (partition by hent_ifu_ieu_grad.vedtak_id order by case when hent_ifu_ieu_grad.k_land_3_tegn_id = '161' then 1 else 2 end, hent_ifu_ieu_grad.k_land_3_tegn_id) as rn
         from hent_ifu_ieu_grad
     ) sub
-    where rn = 1
+    where sub.rn = 1
 ),
 
 final as (
     select
-        case when oifu >= 429527 and oifu < 455560 then 1 else 0 end as oifu_endret_flagg,
+        case when oifu >= 450610 and oifu < 477923 then 1 else 0 end as oifu_endret_flagg,
+        --case when oifu >= 429527 and oifu < 455560 then 1 else 0 end as oifu_endret_flagg, -- 2025G
         -- case when oifu >= 429527 and oifu < 455560 then round(100 * ugradert_brutto_per_ar / oifu, 2) else 0 end as ny_kompgrad,
 
         case when kompensasjonsgrad > 70 then 1 else 0 end as kompgrad_over_70_flagg,

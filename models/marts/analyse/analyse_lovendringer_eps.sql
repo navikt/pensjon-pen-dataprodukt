@@ -30,7 +30,7 @@ finne_eps_til_lovendring as (
         case when yk.netto < yk.brutto then 'Brukers UT er avkortet' end as ut_avkoret,
         case when pd.k_grnl_rolle_t in ('EKTEF', 'PARTNER', 'SAMBO') then 1 else 0 end as har_eps,
         case when pd.k_grnl_rolle_t in ('EKTEF', 'PARTNER', 'SAMBO') then pg.kravhode_id end as eps_kravhode_id,
-        pg.PERSON_GRUNNLAG_ID,
+        pg.person_grunnlag_id,
         pd.person_det_id
     from pen_dataprodukt.analyse_ifu_ieu_grad v
     left join pen.t_sak s on v.sak_id = s.sak_id
@@ -83,11 +83,11 @@ eps_vedtak_lopende as (
             and yk_tfb.k_ytelse_komp_t = 'UT_TFB'
             and yk_tfb.bruk = '1'
             and yk_tfb.opphort = '0'
-    where 
+    where
         v.dato_lopende_fom is not null
         and v.dato_lopende_tom is null
         and v.k_sak_t = 'UFOREP'
-        
+
 ),
 
 eps_pavirket_lovendringer as (
@@ -100,7 +100,7 @@ eps_pavirket_lovendringer as (
         v.oifu_endret_flagg as oifu_endret_flagg_eps,
         v.minsteytelse_ektefelle_flagg as minsteytelse_ektefelle_flagg_eps,
         v.kompgrad_over_70_flagg as kompgrad_over_70_flagg_eps,
-        
+
         e.bt_fb,
         e.har_eps
 
@@ -108,7 +108,7 @@ eps_pavirket_lovendringer as (
     left join pen_dataprodukt.analyse_ifu_ieu_grad v on e.eps_vedtak_id = v.vedtak_id
 )
 
-select 
+select
     oifu_endret_flagg,
     minsteytelse_ektefelle_flagg,
     kompgrad_over_70_flagg,
@@ -129,12 +129,12 @@ group by
     kompgrad_over_70_flagg_eps,
     bt_fb,
     har_eps
-order by 
+order by
     oifu_endret_flagg,
     minsteytelse_ektefelle_flagg,
     kompgrad_over_70_flagg,
     oifu_endret_flagg_eps,
     minsteytelse_ektefelle_flagg_eps,
-    kompgrad_over_70_flagg_eps,        
+    kompgrad_over_70_flagg_eps,
     bt_fb,
     har_eps
