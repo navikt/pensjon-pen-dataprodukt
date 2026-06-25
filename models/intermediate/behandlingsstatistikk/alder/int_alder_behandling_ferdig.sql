@@ -27,6 +27,10 @@ ref_t_k_kravlinje_t as (
     select * from {{ ref('stg_t_k_kravlinje_t') }}
 ),
 
+ref_int_tilbakekrevning_per_vedtak as (
+    select * from {{ ref('int_tilbakekrevning_per_vedtak') }}
+),
+
 vilkarsvedtak_hovedkravlinje as (
     -- finner hovedkravlinjer for de få tilfellene hvor v.k_vedtak_t er null
     -- hovedkravlinjene har i noen tilfeller duplikater per vedtak_id
@@ -94,6 +98,19 @@ fjern_duplikater as (
     where vv.rn = 1
 ),
 
+join_tilbakekr as (
+    select
+        fjern_duplikater.*,
+        ref_int_tilbakekrevning_per_vedtak.periode_fom,
+        ref_int_tilbakekrevning_per_vedtak.periode_tom,
+        ref_int_tilbakekrevning_per_vedtak.pot__tilbakek
+    from fjern_duplikater
+    left join ref_int_tilbakekrevning_per_vedtak
+        on
+            fjern_duplikater.vedtak_id = ref_int_tilbakekrevning_per_vedtak.vedtak_id
+            and fjern_duplikater.k_krav_gjelder = 'TILBAKEKR'
+),
+
 sette_resultat as (
     select
         sak_id,
@@ -119,8 +136,11 @@ sette_resultat as (
         k_vedtak_s,
         k_vilkar_resul_t,
         vv__k_vilkar_resul_t,
-        k_klageank_res_t
-    from fjern_duplikater
+        k_klageank_res_t,
+        periode_fom,
+        periode_tom,
+        pot__tilbakek
+    from join_tilbakekr
 )
 
 select * from sette_resultat

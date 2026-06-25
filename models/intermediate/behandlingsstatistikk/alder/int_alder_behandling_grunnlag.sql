@@ -50,7 +50,10 @@ union_behandling as (
         k_vilkar_resul_t,
         vv__k_vilkar_resul_t,
         k_klageank_res_t,
-        null as avbrutt_behandling_resultat
+        null as avbrutt_behandling_resultat,
+        periode_fom,
+        periode_tom,
+        pot__tilbakek
     from behandling_ferdig
     union all
     select
@@ -77,7 +80,10 @@ union_behandling as (
         null as k_vilkar_resul_t,
         null as vv__k_vilkar_resul_t,
         null as k_klageank_res_t,
-        avbrutt_behandling_resultat
+        avbrutt_behandling_resultat,
+        null as periode_fom,
+        null as periode_tom,
+        null as pot__tilbakek
     from behandling_avbrutt
     union all
     select
@@ -104,7 +110,10 @@ union_behandling as (
         null as k_vilkar_resul_t,
         null as vv__k_vilkar_resul_t,
         null as k_klageank_res_t,
-        null as avbrutt_behandling_resultat
+        null as avbrutt_behandling_resultat,
+        null as periode_fom,
+        null as periode_tom,
+        null as pot__tilbakek
     from behandling_andre
 )
 
@@ -133,5 +142,8 @@ select
     vv__k_vilkar_resul_t, -- til behandling_resultat
     k_klageank_res_t, -- til behandling_resultat
     avbrutt_behandling_resultat,
-    cast(systimestamp at time zone 'UTC' as timestamp(9)) as kjoretidspunkt -- brukes til last fra Oracle til BQ
+    periode_fom,
+    periode_tom,
+    pot__tilbakek,
+    cast(systimestamp at time zone 'UTC' as timestamp(9)) as kjoretidspunkt -- Tidspunkt raden oppstår i snapshot. Orginalt brukt til last fra Oracle til BQ
 from union_behandling
