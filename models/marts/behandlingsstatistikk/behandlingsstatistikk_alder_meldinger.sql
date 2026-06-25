@@ -65,6 +65,9 @@ ref_behandlingsstatistikk_grunnlag as (
         vv__k_vilkar_resul_t,
         k_klageank_res_t,
         avbrutt_behandling_resultat,
+        pot__tilbakek,
+        periode_fom,
+        periode_tom,
         kjoretidspunkt
     from {{ ref('snapshot_int_alder_behandling_grunnlag') }}
     {% if is_incremental() %}
@@ -142,9 +145,9 @@ nye_kolonnenavn as (
         endret_av as saksbehandler,
         attesterer as ansvarlig_beslutter,
         ansvarlig_enhet,
-        -1.1 as tilbakekrev_belop,
-        to_date('01.01.1900', 'DD.MM.YYYY') as funksjonell_periode_fom,
-        to_date('01.01.1900', 'DD.MM.YYYY') as funksjonell_periode_tom,
+        pot__tilbakek as tilbakekrev_belop,
+        periode_fom as funksjonell_periode_fom,
+        periode_tom as funksjonell_periode_tom,
         'PESYS' as fagsystem_navn,
         '1' as fagsystem_versjon,
         cast(systimestamp at time zone 'UTC' as timestamp(9)) as teknisk_tid -- brukes til last fra Oracle til BQ, vil skille seg fra kjoretidspunkt ved rekjøring
