@@ -18,14 +18,13 @@ ref_t_tilbakek_pr_mnd as (
 
 select
     ref_t_tilbakek_total.vedtak_id,
-    min(ref_t_tilbakek_pr_mnd.periode_fom) as periode_fom,
-    max(ref_t_tilbakek_pr_mnd.periode_tom) as periode_tom,
+    min(case when ref_t_tilbakek_pr_mnd.pot__tilbakek > 0 then ref_t_tilbakek_pr_mnd.periode_fom end) as periode_fom,
+    max(case when ref_t_tilbakek_pr_mnd.pot__tilbakek > 0 then ref_t_tilbakek_pr_mnd.periode_tom end) as periode_tom,
     sum(ref_t_tilbakek_pr_mnd.pot__tilbakek) as pot__tilbakek
 from ref_t_tilbakek_total
 inner join ref_t_tilbakek_pr_ar
     on ref_t_tilbakek_total.tilbakek_total_id = ref_t_tilbakek_pr_ar.tilbakek_total_id
 inner join ref_t_tilbakek_pr_mnd
     on ref_t_tilbakek_pr_ar.tilbakek_pr_ar_id = ref_t_tilbakek_pr_mnd.tilbakek_pr_ar_id
-where ref_t_tilbakek_pr_mnd.pot__tilbakek > 0
 group by
     ref_t_tilbakek_total.vedtak_id
