@@ -68,7 +68,12 @@ ref_behandlingsstatistikk_grunnlag as (
         pot__tilbakek,
         periode_fom,
         periode_tom,
-        kjoretidspunkt
+        kjoretidspunkt,
+
+        -- BRUKER | SAKSBEH | SELVB_ANNET | SYSTEM | NULL, 
+        {{ klassifiser_revisjonsfelt('endret_av') }} as endret_av_kode,
+        {{ klassifiser_revisjonsfelt('opprettet_av') }} as opprettet_av_kode,
+        {{ klassifiser_revisjonsfelt('attesterer') }} as attestert_av_kode
     from {{ ref('snapshot_int_ufore_behandling_grunnlag') }}
     {% if is_incremental() %}
         where kjoretidspunkt > (select coalesce(max(z.kjoretidspunkt), to_date('01.01.1900', 'DD.MM.YYYY')) from {{ this }} z)
@@ -99,7 +104,17 @@ sett_behandling_resultat_og_status as (
             when beh.k_krav_s = 'AVBRUTT' then 'AVBRUTT'
             when beh.k_krav_s = 'FERDIG' and beh.k_vedtak_s not in ('IVERKS', 'STOPPET', 'STOPPES', 'REAK', 'AVBR') then 'VENTER_VEDTAK'
             else beh.k_krav_s
-        end as behandling_status
+        end as behandling_status,
+        {{ beregn_behandling_metode(
+            k_krav_s='beh.k_krav_s',
+            ferdigbehandlet_tid='beh.ferdigbehandlet_tid',
+            opprettet_av_kode='beh.opprettet_av_kode',
+            attestert_av_kode='beh.attestert_av_kode',
+            endret_av_kode='beh.endret_av_kode',
+            k_krav_arsak_t='beh.k_krav_arsak_t',
+            k_krav_gjelder='beh.k_krav_gjelder',
+            k_behandling_t='beh.k_behandling_t'
+        ) }} as behandling_metode
     from ref_behandlingsstatistikk_grunnlag beh
 ),
 
@@ -139,7 +154,7 @@ nye_kolonnenavn as (
         k_krav_gjelder as behandling_type,
         behandling_status,
         behandling_resultat,
-        k_behandling_t as behandling_metode,
+        behandling_metode,
         k_krav_arsak_t as behandling_arsak,
         opprettet_av,
         endret_av as saksbehandler,
