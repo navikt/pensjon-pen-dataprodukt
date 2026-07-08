@@ -75,9 +75,9 @@ ref_behandlingsstatistikk_grunnlag as (
         {{ klassifiser_revisjonsfelt('opprettet_av') }} as opprettet_av_kode,
         {{ klassifiser_revisjonsfelt('attesterer') }} as attestert_av_kode
     from {{ ref('snapshot_int_ufore_behandling_grunnlag') }}
-    -- {% if is_incremental() %}
-    --     where kjoretidspunkt > (select coalesce(max(z.kjoretidspunkt), to_date('01.01.1900', 'DD.MM.YYYY')) from {{ this }} z)
-    -- {% endif %}
+    {% if is_incremental() %}
+        where kjoretidspunkt > (select coalesce(max(z.kjoretidspunkt), to_date('01.01.1900', 'DD.MM.YYYY')) from {{ this }} z)
+    {% endif %}
 ),
 
 sett_behandling_resultat_og_status as (
