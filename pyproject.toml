@@ -6,11 +6,11 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     # se https://github.com/navikt/dvh-images/blob/main/airflow/dbt/pyproject.toml
-    "dbt-oracle>=1.11.0",
-    "oracledb>=3.3.0",
+    "dbt-oracle>=1.11.1",
+    "oracledb>=4.0.1",
     "requests>=2.34.2",
     "db-dtypes>=1.6.0",
-    "dbt-core>=1.11.11",
+    "dbt-core>=1.11.12",
     "cryptography>=48.0.0",
 ]
 
@@ -23,7 +23,7 @@ dev = [
     "black>=25.12.0",
     "google-cloud-secret-manager>=2.28.0",
     "sqlfluff>=4.2.1",
-    "ruff>=0.15.15",
+    "ruff>=0.15.20",
 ]
 
 [tool.ruff]
