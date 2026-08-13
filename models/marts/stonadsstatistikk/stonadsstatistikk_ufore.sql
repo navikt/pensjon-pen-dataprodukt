@@ -608,7 +608,7 @@ select
     rest_til_utbetaling,
     differansebelop,
     ugradert_brutto_per_ar,
-    --kompensasjonsgrad,
+    kompensasjonsgrad,
     inntekt_foer,
     inntekt_etter,
     forintarb,
