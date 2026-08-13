@@ -10,7 +10,7 @@
 select
     av.oifu,
     av.oieu,
-    av.kompensasjonsgrad,
+    av.reduksjonsprosent as kompensasjonsgrad,
     av.ugradert_brutto_per_ar,
     ufo.sak_id,
     ufo.vedtak_id,

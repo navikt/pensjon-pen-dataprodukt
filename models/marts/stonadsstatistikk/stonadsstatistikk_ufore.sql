@@ -99,15 +99,15 @@ yk_bres as
         --  
         max(case when k_ytelse_komp_t = 'UT_ORDINER' and OPPHORT = '0' then a.oieu end) AS oieu,
         --  
-        max(case when k_ytelse_komp_t = 'UT_ORDINER' and OPPHORT = '0' then a.inntektsgrense end) AS inntektsgrense,
+        max(case when k_ytelse_komp_t = 'UT_ORDINER' and OPPHORT = '0' then a.bunnfradrag end) AS inntektsgrense,
         --  
-        max(case when k_ytelse_komp_t = 'UT_ORDINER' and OPPHORT = '0' then a.belopsgrense end) AS belopsgrense,
+        max(case when k_ytelse_komp_t = 'UT_ORDINER' and OPPHORT = '0' then a.fribelop_ut end) AS belopsgrense,
         --  
         max(case when k_ytelse_komp_t = 'UT_ORDINER' and OPPHORT = '0' then a.inntektstak end) AS inntektstak,
         --  
         max(case when k_ytelse_komp_t = 'UT_ORDINER' and OPPHORT = '0' then a.forventet_inntekt end) AS forventet_inntekt,
         --  
-        max(case when k_ytelse_komp_t = 'UT_ORDINER' and OPPHORT = '0' then a.inntektsgrense_neste_ar end) AS inntektsgrense_neste_aar,
+        max(case when k_ytelse_komp_t = 'UT_ORDINER' and OPPHORT = '0' then a.bunnfradrag_neste_ar end) AS inntektsgrense_neste_aar,
         --  
         max(case when k_ytelse_komp_t = 'UT_ORDINER' and OPPHORT = '0' then a.avkortingsbelop_per_ar end) AS avkortet_per_aar,
         --  
@@ -117,7 +117,7 @@ yk_bres as
         --  
         max(case when k_ytelse_komp_t = 'UT_ORDINER' and OPPHORT = '0' then a.ugradert_brutto_per_ar end) AS ugradert_brutto_per_ar,
         --  
-        max(case when k_ytelse_komp_t = 'UT_ORDINER' and OPPHORT = '0' then a.kompensasjonsgrad end) AS kompensasjonsgrad,
+        max(case when k_ytelse_komp_t = 'UT_ORDINER' and OPPHORT = '0' then a.reduksjonsprosent end) AS kompensasjonsgrad,
         
         -- Reduksjonsinformasjon ----------------------------------------------------------------------------------------------------
         max(case when k_ytelse_komp_t = 'UT_TSB' then nullif(nvl(ri.SUM_BRUTTO_FOR_REDUKSJON_BT,0) - nvl(ri.SUM_BRUTTO_ETTER_REDUKSJON_BT,0),0) end) as UTBT_SB_REDUKSJON_AR_BELOP,
@@ -608,7 +608,7 @@ select
     rest_til_utbetaling,
     differansebelop,
     ugradert_brutto_per_ar,
-    kompensasjonsgrad,
+    --kompensasjonsgrad,
     inntekt_foer,
     inntekt_etter,
     forintarb,
