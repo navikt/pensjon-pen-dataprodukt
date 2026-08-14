@@ -9,6 +9,7 @@ select
     ap_kap19_uten_gjr,
     pen_under_utbet_id,
     beregning_id,
+    avkort_info_id,
     f_min_pen_niva_id,
     anvendt_trygdetid,
     psats_gp,

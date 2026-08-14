@@ -29,6 +29,8 @@ models:
         description: "Id for å koble til t_beregning_res, altså kap20, dvs 2011, 2016 og 2025."
       - name: beregning_id
         description: "Id for å koble til t_beregning, altså kap19, dvs tom 2010."
+      - name: avkort_info_id
+        description: "Id for å koble til t_avkort_info, som inneholder informasjon om avkorting."
       - name: netto
         description: "Avrundet månedsbeløp etter avkorting, altså det som faktisk utbetales."
       - name: bruk

@@ -18,5 +18,6 @@ select
     dato_virk_fom,
     dato_virk_tom,
     dato_lopende_fom,
-    dato_lopende_tom
+    dato_lopende_tom,
+    ufore_historik_id
 from {{ source('pen', 't_vedtak') }}
