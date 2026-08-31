@@ -32,3 +32,4 @@ sources:
       - name: t_tilbakek_total
       - name: t_tilbakek_pr_ar
       - name: t_tilbakek_pr_mnd
+      - name: t_krav_enhet_hist
