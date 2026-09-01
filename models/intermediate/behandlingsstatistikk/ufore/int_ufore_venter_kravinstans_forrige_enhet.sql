@@ -30,13 +30,18 @@ med_forrige_enhet as (
     from ref_snapshot
 ),
 
+-- vi bryr oss bare om første overgang til klageinstans
 final as (
     select
         e.kravhode_id,
         e.k_krav_s,
         e.ansvarlig_enhet,
         coalesce(e.forrige_ansvarlig_enhet, hist.org_enhet_id_fk) as forrige_ansvarlig_enhet,
-        e.dato_endret
+        e.dato_endret,
+        row_number() over (
+            partition by e.kravhode_id
+            order by e.dato_endret asc
+        ) as rn
     from med_forrige_enhet e
     left join ref_int_krav_enhet_hist hist
         on
@@ -45,4 +50,11 @@ final as (
     where e.k_krav_s = 'VENTER_KLAGEINSTANS'
 )
 
-select * from final
+select
+    kravhode_id,
+    k_krav_s,
+    ansvarlig_enhet,
+    forrige_ansvarlig_enhet,
+    dato_endret
+from final
+where rn = 1
