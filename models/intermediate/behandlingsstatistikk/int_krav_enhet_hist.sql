@@ -20,33 +20,23 @@ join_org_enhet as (
         hist.endret_av,
         hist.dato_opprettet,
         org_enhet.org_enhet_id_fk,
-        lead(org_enhet.org_enhet_id_fk) over (
+        row_number() over (
             partition by hist.kravhode_id
-            order by hist.dato_opprettet asc
-        ) as neste_org_enhet_id_fk
+            order by hist.dato_opprettet desc
+        ) as rn
     from ref_stg_t_krav_enhet_hist hist
     left join ref_stg_t_pen_org_enhet org_enhet
         on hist.pen_org_enhet_id = org_enhet.pen_org_enhet_id
+    where org_enhet.org_enhet_id_fk not like '42%'
 ),
 
-siste_enhet_sendt_til_klageenhet as (
+final as (
     select
         kravhode_id,
         pen_org_enhet_id,
-        org_enhet_id_fk,
-        neste_org_enhet_id_fk,
-        row_number() over (
-            partition by kravhode_id
-            order by dato_opprettet desc
-        ) as rn
+        org_enhet_id_fk
     from join_org_enhet
-    where neste_org_enhet_id_fk = 4286
+    where rn = 1
 )
 
-select
-    kravhode_id,
-    pen_org_enhet_id,
-    org_enhet_id_fk,
-    neste_org_enhet_id_fk
-from siste_enhet_sendt_til_klageenhet
-where rn = 1
+select * from final
