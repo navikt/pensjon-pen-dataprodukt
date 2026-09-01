@@ -38,6 +38,10 @@ ref_stg_t_sak as (
     from {{ ref('stg_t_sak') }}
 ),
 
+ref_int_ufore_venter_kravinstans_forrige_enhet as (
+    select * from {{ ref('int_ufore_venter_kravinstans_forrige_enhet') }}
+),
+
 ref_behandlingsstatistikk_grunnlag as (
     select
         rownum + ({{ sekvensnummer_offset }}) as sekvensnummer,
@@ -48,7 +52,7 @@ ref_behandlingsstatistikk_grunnlag as (
         k_krav_arsak_t, -- ka
         k_behandling_t, -- kh
         k_utlandstilknytning, -- sak
-        ansvarlig_enhet, -- kh
+        ansvarlig_enhet as opprinnelig_ansvarlig_enhet, -- kh
         endret_av, -- kh
         opprettet_av, -- kh
         attesterer, -- vedtak
@@ -118,12 +122,25 @@ sett_behandling_resultat_og_status as (
     from ref_behandlingsstatistikk_grunnlag beh
 ),
 
+sett_ansvarlig_enhet as (
+    select
+        beh.*,
+        coalesce(forrige.forrige_ansvarlig_enhet, beh.opprinnelig_ansvarlig_enhet) as ansvarlig_enhet,
+        forrige.forrige_ansvarlig_enhet
+    from sett_behandling_resultat_og_status beh
+    left join ref_int_ufore_venter_kravinstans_forrige_enhet forrige
+        on
+            beh.kravhode_id = forrige.kravhode_id
+            and beh.k_krav_s = 'VENTER_KLAGEINSTANS'
+            and beh.opprinnelig_ansvarlig_enhet like '42%'
+),
+
 join_fnr as (
     select
         beh.*,
         s.k_sak_t,
         person.fnr_fk
-    from sett_behandling_resultat_og_status beh
+    from sett_ansvarlig_enhet beh
     left join ref_stg_t_sak s on beh.sak_id = s.sak_id
     left join ref_stg_t_person person on s.person_id = person.person_id
 ),
@@ -143,8 +160,7 @@ nye_kolonnenavn as (
             when behandling_status in ('FERDIG', 'AVBRUTT') then ferdigbehandlet_tid  -- fjerner ferdigbehandlet_tid fra VENTER_VEDTAK
         end as ferdigbehandlet_tid, -- dato
         case -- utbetaltTid
-            when {{ potensielt_lopende('k_krav_gjelder') }} = '1' then dato_virk_fom
-            else null -- alle krav som ikke går til utbetaling, feks opphør, skal ikke ha utbetaltTid
+            when {{ potensielt_lopende('k_krav_gjelder') }} = '1' then dato_virk_fom -- alle krav som ikke går til utbetaling, feks opphør, skal ikke ha utbetaltTid
         end as utbetalt_tid,
         cast(from_tz(cast(dato_endret as timestamp), 'Europe/Oslo') at time zone 'UTC' as timestamp(9)) as endret_tid,
         dato_onsket_virk as forventetoppstart_tid,
@@ -164,7 +180,7 @@ nye_kolonnenavn as (
         periode_fom as funksjonell_periode_fom,
         periode_tom as funksjonell_periode_tom,
         'PESYS' as fagsystem_navn,
-        '1' as fagsystem_versjon,
+        '2' as fagsystem_versjon,
         cast(systimestamp at time zone 'UTC' as timestamp(9)) as teknisk_tid -- brukes til last fra Oracle til BQ, vil skille seg fra kjoretidspunkt ved rekjøring
     from join_fnr
 ),
