@@ -110,10 +110,11 @@ legg_til_belop as (
 final as (
     select
         f.*,
-        coalesce(f.yk_tfb_netto, 0) + coalesce(f2.yk_tfb_netto, 0) as husholdning_bt_netto,
+        coalesce(f.yk_tfb_netto, 0) + coalesce(f.yk_tsb_netto, 0) + coalesce(f2.yk_tfb_netto, 0) + coalesce(f2.yk_tsb_netto, 0) as husholdning_bt_netto,
+        coalesce(f.yk_tfb_brutto, 0) + coalesce(f.yk_tsb_brutto, 0) + coalesce(f2.yk_tfb_brutto, 0) + coalesce(f2.yk_tsb_brutto, 0) as husholdning_bt_brutto,
         -- høringsforslag
-        coalesce(f.bt_brutto, 0) + coalesce(f2.bt_brutto, 0) as husholdning_bt_brutto,
-        coalesce(f.bt_brutto_ar, 0) + coalesce(f2.bt_brutto_ar, 0) as husholdning_bt_brutto_ar,
+        coalesce(f.bt_brutto, 0) + coalesce(f2.bt_brutto, 0) as husholdning_ny_bt_brutto,
+        coalesce(f.bt_brutto_ar, 0) + coalesce(f2.bt_brutto_ar, 0) as husholdning_ny_bt_brutto_ar,
 
         case when f.eps_kravhode_id is not null then 1 else 0 end as eps_med_ut_flagg
 
@@ -150,6 +151,6 @@ select
     bt_brutto_ar,
     bt_brutto,
     husholdning_bt_netto,
-    husholdning_bt_brutto,
-    husholdning_bt_brutto_ar
+    husholdning_ny_bt_brutto,
+    husholdning_ny_bt_brutto_ar
 from final
