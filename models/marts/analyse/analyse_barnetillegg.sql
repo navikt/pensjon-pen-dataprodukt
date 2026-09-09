@@ -15,7 +15,7 @@ familie_info as (
     select
         v.*,
         pd.*,
-        extract(year from p.dato_fodsel) - extract(year from current_date) as alder,
+        extract(year from current_date) - extract(year from p.dato_fodsel) as alder,
         row_number() over (partition by pg.person_grunnlag_id order by pd.dato_opprettet desc) as rn
     from lopende_vedtak v
     left join pen.t_person_grunnlag pg
