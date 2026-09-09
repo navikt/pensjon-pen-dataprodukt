@@ -34,7 +34,7 @@ familie_info_per_kravhode as (
         sak_id,
         sum(case when k_grnl_rolle_t = 'BARN' then 1 else 0 end) as antall_barn,
         sum(case when k_grnl_rolle_t = 'BARN' and alder < 18 then 1 else 0 end) as antall_barn_under_18,
-        max(case when k_grnl_rolle_t in ('EKTEF', 'PARTNER', 'SAMBO') then 1 else 0 end) as har_eps
+        max(case when k_grnl_rolle_t in ('EKTEF', 'PARTNER', 'SAMBO') then 1 else 0 end) as har_eps -- Denne kan være 0, selv om søkeren har en aktiv rolle i EPS sin uføresak
     from familie_info
     where rn = 1
     group by sak_id
@@ -43,7 +43,7 @@ familie_info_per_kravhode as (
 har_eps_med_ut as (
     select
         v.sak_id,
-        max(case when pd.k_grnl_rolle_t in ('EKTEF', 'PARTNER', 'SAMBO') then pg.kravhode_id end) as eps_kravhode_id
+        max(case when pd.k_grnl_rolle_t in ('EKTEF', 'PARTNER', 'SAMBO') then pg.kravhode_id end) as eps_kravhode_id -- Denne kan være 1, selv om søkeren ikke har en EPS med aktiv rolle
     from lopende_vedtak v
     left join pen.t_sak s on v.sak_id = s.sak_id
     left join pen.t_person_grunnlag pg on s.person_id = pg.person_id
@@ -70,7 +70,7 @@ legg_til_belop as (
         v.avkort_info_id,
         extract(year from current_date) - extract(year from p.dato_fodsel) as alder,
         {{ kjonn_fra_fnr("p.fnr_fk") }} as kjonn,
-        case when yk_tfb.brutto > 0 or yk_tsb.brutto > 0 then 1 else 0 end as barnetillegg_flagg,
+        case when yk_tfb.netto > 0 or yk_tsb.netto > 0 then 1 else 0 end as barnetillegg_flagg,
         b2011.uforegrad,
         b2011.mottar_minsteytelse,
         cte1.antall_barn,
