@@ -71,6 +71,8 @@ legg_til_belop as (
         extract(year from current_date) - extract(year from p.dato_fodsel) as alder,
         {{ kjonn_fra_fnr("p.fnr_fk") }} as kjonn,
         case when yk_tfb.brutto > 0 or yk_tsb.brutto > 0 then 1 else 0 end as barnetillegg_flagg,
+        b2011.uforegrad,
+        b2011.mottar_minsteytelse,
         cte1.antall_barn,
         cte1.antall_barn_under_18,
         cte1.har_eps,
@@ -112,6 +114,7 @@ legg_til_belop as (
             and yk_tsb.bruk = '1'
     inner join {{ ref("stg_t_sak") }} s on v.sak_id = s.sak_id
     inner join {{ ref("stg_t_person") }} p on s.person_id = p.person_id
+    left join pen.t_beregning_2011 b2011 on v.uforetrygd_beregning_id = b2011.beregning_2011_id
 ),
 
 final as (
@@ -141,6 +144,8 @@ select
     avkort_info_id,
     alder,
     kjonn,
+    uforegrad,
+    mottar_minsteytelse,
     barnetillegg_flagg,
     antall_barn,
     antall_barn_under_18,
