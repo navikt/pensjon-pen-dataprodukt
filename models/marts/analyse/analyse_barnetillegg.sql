@@ -15,6 +15,7 @@ familie_info as (
     select
         v.*,
         pd.*,
+        extract(year from p.dato_fodsel) - extract(year from current_date) as alder,
         row_number() over (partition by pg.person_grunnlag_id order by pd.dato_opprettet desc) as rn
     from lopende_vedtak v
     left join pen.t_person_grunnlag pg
@@ -25,12 +26,14 @@ familie_info as (
             pg.person_grunnlag_id = pd.person_grunnlag_id
             and pd.bruk = '1'
             and pd.rolle_tom is null
+    inner join pen.t_person p on pg.person_id = p.person_id
 ),
 
 familie_info_per_kravhode as (
     select
         sak_id,
         sum(case when k_grnl_rolle_t = 'BARN' then 1 else 0 end) as antall_barn,
+        sum(case when k_grnl_rolle_t = 'BARN' and alder < 18 then 1 else 0 end) as antall_barn_under_18,
         max(case when k_grnl_rolle_t in ('EKTEF', 'PARTNER', 'SAMBO') then 1 else 0 end) as har_eps
     from familie_info
     where rn = 1
@@ -67,6 +70,7 @@ legg_til_belop as (
         v.avkort_info_id,
         case when yk_tfb.brutto > 0 or yk_tsb.brutto > 0 then 1 else 0 end as barnetillegg_flagg,
         cte1.antall_barn,
+        cte1.antall_barn_under_18,
         cte1.har_eps,
         cte2.eps_kravhode_id,
         yk.brutto as yk_brutto,
@@ -81,8 +85,8 @@ legg_til_belop as (
         yk_tsb.netto as yk_tsb_netto,
         yk_tsb.brutto_per_ar as yk_tsb_brutto_per_ar,
         yk_tsb.netto_per_ar as yk_tsb_netto_per_ar,
-        case when cte1.antall_barn > 0 then round(0.15 * 136549 * cte1.antall_barn) end as bt_brutto_ar,
-        case when cte1.antall_barn > 0 then round(0.15 * 136549 * cte1.antall_barn / 12) end as bt_brutto
+        case when cte1.antall_barn_under_18 > 0 then round(0.15 * 136549 * cte1.antall_barn_under_18) end as bt_brutto_ar,
+        case when cte1.antall_barn_under_18 > 0 then round(0.15 * 136549 * cte1.antall_barn_under_18 / 12) end as bt_brutto
 
     from lopende_vedtak v
     left join familie_info_per_kravhode cte1
@@ -134,6 +138,7 @@ select
     avkort_info_id,
     barnetillegg_flagg,
     antall_barn,
+    antall_barn_under_18,
     har_eps,
     eps_kravhode_id,
     yk_brutto,
