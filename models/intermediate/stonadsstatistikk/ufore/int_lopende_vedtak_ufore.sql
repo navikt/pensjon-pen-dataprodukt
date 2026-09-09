@@ -78,12 +78,7 @@ join_kravhode as (
 join_person as (
     select
         join_kravhode.*,
-        case
-            when substr(ref_person.fnr_fk, 9, 1) in ('0', '2', '4', '6', '8')
-                then 'K'
-            when substr(ref_person.fnr_fk, 9, 1) in ('1', '3', '5', '7', '9')
-                then 'M'
-        end as kjonn,
+        {{ kjonn_fra_fnr("ref_person.fnr_fk") }} as kjonn,
         extract(year from ref_person.dato_fodsel) as fodselsaar,
         ref_sak.k_utlandstilknytning,
         ref_sak.dato_opprettet as sak_dato_opprettet
