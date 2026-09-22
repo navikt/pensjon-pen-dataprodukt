@@ -23,10 +23,6 @@ ref_t_kravlinje as (
     select * from {{ ref('stg_t_kravlinje') }}
 ),
 
-ref_t_k_kravlinje_t as (
-    select * from {{ ref('stg_t_k_kravlinje_t') }}
-),
-
 ref_int_tilbakekrevning_per_vedtak as (
     select * from {{ ref('int_tilbakekrevning_per_vedtak') }}
 ),
@@ -38,9 +34,8 @@ vilkarsvedtak_hovedkravlinje as (
         vv.k_vilkar_resul_t,
         kl.k_land_3_tegn_id
     from ref_t_vilkar_vedtak vv
-    inner join ref_t_k_kravlinje_t tkl on vv.k_kravlinje_t = tkl.k_kravlinje_t
     left join ref_t_kravlinje kl on vv.kravlinje_id = kl.kravlinje_id
-    where tkl.hoved_krav_linje = '1'
+    where {{ hoved_krav_linje('vv.k_kravlinje_t') }} = '1'
 ),
 
 behandlinger_vedtak as (
