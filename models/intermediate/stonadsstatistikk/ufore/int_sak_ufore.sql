@@ -42,7 +42,7 @@ join_saksdatoer as (
     
     from ref_sak s
     
-    inner join ref_saksdatoer
+    left join ref_saksdatoer
         on s.sak_id = ref_saksdatoer.sak_id
 
 ),
