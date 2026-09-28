@@ -1,0 +1,46 @@
+models:
+  - name: sak_uforetrygd
+    description: |
+        Styringsinformasjon for uføretrygdsaker i Pesys.
+        Gir én rad per sak med grunnleggende saksinformasjon, samt kjønn og fødselsår for personen på saken.
+        Tar utgangspunkt i saker med løpende vedtak (se int_sak_ufore), og inneholder derfor kun saker som har eller har hatt et løpende vedtak.
+    columns:
+      - name: sak_id
+        description: Sak-id i Pesys. Unik i tabellen. Fra feltet t_sak.sak_id.
+        data_type: number
+        data_tests:
+          - not_null
+          - unique
+      - name: k_sak_t
+        description: Type sak i Pesys, her alltid "UFOREP". Fra feltet t_sak.k_sak_t.
+        data_type: varchar2
+      - name: kjonn
+        description: Kjønn utledet fra fødselsnummeret til personen på saken.
+        data_type: varchar2
+      - name: fodselsaar
+        description: Fødselsår til personen på saken. Fra feltet t_person.dato_fodsel.
+        data_type: number
+      - name: k_utlandstilknytning
+        description: Angir om saken har en utenlandstilknytning. Fra feltet t_sak.k_utlandstilknytning.
+        data_type: varchar2
+      - name: sak_dato_opprettet
+        description: Tidspunkt for når saken ble opprettet i Pesys. Fra feltet t_sak.dato_opprettet.
+        data_type: date
+      - name: avsluttet_dato
+        description: Dato for når saken ble avsluttet. Alltid null i dagens versjon av modellen.
+        data_type: date
+      - name: avsluttet_arsak
+        description: Årsak til at saken ble avsluttet. Alltid null i dagens versjon av modellen.
+        data_type: varchar2(255)
+      - name: gyldig_fra_dato
+        description: Dato for virkningstidspunkt for det første vedtaket på saken. Fra feltet t_vedtak.dato_virk_fom (minste verdi).
+        data_type: date
+      - name: gyldig_til_dato
+        description: Dato for når det siste løpende vedtaket på saken opphører. Fra feltet t_vedtak.dato_lopende_tom (største verdi).
+        data_type: date
+      - name: har_ikke_sammenhengende_vedtak
+        description: Flagg (0/1) som angir om saken har hatt opphold på mer enn én dag mellom to påfølgende vedtaksperioder.
+        data_type: number
+      - name: kjoretidspunkt
+        description: Tidspunkt for når modellen sist ble kjørt (UTC).
+        data_type: timestamp
