@@ -21,4 +21,4 @@ snapshots:
       updated_at: dato_endret
       unique_key: kravhode_id
       hard_deletes: ignore
-      tags: 'sak'
+      tags: 'sbs'
