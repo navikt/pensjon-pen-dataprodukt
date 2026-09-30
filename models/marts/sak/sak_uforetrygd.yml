@@ -44,3 +44,33 @@ models:
       - name: kjoretidspunkt
         description: Tidspunkt for når modellen sist ble kjørt (UTC).
         data_type: timestamp
+
+  - name: sakshistorikk_uforetrygd
+    description: |
+        Historikk over sammenhengende perioder med løpende uførevedtak per sak.
+        Gir én rad per periode per sak, der periodene skilles av opphold på mer enn én dag mellom vedtak.
+    columns:
+      - name: sak_id
+        description: Sak-id i Pesys.
+        data_type: number
+      - name: totalt_antall_perioder
+        description: Totalt antall sammenhengende perioder med løpende vedtak på saken.
+        data_type: number
+      - name: periode_nr
+        description: Nummer på perioden, sortert kronologisk fra 1.
+        data_type: number
+      - name: er_siste_periode
+        description: Flagg (0/1) som angir om perioden er den siste perioden på saken.
+        data_type: number
+      - name: forste_dato_lopende_fom
+        description: Første dato fra og med for løpende vedtak i perioden.
+        data_type: date
+      - name: siste_dato_lopende_tom
+        description: Siste dato til og med for løpende vedtak i perioden. Null dersom perioden inneholder et vedtak uten sluttdato.
+        data_type: date
+      - name: forste_dato_virk_fom
+        description: Første virkningsdato fra og med for vedtak i perioden.
+        data_type: date
+      - name: kjoretidspunkt
+        description: Tidspunkt for når modellen sist ble kjørt (UTC).
+        data_type: timestamp
