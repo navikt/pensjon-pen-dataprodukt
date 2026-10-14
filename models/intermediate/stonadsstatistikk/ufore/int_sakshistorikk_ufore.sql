@@ -74,8 +74,8 @@ sakshistorikk_info as (
         max(sh.periode_nr) over (partition by sh.sak_id) as totalt_antall_perioder,
         case
             when sh.periode_nr = max(sh.periode_nr) over (partition by sh.sak_id)
-                then 1
-            else 0
+                then '1'
+            else '0'
         end as er_siste_periode
     from sakshistorikk sh
 
