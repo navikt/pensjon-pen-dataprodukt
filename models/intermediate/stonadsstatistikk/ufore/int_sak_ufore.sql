@@ -35,15 +35,14 @@ ref_saksdatoer as (
 
 join_saksdatoer as (
     select
-        s.*,
-        har_ikke_sammenhengende_vedtak,
-        forste_dato_virk_fom,
-        siste_dato_lopende_tom        
-    
-    from ref_sak s
-    
+        ref_sak.*,
+        ref_saksdatoer.har_ikke_sammenhengende_vedtak,
+        ref_saksdatoer.forste_dato_virk_fom,
+        ref_saksdatoer.siste_dato_lopende_tom
+
+    from ref_sak
     left join ref_saksdatoer
-        on s.sak_id = ref_saksdatoer.sak_id
+        on ref_sak.sak_id = ref_saksdatoer.sak_id
 
 ),
 
@@ -52,15 +51,14 @@ join_person as (
         join_saksdatoer.*,
         {{ kjonn_fra_fnr("ref_person.fnr_fk") }} as kjonn,
         extract(year from ref_person.dato_fodsel) as fodselsaar
-    
-    from join_saksdatoer
 
+    from join_saksdatoer
     inner join ref_person
         on join_saksdatoer.person_id = ref_person.person_id
 )
 
 
-select 
+select
     sak_id,
     k_sak_t,
     k_sak_s,

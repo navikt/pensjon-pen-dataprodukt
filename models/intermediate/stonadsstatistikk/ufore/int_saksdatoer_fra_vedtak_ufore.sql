@@ -32,15 +32,14 @@ vedtaksinfo as (
         max(
             case
                 when dato_lopende_fom - forrige_dato_lopende_tom > 1
-                then 1
-                else 0
+                    then '1'
+                else '0'
             end
         ) as har_ikke_sammenhengende_vedtak,
         min(dato_virk_fom) as forste_dato_virk_fom,
         max(dato_lopende_tom) as siste_dato_lopende_tom
-    
-    from vedtakshistorikk
 
+    from vedtakshistorikk
     group by sak_id
 )
 
