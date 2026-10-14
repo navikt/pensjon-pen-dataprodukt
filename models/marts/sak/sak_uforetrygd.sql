@@ -32,6 +32,6 @@ select
     cast(null as varchar(255)) as avsluttet_arsak,
     forste_dato_virk_fom as gyldig_fra_dato,
     siste_dato_lopende_tom as gyldig_til_dato,
-    har_ikke_sammenhengende_vedtak,
+    coalesce(har_ikke_sammenhengende_vedtak, '0') as har_ikke_sammenhengende_vedtak,
     cast(systimestamp at time zone 'UTC' as timestamp(9)) as kjoretidspunkt
 from ref_int_lopende_vedtak_ufore
