@@ -40,7 +40,7 @@ models:
         data_type: date
       - name: har_ikke_sammenhengende_vedtak
         description: Flagg (0/1) som angir om saken har hatt opphold på mer enn én dag mellom to påfølgende vedtaksperioder.
-        data_type: number
+        data_type: varchar2
       - name: kjoretidspunkt
         description: Tidspunkt for når modellen sist ble kjørt (UTC).
         data_type: timestamp
@@ -61,7 +61,7 @@ models:
         data_type: number
       - name: er_siste_periode
         description: Flagg (0/1) som angir om perioden er den siste perioden på saken.
-        data_type: number
+        data_type: varchar
       - name: forste_dato_lopende_fom
         description: Første dato fra og med for løpende vedtak i perioden.
         data_type: date
