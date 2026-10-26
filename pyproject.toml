@@ -12,6 +12,7 @@ dependencies = [
     "db-dtypes>=1.6.0",
     "dbt-core>=1.12.6",
     "cryptography>=48.0.0",
+    "certifi>=2026.10.19",
 ]
 
 
