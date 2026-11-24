@@ -9,6 +9,7 @@ select
     k_regelverk_t,
     k_afp_t,
     k_krav_s,
+    k_utlandstilknytning,
     opprettet_av,
     endret_av,
     pen_org_enhet_id,

@@ -2,8 +2,9 @@
 
 with
 
-ref_stg_t_sak as (
+ref_stg_t_sak_ufore as (
     select * from {{ ref('stg_t_sak') }}
+    where k_sak_t = 'UFOREP'
 ),
 
 ref_stg_t_krav_arsak as (
@@ -45,11 +46,10 @@ behandlinger_kravhode as (
         end as endret_av, -- saksbehandler**
         kh.pen_org_enhet_id,
         kh.k_behandling_t, -- metode
-        coalesce(s.k_utlandstilknytning, 'NASJONAL') as k_utlandstilknytning
+        coalesce(kh.k_utlandstilknytning, 'NASJONAL') as k_utlandstilknytning
     from ref_stg_t_kravhode kh
-    inner join ref_stg_t_sak s
+    inner join ref_stg_t_sak_ufore s
         on kh.sak_id = s.sak_id
-    where s.k_sak_t = 'UFOREP'
 ),
 
 behandlinger_kravarsak as (
